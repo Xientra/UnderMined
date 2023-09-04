@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48681677833959432}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.05, z: -0.7057}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.00007042962, y: 1.05, z: -1.3546293}
   m_LocalScale: {x: 2, y: 1.5, z: 3.5236528}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -168,8 +168,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4088440130287515685}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.70710576, w: 0.7071079}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.75}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.00038641578, y: 0.5, z: -2.8103294}
   m_LocalScale: {x: 1, y: 1.23, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -275,8 +275,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6573172234066088195}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6522, z: 1.0585}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.000453282, y: 0.6522, z: -3.1188288}
   m_LocalScale: {x: 2, y: 0.7044, z: 1.7925731}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -380,8 +380,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6851947275914788595}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.70710576, w: 0.7071079}
-  m_LocalPosition: {x: 0, y: 0.5, z: -1.75}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.00015652737, y: 0.5, z: -0.31032926}
   m_LocalScale: {x: 1, y: 1.23, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -487,8 +487,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7815495416372045456}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.70710576, y: -0, z: -0, w: 0.7071079}
-  m_LocalPosition: {x: 0, y: 1.06, z: -1.47}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.00009566476, y: 1.06, z: -0.5903293}
   m_LocalScale: {x: 1.248448, y: 2.5451138, z: 1.248448}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -612,3 +612,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d269371e41c71445b7574747c72b5bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRunning: 0
+  timeRemaining: 30
+  coalToTimeRatio: 10
+  speed: 2
+  acceleration: 0.03
+  steerSpeed: 25
+  moveDirection: {x: 0, y: 0, z: 1}
+  die:
+    m_PersistentCalls:
+      m_Calls: []
