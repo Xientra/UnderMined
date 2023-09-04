@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class JoinManager : MonoBehaviour
 {
@@ -12,6 +13,16 @@ public class JoinManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        
+    }
+
+    public void OnPlayerJoined(PlayerInput playerInput)
+    {
+        
+    }
+    
+    public void OnPlayerLeft(PlayerInput playerInput)
     {
         
     }
