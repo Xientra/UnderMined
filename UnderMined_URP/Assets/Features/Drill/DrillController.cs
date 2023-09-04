@@ -13,9 +13,7 @@ public class DrillController : MonoBehaviour
 	public float speed = 2f;
 	public float acceleration = 0.05f;
 	public float steerSpeed = 25f;
-	
-	public Vector3 moveDirection = new Vector3(0, 0, 1);
-	
+
 	public UnityEvent die;
 
 	public void StartMoving() {
@@ -24,7 +22,6 @@ public class DrillController : MonoBehaviour
 
 	private void Update()
 	{
-
 		if (isRunning == false)
 			return;
 				
@@ -36,7 +33,7 @@ public class DrillController : MonoBehaviour
 	}
 
 	private void Move() {
-		transform.position += moveDirection * (speed * Time.deltaTime);
+		transform.position += transform.forward * (speed * Time.deltaTime);
 
 		speed += acceleration * Time.deltaTime;
 	}
@@ -51,11 +48,6 @@ public class DrillController : MonoBehaviour
 	}
 	
 	public void Steer(float dir) {
-		// dir is -1 to 1
-		// rotate direction vector by dir*steerSpeed
-	}
-	
-	public void SteerDirection(Vector3 newDirection) {
-		// slowly interpolate to newDirection
+		transform.Rotate(new Vector3(0, dir * steerSpeed * Time.deltaTime, 0));
 	}
 }
