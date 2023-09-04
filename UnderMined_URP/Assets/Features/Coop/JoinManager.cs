@@ -27,4 +27,12 @@ public class JoinManager : MonoBehaviour
     {
         // meh i'll do it when i have the time
     }
+
+    public void EnableMining()
+    {
+        for (int i = 0; i < players.Length; i++)
+        {
+            //players[i].
+        }
+    }
 }

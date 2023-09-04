@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-
+[SelectionBase]
 public class DrillController : MonoBehaviour
 {
 	public bool isRunning = false;
