@@ -5,13 +5,14 @@ using UnityEngine.InputSystem;
 
 public class JoinManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public PlayerInput[] players = new PlayerInput[4];
+    private int _playerCount = 0;
+    
     void Start()
     {
         
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         
@@ -19,11 +20,11 @@ public class JoinManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        
+        players[_playerCount++] = playerInput;
     }
     
     public void OnPlayerLeft(PlayerInput playerInput)
     {
-        
+        // meh i'll do it when i have the time
     }
 }
