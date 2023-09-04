@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public bool isSpawning = false;
+
     void Start()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (isSpawning == false)
+            return;
     }
 }

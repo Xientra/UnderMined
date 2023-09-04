@@ -4,50 +4,56 @@ using UnityEngine.Events;
 [SelectionBase]
 public class DrillController : MonoBehaviour
 {
-	public bool isRunning = false;
+    public bool isRunning = false;
 
-	public float timeRemaining = 30f;
+    public float timeRemaining = 30f;
 
-	public float coalToTimeRatio = 10f;
+    public float coalToTimeRatio = 10f;
 
-	public float speed = 2f;
-	public float acceleration = 0.05f;
-	public float steerSpeed = 25f;
+    public float speed = 2f;
+    public float acceleration = 0.05f;
+    public float steerSpeed = 25f;
 
-	public UnityEvent die;
+    public UnityEvent die;
 
-	public void StartMoving() {
-		isRunning = true;
-	}
+    public void StartMoving()
+    {
+        isRunning = true;
+    }
 
-	private void Update()
-	{
-		if (isRunning == false)
-			return;
-				
-		Move();
+    private void Update()
+    {
+        if (isRunning == false)
+            return;
 
-		timeRemaining -= Time.deltaTime;
-		if (timeRemaining <= 0)
-			OnDie();
-	}
+        Move();
 
-	private void Move() {
-		transform.position += transform.forward * (speed * Time.deltaTime);
+        timeRemaining -= Time.deltaTime;
+        if (timeRemaining <= 0)
+            OnDie();
+    }
 
-		speed += acceleration * Time.deltaTime;
-	}
-	
-	public void AddCoal(int amount) {
-		timeRemaining += amount * coalToTimeRatio;
-	}
-	
-	
-	private void OnDie() {
-		die.Invoke();
-	}
-	
-	public void Steer(float dir) {
-		transform.Rotate(new Vector3(0, dir * steerSpeed * Time.deltaTime, 0));
-	}
+    private void Move()
+    {
+        transform.position += transform.forward * (speed * Time.deltaTime);
+
+        speed += acceleration * Time.deltaTime;
+    }
+
+    public void AddCoal(int amount)
+    {
+        timeRemaining += amount * coalToTimeRatio;
+    }
+
+
+    private void OnDie()
+    {
+        isRunning = false;
+        die.Invoke();
+    }
+
+    public void Steer(float dir)
+    {
+        transform.Rotate(new Vector3(0, dir * steerSpeed * Time.deltaTime, 0));
+    }
 }

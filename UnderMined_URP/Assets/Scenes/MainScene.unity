@@ -2727,12 +2727,12 @@ PrefabInstance:
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000020699312
+      value: -0.000000020699305
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000001279288
+      value: 0.000000012792876
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
@@ -2772,6 +2772,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4566039659948849404, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6473315721619898602, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_Name
@@ -2843,12 +2848,12 @@ PrefabInstance:
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000020699312
+      value: -0.000000020699305
       objectReference: {fileID: 0}
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000001279288
+      value: 0.000000012792876
       objectReference: {fileID: 0}
     - target: {fileID: 1001227417301961611, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
@@ -2972,11 +2977,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6890680919256053849, guid: 19645f926d6082343a5a4e1d95d3f9e7,
-        type: 3}
-      propertyPath: isRunning
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8033692403588707408, guid: 19645f926d6082343a5a4e1d95d3f9e7,
         type: 3}
@@ -3124,6 +3124,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: JoinManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5415053199746327966, guid: 427af5ba996c9fc45b50bc9480238e2d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
