@@ -1,5 +1,38 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &886191027308611246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 794773857410256771}
+  m_Layer: 0
+  m_Name: Graphic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &794773857410256771
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886191027308611246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5966027188437896534}
+  - {fileID: 7031216015072343652}
+  m_Father: {fileID: 2173865750050901500}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2331902138504077620
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,8 +65,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5966027188437896534}
-  - {fileID: 7031216015072343652}
+  - {fileID: 5494983656230452414}
+  - {fileID: 794773857410256771}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &653410583639567009
@@ -49,13 +82,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  digSpeed: 4
+  health: 2
+  digSpeed: 8
   moveSpeed: 2
   turnSpeed: 0.1
   digging: 1
   aimAccuracy: 15
-  emergeVFX: {fileID: 0}
-  spawnVFX: {fileID: 0}
+  killDistance: 100
+  attackRange: 2
+  attackCooldown: 1
+  coalSteal: 0.5
+  graphic: {fileID: 886191027308611246}
+  diggingVfx: {fileID: 5001006419244544036}
+  emergeVFX: {fileID: 2824223047872886140, guid: e252253129be6d14097d0e1a1f805a18,
+    type: 3}
 --- !u!65 &2062019389059094710
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -135,7 +175,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2173865750050901500}
+  m_Father: {fileID: 794773857410256771}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &8864584505186810191
 MeshFilter:
@@ -213,12 +253,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8279659943768240468}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2173865750050901500}
+  m_Father: {fileID: 794773857410256771}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4455682474647325157
 MeshFilter:
@@ -270,3 +310,83 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &4884669797744038018
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2173865750050901500}
+    m_Modifications:
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8141997524471373825, guid: e703f98d51ca0064da686e2d6a826d94,
+        type: 3}
+      propertyPath: m_Name
+      value: Digging VFX
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e703f98d51ca0064da686e2d6a826d94, type: 3}
+--- !u!2083052967 &5001006419244544036 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 481587856202539174, guid: e703f98d51ca0064da686e2d6a826d94,
+    type: 3}
+  m_PrefabInstance: {fileID: 4884669797744038018}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5494983656230452414 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1120217392508415036, guid: e703f98d51ca0064da686e2d6a826d94,
+    type: 3}
+  m_PrefabInstance: {fileID: 4884669797744038018}
+  m_PrefabAsset: {fileID: 0}
