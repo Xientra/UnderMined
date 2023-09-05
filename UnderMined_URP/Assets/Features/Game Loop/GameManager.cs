@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     {
         joinManager = FindObjectOfType<JoinManager>();
         drill = FindObjectOfType<DrillController>();
+        enemySpawner = FindObjectOfType<EnemySpawner>();
         drill.die.AddListener(OnDrillDie);
     }
 
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
         
         drill.isRunning = true;
         gameIsRunning = true;
+        enemySpawner.isSpawning = true;
         joinManager.EnableMining(true);
     }
 
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
         
         drill.isRunning = false;
         gameIsRunning = false;
+        enemySpawner.isSpawning = false;
         joinManager.EnableMining(false);
     }
 
