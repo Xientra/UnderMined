@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class CharacterInputController : MonoBehaviour
 {
     private CharacterController _characterController;
-
+    [SerializeField] private BoxCollider triggerArea;
 
     [Header("Move Stats")]
     [SerializeField] private float moveSpeed = 10.0f;
@@ -21,10 +21,10 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] private float dashDuration = 1.0f;
     [SerializeField] private bool dashAvailable = true;
     
-    [Header("Throw Stats")]
+    [Header("Carry and Throw Stats")]
     [SerializeField] private float throwPower = 10.0f;
-
-    [SerializeField] private PickUps _pickUps;
+    [SerializeField] public float maxCarryAmount = 5.0f;
+    [SerializeField] public PickUp pickUp;
 
     private void Awake()
     {
@@ -45,7 +45,7 @@ public class CharacterInputController : MonoBehaviour
         if(moveVec != Vector3.zero)
             transform.forward = moveVec;
     }
-
+    
 
     #region Movement
 

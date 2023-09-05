@@ -6,5 +6,5 @@ public abstract class Interactable : MonoBehaviour
 {
 
     
-    public abstract bool Interact();
+    public abstract bool Interact( CharacterInputController player);
 }
