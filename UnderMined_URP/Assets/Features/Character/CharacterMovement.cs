@@ -9,10 +9,20 @@ public class CharacterMovement : MonoBehaviour
 {
     private CharacterController _characterController;
 
-    [SerializeField] private Vector3 moveVec = new Vector3(0, 0, 0);
     
-    [Header("Stats")]
-    [SerializeField] private float moveSpeed;
+    [Header("Misc")]
+    [SerializeField] private float throwPower = 10.0f;
+
+    [Header("Move Stats")]
+    [SerializeField] private float moveSpeed = 10.0f;
+    [SerializeField] private Vector3 moveVec = Vector3.zero;
+    [SerializeField] private bool moveAvailable = true;
+    
+    [Header("Dash Stats")]
+    [SerializeField] private float dashPower = 3.0f;
+    [SerializeField] private float dashCD = 2.0f;
+    [SerializeField] private float dashDuration = 1.0f;
+    [SerializeField] private bool dashAvailable = true;
 
     private void Awake()
     {
@@ -28,48 +38,97 @@ public class CharacterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _characterController.Move(moveVec);
+        _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
+
+        if(moveVec != Vector3.zero)
+            transform.forward = moveVec;
     }
 
-    public void Move(InputAction.CallbackContext context)
-    {
-        Vector2 inputVec = context.ReadValue<Vector2>();
-        moveVec = new Vector3(inputVec.x, 0, inputVec.y) * moveSpeed * Time.deltaTime;
-        
-        if (context.performed)
-            return;
-    }
 
-    public void Dash(InputAction.CallbackContext context)
-    {
-        Debug.Log("Dash");
-        
-        
-        if (context.performed)
-            return;
-    }
+    #region Movement
 
-    public void Interact(InputAction.CallbackContext context)
-    {
-        Debug.Log("Interact");
+        public void Move(InputAction.CallbackContext context)
+            {
+                if(moveAvailable)
+                {
+                    Vector2 inputVec = context.ReadValue<Vector2>();
+                    moveVec = new Vector3(inputVec.x, 0, inputVec.y).normalized;
+                }
+            }
         
-        if (context.performed)
-            return;
-    }
-
-    public void Attack(InputAction.CallbackContext context)
-    {
-        Debug.Log("Attack");
+            public void Dash(InputAction.CallbackContext context)
+            {
+                if (context.started)
+                {
+                    if (dashAvailable)
+                    {
+                        StartCoroutine(Movement(dashDuration));
+                        StartCoroutine(Cooldown(dashCD));
+                    }
+                }
+            }
+            
+            IEnumerator Movement(float duration)
+            {
+                moveAvailable = false;
         
-        if (context.performed)
-            return;
-    }
+                if (moveVec != Vector3.zero)
+                {
+                    moveVec = moveVec * dashPower;
+                    yield return new WaitForSeconds(duration);
+                    moveAvailable = true;
+                    moveVec = moveVec / dashPower;
+                }
+                else
+                {
+                    moveVec = gameObject.transform.forward * dashPower;
+                    yield return new WaitForSeconds(duration);
+                    moveAvailable = true;
+                    moveVec = Vector3.zero;
+                }
+            }
     
-    public void Throw(InputAction.CallbackContext context)
-    {
-        Debug.Log("Throw");
-        
-        if (context.performed)
+            IEnumerator Cooldown(float duration)
+            {
+                dashAvailable = false;
+                yield return new WaitForSeconds(duration);
+                dashAvailable = true;
+            }
+
+    #endregion
+
+    #region Actions
+    
+        public void Interact(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                Debug.Log("Interact");
+            }
             return;
-    }
+        }
+
+        public void Attack(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                Debug.Log("Attack");
+            }
+            return;
+        }
+        
+        public void Throw(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                Debug.Log("Throw");
+            }
+            return;
+        }
+        
+    #endregion
+
+   
+
+    
 }
