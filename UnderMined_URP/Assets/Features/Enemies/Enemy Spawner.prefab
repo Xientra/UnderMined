@@ -47,4 +47,5 @@ MonoBehaviour:
   isSpawning: 1
   enemyPrefab: {fileID: 653410583639567009, guid: 6e7e19798e9a141489a3aa858cd8f694,
     type: 3}
+  spawnTarget: {fileID: 0}
   continuousSpawnDelay: {x: 4, y: 8}

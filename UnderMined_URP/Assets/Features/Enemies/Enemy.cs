@@ -2,36 +2,66 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
     public DrillController target;
 
-    public float drillSpeed = 4f;
+    public float digSpeed = 4f;
     public float moveSpeed = 2f;
     public float turnSpeed = 0.1f;
 
-    public bool drilling = true;
+    public bool digging = true;
 
-    [Header("Effects:")]
+    public float aimAccuracy = 15f;
+
+    public float killDistance = 100f;
     
-    public GameObject emergeVFX;
+    public float attackRange = 2f;
+
+    public float attackCooldown = 1f;
+    private float _timeTillAttack = 1f;
+
+    [Header("Effects:")] public GameObject emergeVFX;
     public GameObject spawnVFX;
 
     private Vector3 _turnVelocity;
-    
+
     private void Start()
     {
-        //target = FindObjectOfType<DrillController>();
+        SetRandomDirection();
 
         //Instantiate(spawnVFX, transform.position, Quaternion.identity);
     }
-    
+
     private void Update()
     {
-        float speed = drilling ? drillSpeed : moveSpeed;
+        Vector3 toTarget = target.transform.position - transform.position;
+        if (toTarget.sqrMagnitude < attackRange * attackRange)
+        {
+            _timeTillAttack -= Time.deltaTime;
+            if (_timeTillAttack <= 0)
+            {
+                AttackTarget();
+                _timeTillAttack = attackCooldown;
+            }
+        }
+        else
+        {
+            _timeTillAttack = attackCooldown;
+            Move();
+        }
+        
+        if (toTarget.sqrMagnitude > killDistance * killDistance)
+            Destroy(this.gameObject);
+    }
 
-        if (drilling == false)
+    private void Move()
+    {
+        float speed = digging ? digSpeed : moveSpeed;
+
+        if (digging == false)
         {
             // turn towards target
             Vector3 toTarget = target.transform.position - transform.position;
@@ -41,26 +71,39 @@ public class Enemy : MonoBehaviour
         transform.position += transform.forward * (speed * Time.deltaTime);
     }
 
-    private void SetDirection()
+    private void SetRandomDirection()
     {
-        
-        
+        Vector2 rndCircle = Random.insideUnitCircle;
+        Vector3 targetPoint = target.transform.position + new Vector3(rndCircle.x, 0, rndCircle.y) * aimAccuracy;
+        Vector3 direction = targetPoint - transform.position;
+
+        transform.forward = direction;
     }
 
     private void OnCollisionExit(Collision other)
     {
-        Emerge();
+        if (digging)
+            Emerge();
     }
 
     private void Emerge()
     {
-        drilling = false;
+        digging = false;
         //Instantiate(emergeVFX, transform.position, Quaternion.identity);
+    }
+
+    private void AttackTarget()
+    {
+        Debug.Log("NYEH!! (attack drill)");
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        //Gizmos.DrawSphere(transform.position, 1f);
+        if (digging)
+            Debug.DrawLine(transform.position, transform.position + transform.forward * 100, Color.red);
+
+        Vector3 pos = target != null ? target.transform.position : transform.position;
+
+        Gizmos.DrawWireSphere(pos, aimAccuracy);
     }
 }

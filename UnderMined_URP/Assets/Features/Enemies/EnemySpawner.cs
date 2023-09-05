@@ -21,7 +21,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        spawnDelayTimestamp = Random.Range(continuousSpawnDelay.x, continuousSpawnDelay.y);
+        spawnDelayTimestamp = Time.time + Random.Range(continuousSpawnDelay.x, continuousSpawnDelay.y);
         
     }
 
@@ -55,11 +55,9 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 GetSpawnPosition()
     {
-        Vector3 drillPosition = Vector3.zero;
-
         Vector2 rndOnCircle = Random.insideUnitCircle.normalized * GetMinRadius();
         
-        return drillPosition + new Vector3(rndOnCircle.x, 0, rndOnCircle.y);
+        return spawnTarget.transform.position + new Vector3(rndOnCircle.x, 0, rndOnCircle.y);
     }
 
     private void SpawnEnemy()
@@ -67,7 +65,7 @@ public class EnemySpawner : MonoBehaviour
         Vector3 spawnPos = GetSpawnPosition();
         Instantiate(enemyPrefab, spawnPos, Quaternion.identity).GetComponent<Enemy>().target = spawnTarget;
         
-        spawnDelayTimestamp = Random.Range(continuousSpawnDelay.x, continuousSpawnDelay.y);
+        spawnDelayTimestamp = Time.time + Random.Range(continuousSpawnDelay.x, continuousSpawnDelay.y);
     }
 
     private Vector3 GetXYPlanePointFromCameraCorners(int x, int y) => GetXYPlanePointFromCameraCorners(new Vector2(x, y));
