@@ -20,14 +20,21 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] private float dashDuration = 1.0f;
     [SerializeField] private bool dashAvailable = true;
     
-    [Header("Interaction Variables")]
-    [SerializeField] private BoxCollider triggerArea;
-    [SerializeField] public Interactable currentInteractable;
-    
     [Header("Carry and Throw Variables")]
     [SerializeField] private float throwPower = 10.0f;
     [SerializeField] public float maxCarryAmount = 5.0f;
     [SerializeField] public PickUp pickUp;
+    
+    [Header("Interaction Variables")]
+    [SerializeField] private BoxCollider triggerArea;
+    [SerializeField] public Interactable currentInteractable;
+
+    [Header("Combat Variables")]
+    [SerializeField] private int health = 1;
+    [SerializeField] public int damage = 1;
+    [SerializeField] private GameObject attackCube;
+    [SerializeField] private float attackCooldown = 1.0f;
+    [SerializeField] private bool attackAvailable = true;
 
     private void Awake()
     {
@@ -131,7 +138,11 @@ public class CharacterInputController : MonoBehaviour
         {
             if (context.started)
             {
-                Debug.Log("Attack");
+                if(attackAvailable)
+                {
+                    StartCoroutine(attackHandling());
+                    StartCoroutine(attackCooldownHandling(attackCooldown));
+                }
             }
         }
         
@@ -147,6 +158,20 @@ public class CharacterInputController : MonoBehaviour
                 pickUp = null;
                 currentInteractable = null;
             }
+        }
+
+        IEnumerator attackHandling()
+        {
+            attackCube.SetActive(true);
+            yield return new WaitForSeconds(.1f);
+            attackCube.SetActive(false);
+        }
+        
+        IEnumerator attackCooldownHandling(float duration)
+        {
+            attackAvailable = false;
+            yield return new WaitForSeconds(duration);
+            attackAvailable = true;
         }
         
     #endregion
