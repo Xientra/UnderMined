@@ -40,11 +40,15 @@ public class DrillController : MonoBehaviour
         speed += acceleration * Time.deltaTime;
     }
 
-    public void AddCoal(int amount)
+    public void AddCoal(float amount)
     {
         timeRemaining += amount * coalToTimeRatio;
     }
 
+    public void StealCoal(float amount)
+    {
+        timeRemaining -= amount * coalToTimeRatio;
+    }
 
     private void OnDie()
     {
