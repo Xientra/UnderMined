@@ -11,7 +11,7 @@ public class CharacterInputController : MonoBehaviour
 
     [Header("Move Variables")]
     [SerializeField] private float moveSpeed = 10.0f;
-    [SerializeField] private Vector3 moveVec = Vector3.zero;
+    [SerializeField] public Vector3 moveVec = Vector3.zero;
     [SerializeField] private bool moveAvailable = true;
     
     [Header("Dash Variables")]
@@ -28,6 +28,7 @@ public class CharacterInputController : MonoBehaviour
     [Header("Interaction Variables")]
     [SerializeField] private BoxCollider triggerArea;
     [SerializeField] public Interactable currentInteractable;
+    [SerializeField] public bool isSteeringDrill = false;
 
     [Header("Combat Variables")]
     [SerializeField] private int health = 1;
@@ -50,10 +51,13 @@ public class CharacterInputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
+        if(!isSteeringDrill)
+        {
+            _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
 
-        if(moveVec != Vector3.zero)
-            transform.forward = moveVec;
+            if (moveVec != Vector3.zero)
+                transform.forward = moveVec;
+        }
     }
     
 
