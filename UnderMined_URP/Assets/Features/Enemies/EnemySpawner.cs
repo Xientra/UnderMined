@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     
     public Enemy enemyPrefab;
 
-    public GameObject spawnTarget;
+    public DrillController spawnTarget;
 
     private Camera _camera;
     
@@ -30,8 +30,6 @@ public class EnemySpawner : MonoBehaviour
         _camera = Camera.main;
 
         spawnTarget = FindObjectOfType<DrillController>();
-        if (spawnTarget == null)
-            spawnTarget = this.gameObject;
     }
 
     private void Update()
@@ -45,12 +43,12 @@ public class EnemySpawner : MonoBehaviour
 
     private float GetMinRadius()
     {
-        Vector3 drillPosition = Vector3.zero;
+        Vector3 targetPos = spawnTarget.transform.position;
 
         GetXYPlanePointFromCameraCorners(0, 0);
 
-        float distance1 = (drillPosition - GetXYPlanePointFromCameraCorners(0, Screen.height)).magnitude;
-        float distance2 = (drillPosition - GetXYPlanePointFromCameraCorners(Screen.width, Screen.height)).magnitude;
+        float distance1 = (targetPos - GetXYPlanePointFromCameraCorners(0, Screen.height)).magnitude;
+        float distance2 = (targetPos - GetXYPlanePointFromCameraCorners(Screen.width, Screen.height)).magnitude;
         
         return Mathf.Max(distance1, distance2);
     }
@@ -67,7 +65,7 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnEnemy()
     {
         Vector3 spawnPos = GetSpawnPosition();
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        Instantiate(enemyPrefab, spawnPos, Quaternion.identity).GetComponent<Enemy>().target = spawnTarget;
         
         spawnDelayTimestamp = Random.Range(continuousSpawnDelay.x, continuousSpawnDelay.y);
     }
