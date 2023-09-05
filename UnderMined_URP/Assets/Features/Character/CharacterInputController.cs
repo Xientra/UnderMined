@@ -8,20 +8,23 @@ using UnityEngine.InputSystem;
 public class CharacterInputController : MonoBehaviour
 {
     private CharacterController _characterController;
-    [SerializeField] private BoxCollider triggerArea;
 
-    [Header("Move Stats")]
+    [Header("Move Variables")]
     [SerializeField] private float moveSpeed = 10.0f;
     [SerializeField] private Vector3 moveVec = Vector3.zero;
     [SerializeField] private bool moveAvailable = true;
     
-    [Header("Dash Stats")]
+    [Header("Dash Variables")]
     [SerializeField] private float dashPower = 3.0f;
     [SerializeField] private float dashCD = 2.0f;
     [SerializeField] private float dashDuration = 1.0f;
     [SerializeField] private bool dashAvailable = true;
     
-    [Header("Carry and Throw Stats")]
+    [Header("Interaction Variables")]
+    [SerializeField] private BoxCollider triggerArea;
+    [SerializeField] public Interactable currentInteractable;
+    
+    [Header("Carry and Throw Variables")]
     [SerializeField] private float throwPower = 10.0f;
     [SerializeField] public float maxCarryAmount = 5.0f;
     [SerializeField] public PickUp pickUp;
@@ -105,9 +108,22 @@ public class CharacterInputController : MonoBehaviour
         {
             if (context.started)
             {
-                Debug.Log("Interact");
+                if (currentInteractable)
+                {
+                    currentInteractable.Interact(this);
+                }
+                else 
+                {
+                    if (pickUp)
+                    {
+                        pickUp.transform.SetParent(null);
+                        pickUp.rb.useGravity = true;
+                        pickUp.rb.constraints = RigidbodyConstraints.None;
+                        pickUp.col.enabled = true;
+                        pickUp = null;
+                    }
+                }
             }
-            return;
         }
 
         public void Attack(InputAction.CallbackContext context)

@@ -15,10 +15,7 @@ public class InteractionTriggerController : MonoBehaviour
         Interactable interactable = other.gameObject.GetComponent<Interactable>();
         if (interactable)
         {
-            if (interactable.Interact( player))
-            {
-                
-            }
+            player.currentInteractable = interactable;
         }
             
     }
