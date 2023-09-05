@@ -473,10 +473,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 15
   moveVec: {x: 0, y: 0, z: 0}
-  moveAvailable: 1
+  moveAvailable: 0
   dashPower: 10
   dashCD: 0.5
-  dashDuration: 0.1
+  dashDuration: 0.05
   dashAvailable: 1
-  throwPower: 10
-  _pickUps: {fileID: 0}
+  triggerArea: {fileID: 0}
+  currentInteractable: {fileID: 0}
+  throwPower: 500
+  maxCarryAmount: 5
+  pickUp: {fileID: 0}

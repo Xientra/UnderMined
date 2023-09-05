@@ -17,6 +17,15 @@ public class InteractionTriggerController : MonoBehaviour
         {
             player.currentInteractable = interactable;
         }
-            
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        Interactable interactable = other.gameObject.GetComponent<Interactable>();
+        if (interactable)
+        {
+            if (player.currentInteractable == interactable)
+                player.currentInteractable = null;
+        }
     }
 }
