@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterController : MonoBehaviour
+public class CharacterInputController : MonoBehaviour
 {
     private CharacterController _characterController;
 
@@ -23,7 +23,8 @@ public class CharacterController : MonoBehaviour
     
     [Header("Throw Stats")]
     [SerializeField] private float throwPower = 10.0f;
-    [SerializeField]
+
+    [SerializeField] private PickUps _pickUps;
 
     private void Awake()
     {
