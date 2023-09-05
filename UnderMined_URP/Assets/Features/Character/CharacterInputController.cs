@@ -121,6 +121,7 @@ public class CharacterInputController : MonoBehaviour
                         pickUp.rb.constraints = RigidbodyConstraints.None;
                         pickUp.col.enabled = true;
                         pickUp = null;
+                        currentInteractable = null;
                     }
                 }
             }
@@ -132,16 +133,20 @@ public class CharacterInputController : MonoBehaviour
             {
                 Debug.Log("Attack");
             }
-            return;
         }
         
         public void Throw(InputAction.CallbackContext context)
         {
-            if (context.started)
+            if (pickUp)
             {
-                Debug.Log("Throw");
+                pickUp.transform.SetParent(null);
+                pickUp.rb.useGravity = true;
+                pickUp.rb.constraints = RigidbodyConstraints.None;
+                pickUp.col.enabled = true;
+                pickUp.rb.AddForce((moveVec + (transform.forward + Vector3.up / 2)) * throwPower);
+                pickUp = null;
+                currentInteractable = null;
             }
-            return;
         }
         
     #endregion
