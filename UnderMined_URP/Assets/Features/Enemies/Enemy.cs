@@ -1,18 +1,109 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public DrillController target;
+
+    public float digSpeed = 4f;
+    public float moveSpeed = 2f;
+    public float turnSpeed = 0.1f;
+
+    public bool digging = true;
+
+    public float aimAccuracy = 15f;
+
+    public float killDistance = 100f;
+    
+    public float attackRange = 2f;
+
+    public float attackCooldown = 1f;
+    private float _timeTillAttack = 1f;
+
+    [Header("Effects:")] public GameObject emergeVFX;
+    public GameObject spawnVFX;
+
+    private Vector3 _turnVelocity;
+
+    private void Start()
     {
-        
+        SetRandomDirection();
+
+        //Instantiate(spawnVFX, transform.position, Quaternion.identity);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        Vector3 toTarget = target.transform.position - transform.position;
+        if (toTarget.sqrMagnitude < attackRange * attackRange)
+        {
+            _timeTillAttack -= Time.deltaTime;
+            if (_timeTillAttack <= 0)
+            {
+                AttackTarget();
+                _timeTillAttack = attackCooldown;
+            }
+        }
+        else
+        {
+            _timeTillAttack = attackCooldown;
+            Move();
+        }
         
+        if (toTarget.sqrMagnitude > killDistance * killDistance)
+            Destroy(this.gameObject);
+    }
+
+    private void Move()
+    {
+        float speed = digging ? digSpeed : moveSpeed;
+
+        if (digging == false)
+        {
+            // turn towards target
+            Vector3 toTarget = target.transform.position - transform.position;
+            transform.forward = Vector3.SmoothDamp(transform.forward, toTarget, ref _turnVelocity, turnSpeed);
+        }
+
+        transform.position += transform.forward * (speed * Time.deltaTime);
+    }
+
+    private void SetRandomDirection()
+    {
+        Vector2 rndCircle = Random.insideUnitCircle;
+        Vector3 targetPoint = target.transform.position + new Vector3(rndCircle.x, 0, rndCircle.y) * aimAccuracy;
+        Vector3 direction = targetPoint - transform.position;
+
+        transform.forward = direction;
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (digging)
+            Emerge();
+    }
+
+    private void Emerge()
+    {
+        digging = false;
+        //Instantiate(emergeVFX, transform.position, Quaternion.identity);
+    }
+
+    private void AttackTarget()
+    {
+        Debug.Log("NYEH!! (attack drill)");
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (digging)
+            Debug.DrawLine(transform.position, transform.position + transform.forward * 100, Color.red);
+
+        Vector3 pos = target != null ? target.transform.position : transform.position;
+
+        Gizmos.DrawWireSphere(pos, aimAccuracy);
     }
 }
