@@ -5,13 +5,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterMovement : MonoBehaviour
+public class CharacterController : MonoBehaviour
 {
     private CharacterController _characterController;
 
-    
-    [Header("Misc")]
-    [SerializeField] private float throwPower = 10.0f;
 
     [Header("Move Stats")]
     [SerializeField] private float moveSpeed = 10.0f;
@@ -23,6 +20,10 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float dashCD = 2.0f;
     [SerializeField] private float dashDuration = 1.0f;
     [SerializeField] private bool dashAvailable = true;
+    
+    [Header("Throw Stats")]
+    [SerializeField] private float throwPower = 10.0f;
+    [SerializeField]
 
     private void Awake()
     {
