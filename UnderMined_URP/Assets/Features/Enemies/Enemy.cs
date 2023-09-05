@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IHittable
 {
     public DrillController target;
 
+    public int health = 2;
+    
     public float digSpeed = 4f;
     public float moveSpeed = 2f;
     public float turnSpeed = 0.1f;
@@ -23,6 +25,8 @@ public class Enemy : MonoBehaviour
     public float attackCooldown = 1f;
     private float _timeTillAttack = 1f;
 
+    public float coalSteal = 0.5f;
+    
     [Header("Effects:")] public GameObject emergeVFX;
     public GameObject spawnVFX;
 
@@ -95,6 +99,7 @@ public class Enemy : MonoBehaviour
     private void AttackTarget()
     {
         Debug.Log("NYEH!! (attack drill)");
+        target.StealCoal(coalSteal);
     }
 
     private void OnDrawGizmos()
@@ -105,5 +110,18 @@ public class Enemy : MonoBehaviour
         Vector3 pos = target != null ? target.transform.position : transform.position;
 
         Gizmos.DrawWireSphere(pos, aimAccuracy);
+    }
+
+    public void GetHit(int amount)
+    {
+        health -= amount;
+        if (health < 0)
+            Die();
+    }
+
+    private void Die()
+    {
+        // TODO: die vfx + die animation
+        Destroy(this.gameObject);
     }
 }
