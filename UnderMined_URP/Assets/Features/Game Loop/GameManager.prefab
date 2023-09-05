@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 5048352436121492312}
   - component: {fileID: 6985529969084917491}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Timer Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1023,7 +1023,7 @@ MonoBehaviour:
   enemySpawner: {fileID: 0}
   mainMenu: {fileID: 7505054108448339283}
   inGameMenu: {fileID: 4566039659948849404}
-  timerLabel: {fileID: 2003030281411890137}
+  timerLabel: {fileID: 6985529969084917491}
   endScreen: {fileID: 8950625193863903215}
   gameIsRunning: 0
   gold: 0
@@ -1456,7 +1456,7 @@ GameObject:
   - component: {fileID: 4005337506345565677}
   - component: {fileID: 2003030281411890137}
   m_Layer: 5
-  m_Name: Timer Label
+  m_Name: Start Btn  Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

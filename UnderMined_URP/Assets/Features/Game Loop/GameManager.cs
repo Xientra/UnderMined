@@ -34,11 +34,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (gameIsRunning)
-        {
-            string timeText = TimeSpan.FromSeconds(drill.timeRemaining).ToString("hh':'mm':'ss");
-            Debug.Log(timeText);
-            timerLabel.text = timeText;
-        }
+            timerLabel.text = TimeSpan.FromSeconds(drill.timeRemaining).ToString("hh':'mm':'ss");
     }
 
     public void Btn_StartGame()
