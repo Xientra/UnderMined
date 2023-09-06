@@ -173,7 +173,7 @@ public class CharacterInputController : MonoBehaviour
                     {
                         isSteeringDrill = false;
                         this.gameObject.transform.SetParent(null);
-                        //todo: default back to idle/walking anim
+                        //todo: default back to idle/walking anim       
                     }
                     
                 }
