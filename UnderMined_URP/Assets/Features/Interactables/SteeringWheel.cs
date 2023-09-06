@@ -14,7 +14,7 @@ public class SteeringWheel : Interactable
 
     public override void Interact(CharacterInputController player)
     {
-        if(!player.pickUp)
+        if(!player.pickUp && drill.isRunning)
         {
             player.isSteeringDrill = true;
             player._drillController = drill;

@@ -28,9 +28,23 @@ public class JoinManager : MonoBehaviour
 
     public void EnableMining(bool value)
     {
-        for (int i = 0; i < players.Length; i++)
+        
+        if (value)
         {
-            //players[i].
+            for (int i = 0; i < players.Length; i++)
+            {
+                //players[i].
+            }
         }
+        else
+        {
+            for (int i = 0; i < players.Length; i++)
+            {
+                CharacterInputController player = players[i].GetComponent<CharacterInputController>();
+                player.isSteeringDrill = false;
+                player.transform.parent = null;
+            }
+        }
+        
     }
 }
