@@ -1,3 +1,4 @@
+using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.VFX;
@@ -16,7 +17,20 @@ public class DrillController : MonoBehaviour
     public float acceleration = 0.05f;
     public float steerSpeed = 25f;
 
+    [Space(5)]
+    
     public UnityEvent die;
+
+    [Header("Mining:")]
+    
+    public float miningSize = 2f;
+    public float miningStrength = 0.8f;
+    public GameObject miningPoint;
+    
+    public float mineDelay = 0.5f;
+
+    private float _mineTimestamp = 0f;
+    
 
     [Header("Effects:")]
     
@@ -35,6 +49,8 @@ public class DrillController : MonoBehaviour
 
         Move();
 
+        Mine();
+
         timeRemaining -= Time.deltaTime;
         if (timeRemaining <= 0)
             OnDie();
@@ -45,6 +61,15 @@ public class DrillController : MonoBehaviour
         transform.position += transform.forward * (speed * Time.deltaTime);
 
         speed += acceleration * Time.deltaTime;
+    }
+
+    private void Mine()
+    {
+        if (Time.time > _mineTimestamp)
+        {
+            ChunkManager.instance.MineWall(miningPoint.transform.position, miningSize, miningStrength);
+            _mineTimestamp = Time.time + mineDelay;
+        }
     }
 
     public void AddCoal(float amount)

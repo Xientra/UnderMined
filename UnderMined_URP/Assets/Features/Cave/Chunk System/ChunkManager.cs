@@ -65,7 +65,7 @@ namespace Features.Cave.Chunk_System
             chunkPool[chunkIndex].SetChunkValueField(GetValueFieldAtGridPos(gridPos));
         }
 
-        public GridPoint[,] GetValueFieldAtGridPos(Vector2Int gridPos)
+        private GridPoint[,] GetValueFieldAtGridPos(Vector2Int gridPos)
         {
             if (_caveChunkValues.TryGetValue(gridPos, out var valueField))
                 return valueField;
@@ -124,18 +124,53 @@ namespace Features.Cave.Chunk_System
 
         private Vector2Int GetTargetChunkGridPosition()
         {
-            float xPos = target.transform.position.x;
-            float yPos = target.transform.position.z;
-
-            int x = Mathf.FloorToInt(xPos / ChunkSize) % ChunkSize;
-            int y = Mathf.FloorToInt(yPos / ChunkSize) % ChunkSize;
-
-            return new Vector2Int(x, y);
+            return WorldToGridPosition(target.transform.position);
         }
 
+        private Vector2Int WorldToGridPosition(Vector3 worldPos)
+        {
+            return new Vector2Int(
+                Mathf.FloorToInt(worldPos.x / ChunkSize) % ChunkSize, 
+                Mathf.FloorToInt(worldPos.z / ChunkSize) % ChunkSize);
+        }
+        
         private Vector3 GridToWorldPosition(Vector2Int gridPos)
         {
             return new Vector3(gridPos.x * ChunkSize, 0, gridPos.y * ChunkSize);
+        }
+
+        /// <summary>
+        /// Removes part of the  wall at the given position.<br/>
+        /// point is the world position of mining, radius the radius and strength is between 0 and 1 the amount subtracted from the wall.
+        /// </summary>
+        public MiningResult MineWall(Vector3 point, float radius, float strength)
+        {
+            // TODO: make this cross chunks
+            
+            Vector2Int chunkGridPos = WorldToGridPosition(point);
+
+            GridPoint[,] valueField = GetValueFieldAtGridPos(chunkGridPos);
+            
+            // TODO: make this cross chunks
+            MiningResult mr = new MiningResult();
+
+            // TODO: maybe optimize 
+            
+            for (int y = 0; y < ChunkSize; y++)
+                for (int x = 0; x < ChunkSize; x++)
+                if ((valueField[x, y].pos - point).sqrMagnitude < radius * radius)
+                {
+                    float removeAmount = Mathf.Min(valueField[x, y].value, strength);
+                    valueField[x, y].value -= removeAmount;
+                    if (valueField[x, y].wallType == GridPoint.WallType.Stone)
+                        mr.stoneAmount += removeAmount;
+                    else if (valueField[x, y].wallType == GridPoint.WallType.Coal)
+                        mr.coalAmount += removeAmount;
+                    else if (valueField[x, y].wallType == GridPoint.WallType.Gold)
+                        mr.goldAmount += removeAmount;
+                }
+
+            return mr;
         }
 
         private void OnDestroy()
@@ -148,5 +183,13 @@ namespace Features.Cave.Chunk_System
             Gizmos.color = Color.blue;
             Gizmos.DrawSphere(GridToWorldPosition(GetTargetChunkGridPosition()), 5f);
         }
+    }
+
+    [System.Serializable]
+    public class MiningResult
+    {
+        public float stoneAmount = 0f;
+        public float coalAmount = 0f;
+        public float goldAmount = 0f;
     }
 }

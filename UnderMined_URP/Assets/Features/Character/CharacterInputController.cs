@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,6 +39,10 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] private bool attackAvailable = true;
 
+    [Header("Combat Variables")]
+    [SerializeField] private float miningStrength = 0.5f;
+    [SerializeField] private float miningRadius = 1f;
+    
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -155,6 +160,7 @@ public class CharacterInputController : MonoBehaviour
             {
                 if(attackAvailable)
                 {
+                    ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
                     StartCoroutine(attackHandling());
                     StartCoroutine(attackCooldownHandling(attackCooldown));
                 }
