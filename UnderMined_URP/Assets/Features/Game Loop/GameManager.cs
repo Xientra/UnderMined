@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     public JoinManager joinManager;
     public DrillController drill;
     public EnemySpawner enemySpawner;
@@ -23,7 +25,12 @@ public class GameManager : MonoBehaviour
     public bool gameIsRunning = false;
 
     public float gold = 0f;
-    
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         joinManager = FindObjectOfType<JoinManager>();
@@ -39,6 +46,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void Btn_StartGame()
+    {
+        StartGame();
+    }
+
+    public void StartGame()
     {
         mainMenu.SetActive(false);
         inGameMenu.SetActive(true);
