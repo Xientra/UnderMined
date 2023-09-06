@@ -33,10 +33,13 @@ public class CharacterInputController : MonoBehaviour
 
     [Header("Combat Variables")]
     [SerializeField] private int health = 1;
+    [SerializeField] public bool isFallen = false;
     [SerializeField] public int damage = 1;
     [SerializeField] private GameObject attackCube;
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] private bool attackAvailable = true;
+
+    [SerializeField] private GameObject revivePrefab;
 
     private void Awake()
     {
@@ -52,16 +55,19 @@ public class CharacterInputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isSteeringDrill)
+        if(!isFallen)
         {
-            _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
+            if (!isSteeringDrill)
+            {
+                _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
 
-            if (moveVec != Vector3.zero)
-                transform.forward = moveVec;
-        }
-        else
-        {
-            _drillController.Steer(moveVec.x);
+                if (moveVec != Vector3.zero)
+                    transform.forward = moveVec;
+            }
+            else
+            {
+                _drillController.Steer(moveVec.x);
+            }
         }
     }
     
@@ -124,13 +130,36 @@ public class CharacterInputController : MonoBehaviour
         {
             if (context.started)
             {
-                if (currentInteractable)
+                if (currentInteractable)    //interact
                 {
                     currentInteractable.Interact(this);
+
+                    Type interactableType = currentInteractable.GetType();
+                    switch (currentInteractable)
+                    {
+                        case PickUp:
+                            break;
+                        
+                        case Refill:
+                            break;
+
+                        case SteeringWheel:
+                            break;
+                        
+                        case Revive:
+                            break;
+
+                        case StartGame:
+                            break;
+                        
+                        default:
+                            //todo: explode
+                            break;
+                    }
                 }
                 else 
                 {
-                    if (pickUp)
+                    if (pickUp) //drop carried stuff
                     {
                         pickUp.transform.SetParent(null);
                         pickUp.rb.useGravity = true;
@@ -138,11 +167,13 @@ public class CharacterInputController : MonoBehaviour
                         pickUp.col.enabled = true;
                         pickUp = null;
                         currentInteractable = null;
+                        //todo: default back to idle/walking anim
                     }
-                    else if (isSteeringDrill)
+                    else if (isSteeringDrill) //get out of drill
                     {
                         isSteeringDrill = false;
                         this.gameObject.transform.SetParent(null);
+                        //todo: default back to idle/walking anim       
                     }
                     
                 }
@@ -190,6 +221,12 @@ public class CharacterInputController : MonoBehaviour
         }
         
     #endregion
+
+    public void onDeath()
+    {
+        this.isFallen = true;
+        Instantiate(revivePrefab).GetComponent<Revive>().fallenplayer = this;
+    }
 
    
 
