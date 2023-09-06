@@ -1,21 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SteeringWheel : Interactable
 {
-    [SerializeField] private DrillController drill;
-    public override bool Interact(CharacterInputController player)
+    [SerializeField] public DrillController drill;
+
+    private void Awake()
     {
-        if (!player.pickUp)
+        this.enabled = false;
+    }
+
+    public override void Interact(CharacterInputController player)
+    {
+        if(!player.pickUp && drill.isRunning)
         {
             player.isSteeringDrill = true;
-            player.transform.position = this.gameObject.transform.position - (-1 * this.gameObject.transform.forward);
+            player._drillController = drill;
+            player.transform.position = this.gameObject.transform.position - (this.gameObject.transform.forward);
             player.transform.SetParent(drill.gameObject.transform);
-            drill.Steer(player.moveVec.x);
-            return true;
+            player.currentInteractable = null;
         }
-
-        return false;
     }
 }

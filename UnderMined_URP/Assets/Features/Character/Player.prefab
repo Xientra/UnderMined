@@ -117,6 +117,8 @@ GameObject:
   - component: {fileID: 177140892577456008}
   - component: {fileID: 3800138988120268154}
   - component: {fileID: 4358758461106604450}
+  - component: {fileID: 3770396406742561035}
+  - component: {fileID: 8239010441144778236}
   m_Layer: 0
   m_Name: InteractionTrigger
   m_TagString: Untagged
@@ -133,8 +135,8 @@ Transform:
   m_GameObject: {fileID: 2647120775997438785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.16}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.25}
+  m_LocalScale: {x: 2, y: 1, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5843183996874581282}
@@ -210,6 +212,46 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3770396406742561035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2647120775997438785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0eee520006f739498b4261f43ca556e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 3405280429056535524}
+--- !u!54 &8239010441144778236
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2647120775997438785}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &6258074923782504398
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6074066294516057266
 Transform:
   m_ObjectHideFlags: 0
@@ -241,7 +283,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 1, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5843183996874581282}
@@ -619,9 +661,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 234cba62b8cc4174887ce980ff8ca1cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _drillController: {fileID: 0}
   moveSpeed: 15
   moveVec: {x: 0, y: 0, z: 0}
-  moveAvailable: 0
+  moveAvailable: 1
   dashPower: 10
   dashCD: 0.5
   dashDuration: 0.05
@@ -631,8 +674,9 @@ MonoBehaviour:
   pickUp: {fileID: 0}
   triggerArea: {fileID: 0}
   currentInteractable: {fileID: 0}
+  isSteeringDrill: 0
   health: 1
   damage: 1
-  attackCube: {fileID: 0}
+  attackCube: {fileID: 6258074923782504398}
   attackCooldown: 1
   attackAvailable: 1

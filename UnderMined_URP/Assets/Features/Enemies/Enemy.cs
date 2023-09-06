@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour, IHittable
@@ -26,17 +27,21 @@ public class Enemy : MonoBehaviour, IHittable
     private float _timeTillAttack = 1f;
 
     public float coalSteal = 0.5f;
+
+    [Space(5)]
     
-    [Header("Effects:")] public GameObject emergeVFX;
-    public GameObject spawnVFX;
+    public GameObject graphic;
+    public VisualEffect diggingVfx;
+    
+    [Header("Effects:")]
+    
+    public GameObject emergeVFX;
 
     private Vector3 _turnVelocity;
 
     private void Start()
     {
         SetRandomDirection();
-
-        //Instantiate(spawnVFX, transform.position, Quaternion.identity);
     }
 
     private void Update()
@@ -87,13 +92,15 @@ public class Enemy : MonoBehaviour, IHittable
     private void OnCollisionExit(Collision other)
     {
         if (digging)
-            Emerge();
+            Emerge(Vector3.up);
     }
 
-    private void Emerge()
+    private void Emerge(Vector3 normal)
     {
         digging = false;
-        //Instantiate(emergeVFX, transform.position, Quaternion.identity);
+        diggingVfx.Stop();
+        Instantiate(emergeVFX, transform.position, Quaternion.identity).transform.up = normal;
+        graphic.SetActive(true);
     }
 
     private void AttackTarget()

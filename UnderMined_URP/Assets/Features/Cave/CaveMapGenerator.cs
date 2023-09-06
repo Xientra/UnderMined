@@ -14,29 +14,6 @@ public struct MeshInfo {
         vertices = _vertices;
     }
 }
-
-public struct GridPoint
-    {
-        /// <summary> world space pos of grid point</summary>
-        public Vector3 pos;
-
-        /// <summary> SignedDistanceField Value of this GridPoint </summary>
-        public float value;
-
-        public GridPoint(Vector3 _pos, float _value)
-        {
-            pos = _pos;
-            value = _value;
-        }
-
-        public GridPoint(Vector3 _pos)
-        {
-            pos = _pos;
-            //Debug.Log(Mathf.PerlinNoise(pos.x,pos.z));
-            value = Mathf.PerlinNoise(pos.x/64*4,pos.z/64*4);
-        }
-    }
-
 /// <summary> contains information of a full grid cell </summary>
 public struct GridSquare
 {
