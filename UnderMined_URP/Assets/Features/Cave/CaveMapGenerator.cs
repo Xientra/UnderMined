@@ -14,8 +14,6 @@ public struct MeshInfo {
         vertices = _vertices;
     }
 }
-
-
 /// <summary> contains information of a full grid cell </summary>
 public struct GridSquare
 {
@@ -32,6 +30,8 @@ public struct GridSquare
     }
 }
 
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 public class CaveMapGenerator : MonoBehaviour
 {
     [SerializeField]
@@ -58,11 +58,15 @@ public class CaveMapGenerator : MonoBehaviour
 
     private MeshInfo meshInfo;
 
+    private MeshFilter meshFilter;
+
     private void Start()
     {
         meshGenerator = new MeshGenerator();
 
         gridPointDic = new Dictionary<Vector3, int>();
+
+        meshFilter = GetComponent<MeshFilter>();
 
         InitializeMap(transform.position);
     }
@@ -85,31 +89,45 @@ public class CaveMapGenerator : MonoBehaviour
                 GridPoint p = new GridPoint(gridPointPos);
                 map[x, y] = p;
 
-                gridPointDic.Add(p.pos, index);
+                gridPointDic.Add(p.pos, index++);
             }
         }
 
-        meshInfo = meshGenerator.GenerateMeshFromMap(map, gridPointDic, isoValue);
+        MeshInfo[] meshInfos = meshGenerator.GenerateMeshFromMap(map, gridPointDic, isoValue);
 
-        foreach(Vector3 v in meshInfo.vertices) Debug.Log(v);
+        MeshInfo meshInfo = meshInfos[0];
+
+        Mesh mesh = new Mesh();
+
+        mesh.SetVertices(meshInfo.vertices);
+        mesh.SetIndices(meshInfo.indeces, MeshTopology.Triangles, 0);
+        mesh.RecalculateNormals();
+
+        meshFilter.mesh = mesh;
+
         // this can give me the gridpoint in the map based on its index (which goes from 0 to ((width*height) - 1))
         //GridPoint p = (GridPoint)map[(int)Mathf.Ceil(index/width), index%width];
     }
 
     private void OnDrawGizmos()
     {
+        // Draw GridPoints
         if(map != null)
         {
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    Gizmos.color = (map[x,y].value == 1)?Color.black:Color.white;
+                    float v = map[x,y].value;
+                    //Gizmos.color = new Color(v,v,v);
+                    Gizmos.color = v > isoValue ? Color.black : Color.white;
                     Gizmos.DrawCube(map[x, y].pos, cellSize * 0.1f * Vector3.one);
                 }
             }
         }
+
         /* 
+        // Draw Squares
         if(squares != null)
         {
             for (int x = 0; x < width - 1; x++)
@@ -129,6 +147,8 @@ public class CaveMapGenerator : MonoBehaviour
         }
         */
 
+        /* 
+        // Draw Triangles
         if(Application.isPlaying) {
             Gizmos.color = Color.red;
             int triangleCount = meshInfo.indeces.Length / 3;
@@ -147,5 +167,6 @@ public class CaveMapGenerator : MonoBehaviour
                 Gizmos.DrawLine(c,a);
             }
         }
+        */
     }
 }
