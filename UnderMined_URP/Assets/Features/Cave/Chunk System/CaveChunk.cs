@@ -17,6 +17,8 @@ namespace Features.Cave.Chunk_System
         
         private float cellSize = 1f;
 
+        public bool canBeReplaced = true;
+
         private float DEBUG_boxSize = 1f;
 
         private void Awake()
@@ -37,7 +39,7 @@ namespace Features.Cave.Chunk_System
             gridPointDic = gridPoints;
 
             // generate mesh
-            /*
+            
             MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(valueField, gridPointDic, ChunkManager.IsoValue);
             MeshInfo meshInfo = meshInfos[0];
             Mesh mesh = new Mesh();
@@ -47,11 +49,15 @@ namespace Features.Cave.Chunk_System
             mesh.RecalculateNormals();
 
             _meshFilter.mesh = mesh;
-            */
+            
         }
 
+        public bool DEBUG_drawValueField = true;
         private void OnDrawGizmos()
         {
+            if (DEBUG_drawValueField == false) 
+                return;
+            
             if (chunkValueField != null)
             {
                 for (int x = 0; x < chunkValueField.GetLength(0); x++)

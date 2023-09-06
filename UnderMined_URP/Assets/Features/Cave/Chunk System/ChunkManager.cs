@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Features.Cave.Chunk_System
@@ -31,7 +32,7 @@ namespace Features.Cave.Chunk_System
         public float noiseScale = 0.2f;
 
 
-        public Vector2Int currentCenterChunkIndex;
+        [FormerlySerializedAs("currentCenterChunkIndex")] public Vector2Int oldCenterChunkIndex;
 
         public GameObject target;
 
@@ -53,13 +54,30 @@ namespace Features.Cave.Chunk_System
 
         private void Start()
         {
-            currentCenterChunkIndex = GetTargetChunkGridPosition();
+            oldCenterChunkIndex = GetTargetChunkGridPosition();
+            UpdateChunks(oldCenterChunkIndex);
         }
 
         private void Update()
         {
             Vector2Int targetGridPos = GetTargetChunkGridPosition();
 
+            if (oldCenterChunkIndex != targetGridPos)
+                UpdateChunks(targetGridPos);
+
+
+        }
+
+        private void UpdateChunks(Vector2Int targetGridPos)
+        {
+            // set chunks free that are too far away
+            for (int i = 0; i < chunkPool.Length; i++)
+                if (CheckChunkReplaceable(WorldToGridPosition(chunkPool[i].transform.position), targetGridPos))
+                    chunkPool[i].canBeReplaced = true;
+            
+            // put far away chunks to near position
+            
+            // hard settings chunks for now
             SetChunkValues(0, targetGridPos + new Vector2Int(-1, -1));
             SetChunkValues(1, targetGridPos + new Vector2Int(0, -1));
             SetChunkValues(2, targetGridPos + new Vector2Int(1, -1));
@@ -69,6 +87,18 @@ namespace Features.Cave.Chunk_System
             SetChunkValues(6, targetGridPos + new Vector2Int(-1, 1));
             SetChunkValues(7, targetGridPos + new Vector2Int(0, 1));
             SetChunkValues(8, targetGridPos + new Vector2Int(1, 1));
+            
+            oldCenterChunkIndex = GetTargetChunkGridPosition();
+        }
+
+        private bool CheckChunkReplaceable(Vector2Int pos1, Vector2Int pos2)
+        {
+            if (Mathf.Abs(pos1.x - pos2.x) > 1)
+                return true;
+            if (Mathf.Abs(pos1.y - pos2.y) > 1)
+                return true;
+
+            return false;
         }
 
         private void SetChunkValues(int chunkIndex, Vector2Int gridPos)
@@ -76,6 +106,7 @@ namespace Features.Cave.Chunk_System
             chunkPool[chunkIndex].transform.position = GridToWorldPosition(gridPos);
             ChunkInfo ci = GetChunkInfoAtGridPos(gridPos);
             chunkPool[chunkIndex].SetChunkValueField(ci.valueField, ci.gridPoints);
+            chunkPool[chunkIndex].canBeReplaced = false;
         }
 
         private ChunkInfo GetChunkInfoAtGridPos(Vector2Int gridPos)
@@ -138,8 +169,6 @@ namespace Features.Cave.Chunk_System
                     gridPointDic.Add(p.pos, index++);
                 }
 
-            //Debug.Log(gridPointDic.Values.Count);
-            
             return new ChunkInfo(newField, gridPointDic);
         }
 
