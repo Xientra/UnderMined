@@ -528,6 +528,7 @@ MonoBehaviour:
   die:
     m_PersistentCalls:
       m_Calls: []
+  drillVfx: {fileID: 2798591102289790706}
 --- !u!1001 &3550077205746780445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -596,6 +597,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 243cbc7f01e756448ba9e17ebe67fd27, type: 3}
+--- !u!2083052967 &2798591102289790706 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 1698701138673717231, guid: 243cbc7f01e756448ba9e17ebe67fd27,
+    type: 3}
+  m_PrefabInstance: {fileID: 3550077205746780445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4800207348262733483 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8347891736958472118, guid: 243cbc7f01e756448ba9e17ebe67fd27,

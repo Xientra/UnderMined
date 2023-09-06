@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         mainMenu.SetActive(false);
         inGameMenu.SetActive(true);
         
-        drill.isRunning = true;
+        drill.StartMoving();
         gameIsRunning = true;
         enemySpawner.isSpawning = true;
         joinManager.EnableMining(true);
@@ -54,7 +54,6 @@ public class GameManager : MonoBehaviour
         inGameMenu.SetActive(false);
         endScreen.SetActive(true);
         
-        drill.isRunning = false;
         gameIsRunning = false;
         enemySpawner.isSpawning = false;
         joinManager.EnableMining(false);
