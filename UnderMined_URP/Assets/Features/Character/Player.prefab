@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 4358758461106604450}
   - component: {fileID: 3770396406742561035}
   - component: {fileID: 8239010441144778236}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: InteractionTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -676,7 +676,9 @@ MonoBehaviour:
   currentInteractable: {fileID: 0}
   isSteeringDrill: 0
   health: 1
+  isFallen: 0
   damage: 1
   attackCube: {fileID: 6258074923782504398}
   attackCooldown: 1
   attackAvailable: 1
+  revivePrefab: {fileID: 0}

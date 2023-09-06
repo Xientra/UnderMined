@@ -33,10 +33,13 @@ public class CharacterInputController : MonoBehaviour
 
     [Header("Combat Variables")]
     [SerializeField] private int health = 1;
+    [SerializeField] public bool isFallen = false;
     [SerializeField] public int damage = 1;
     [SerializeField] private GameObject attackCube;
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] private bool attackAvailable = true;
+
+    [SerializeField] private GameObject revivePrefab;
 
     private void Awake()
     {
@@ -52,16 +55,19 @@ public class CharacterInputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isSteeringDrill)
+        if(!isFallen)
         {
-            _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
+            if (!isSteeringDrill)
+            {
+                _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
 
-            if (moveVec != Vector3.zero)
-                transform.forward = moveVec;
-        }
-        else
-        {
-            _drillController.Steer(moveVec.x);
+                if (moveVec != Vector3.zero)
+                    transform.forward = moveVec;
+            }
+            else
+            {
+                _drillController.Steer(moveVec.x);
+            }
         }
     }
     
@@ -190,6 +196,12 @@ public class CharacterInputController : MonoBehaviour
         }
         
     #endregion
+
+    public void onDeath()
+    {
+        this.isFallen = true;
+        Instantiate(revivePrefab).GetComponent<Revive>().fallenplayer = this;
+    }
 
    
 
