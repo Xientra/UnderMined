@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 using Random = UnityEngine.Random;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IHittable
 {
     public DrillController target;
 
+    public int health = 2;
+    
     public float digSpeed = 4f;
     public float moveSpeed = 2f;
     public float turnSpeed = 0.1f;
@@ -23,16 +26,22 @@ public class Enemy : MonoBehaviour
     public float attackCooldown = 1f;
     private float _timeTillAttack = 1f;
 
-    [Header("Effects:")] public GameObject emergeVFX;
-    public GameObject spawnVFX;
+    public float coalSteal = 0.5f;
+
+    [Space(5)]
+    
+    public GameObject graphic;
+    public VisualEffect diggingVfx;
+    
+    [Header("Effects:")]
+    
+    public GameObject emergeVFX;
 
     private Vector3 _turnVelocity;
 
     private void Start()
     {
         SetRandomDirection();
-
-        //Instantiate(spawnVFX, transform.position, Quaternion.identity);
     }
 
     private void Update()
@@ -83,18 +92,21 @@ public class Enemy : MonoBehaviour
     private void OnCollisionExit(Collision other)
     {
         if (digging)
-            Emerge();
+            Emerge(Vector3.up);
     }
 
-    private void Emerge()
+    private void Emerge(Vector3 normal)
     {
         digging = false;
-        //Instantiate(emergeVFX, transform.position, Quaternion.identity);
+        diggingVfx.Stop();
+        Instantiate(emergeVFX, transform.position, Quaternion.identity).transform.up = normal;
+        graphic.SetActive(true);
     }
 
     private void AttackTarget()
     {
         Debug.Log("NYEH!! (attack drill)");
+        target.StealCoal(coalSteal);
     }
 
     private void OnDrawGizmos()
@@ -105,5 +117,18 @@ public class Enemy : MonoBehaviour
         Vector3 pos = target != null ? target.transform.position : transform.position;
 
         Gizmos.DrawWireSphere(pos, aimAccuracy);
+    }
+
+    public void GetHit(int amount)
+    {
+        health -= amount;
+        if (health < 0)
+            Die();
+    }
+
+    private void Die()
+    {
+        // TODO: die vfx + die animation
+        Destroy(this.gameObject);
     }
 }
