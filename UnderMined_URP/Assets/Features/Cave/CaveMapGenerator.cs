@@ -93,7 +93,9 @@ public class CaveMapGenerator : MonoBehaviour
             }
         }
 
-        meshInfo = meshGenerator.GenerateMeshFromMap(map, gridPointDic, isoValue);
+        MeshInfo[] meshInfos = meshGenerator.GenerateMeshFromMap(map, gridPointDic, isoValue);
+
+        MeshInfo meshInfo = meshInfos[0];
 
         Mesh mesh = new Mesh();
 

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class MeshGenerator
 {
-    public MeshInfo GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue) {
+    public MeshInfo[] GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue) {
         int width = map.GetLength(0) - 1;
         int height = map.GetLength(1) - 1;
         // create squares in map
         GridSquare[,] squares = GenerateGridSquares(map, width, height);
+
+        List<int> outlines = new List<int>();
 
         // growing list of triangle indeces
         List<int> indeces = new List<int>();
@@ -18,7 +20,7 @@ public class MeshGenerator
         {
             for (int y = 0; y < height; y++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces);
+                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines);
             }
         }
 
@@ -29,9 +31,58 @@ public class MeshGenerator
             vertices[gridPointDic[key]] = key;
         }
 
+
+
         int[] indecesArr = indeces.ToArray();
 
-        return new MeshInfo(indecesArr, vertices);
+        MeshInfo[] result = new MeshInfo[2];
+
+        result[0] = new MeshInfo(indecesArr, vertices);
+        result[1] = TriangulateWall(5f, outlines,vertices);
+
+        return result;
+    }
+
+    private MeshInfo TriangulateWall(float wallheight, List<int> outlineIndeces, Vector3[] vertices) {
+        MeshInfo meshInfo = new MeshInfo();
+        int wallSegmentCount = outlineIndeces.Count;
+
+        Vector3[] wallVerts = new Vector3[wallSegmentCount * 4];
+        List<int> wallIndeces = new List<int>();
+
+        for(int i = 0; i < wallSegmentCount; i++) {
+            int startIndex = i * 4;
+
+            Vector3 aPos = vertices[outlineIndeces[startIndex]];
+            Vector3 dPos = vertices[outlineIndeces[startIndex+1]];
+
+            Vector3 bPos = aPos + Vector3.down * wallheight;
+            Vector3 cPos = dPos + Vector3.down * wallheight;
+
+            int aI = startIndex;
+            int bI = startIndex + 1;
+            int cI = startIndex + 2;
+            int dI = startIndex + 4;
+
+            wallVerts[aI] = aPos;
+            wallVerts[bI] = bPos;
+            wallVerts[cI] = cPos;
+            wallVerts[dI] = dPos;
+
+            wallIndeces.Add(aI);
+            wallIndeces.Add(cI);
+            wallIndeces.Add(bI);
+            
+            wallIndeces.Add(aI);
+            wallIndeces.Add(dI);
+            wallIndeces.Add(cI);
+        }
+
+        meshInfo.vertices = wallVerts;
+        //jank
+        meshInfo.indeces = wallIndeces.ToArray();
+
+        return meshInfo;
     }
 
     private GridSquare[,] GenerateGridSquares(GridPoint[,] map, int width, int height) {
@@ -50,7 +101,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces) {
+    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines) {
         
         /// <summary>
         /// linear interpolation to find position at which isoContour to the isoValue is
@@ -135,6 +186,9 @@ public class MeshGenerator
             indeces.Add(bI);
             indeces.Add(rI);
             indeces.Add(bRI);
+
+            outlines.Add(rI);
+            outlines.Add(bI);
             break;
             case 2:
             r = CrossPos(bR,tR,isoValue);
@@ -143,6 +197,9 @@ public class MeshGenerator
             indeces.Add(rI);
             indeces.Add(tI);
             indeces.Add(tRI);
+
+            outlines.Add(tI);
+            outlines.Add(rI);
             break;
             case 3:
             b = CrossPos(bL,bR,isoValue);
@@ -155,6 +212,9 @@ public class MeshGenerator
             indeces.Add(bI);
             indeces.Add(tI);
             indeces.Add(tRI);
+
+            outlines.Add(tI);
+            outlines.Add(bI);
             break;
             case 4:
             t = CrossPos(tR,tL,isoValue);
@@ -163,6 +223,9 @@ public class MeshGenerator
             indeces.Add(lI);
             indeces.Add(tLI);
             indeces.Add(tI);
+
+            outlines.Add(tI);
+            outlines.Add(lI);
             break;
             case 5:
             l = CrossPos(bL,tL,isoValue);
@@ -186,6 +249,13 @@ public class MeshGenerator
             indeces.Add(tI);
             indeces.Add(rI);
             indeces.Add(bRI);
+            
+            outlines.Add(bI);
+            outlines.Add(lI);
+            
+            outlines.Add(tI);
+            outlines.Add(rI);
+
             break;
             case 6:
             l = CrossPos(bL,tL,isoValue);
@@ -198,6 +268,9 @@ public class MeshGenerator
             indeces.Add(lI);
             indeces.Add(tRI);
             indeces.Add(rI);
+
+            outlines.Add(rI);
+            outlines.Add(lI);
             break;
             case 7:
             l = CrossPos(bL,tL,isoValue);
@@ -214,6 +287,9 @@ public class MeshGenerator
             indeces.Add(bI);
             indeces.Add(tRI);
             indeces.Add(bRI);
+
+            outlines.Add(bI);
+            outlines.Add(lI);
             break;
             case 8:
             l = CrossPos(tL,bL,isoValue);
@@ -222,6 +298,9 @@ public class MeshGenerator
             indeces.Add(lI);
             indeces.Add(bI);
             indeces.Add(bLI);
+
+            outlines.Add(bI);
+            outlines.Add(lI);
             break;
             case 9:
             l = CrossPos(tL,bL,isoValue);
@@ -234,6 +313,9 @@ public class MeshGenerator
             indeces.Add(bLI);
             indeces.Add(rI);
             indeces.Add(bRI);
+
+            outlines.Add(rI);
+            outlines.Add(lI);
             break;
             case 10:
             t = CrossPos(tL,tR,isoValue);
@@ -257,6 +339,12 @@ public class MeshGenerator
             indeces.Add(tI);
             indeces.Add(tRI);
             indeces.Add(rI);
+
+            outlines.Add(lI);
+            outlines.Add(tI);
+
+            outlines.Add(rI);
+            outlines.Add(bI);
             break;
             case 11:
             t = CrossPos(tL,tR,isoValue);
@@ -273,6 +361,9 @@ public class MeshGenerator
             indeces.Add(tI);
             indeces.Add(tRI);
             indeces.Add(bRI);
+
+            outlines.Add(lI);
+            outlines.Add(bI);
             break;
             case 12:
             b = CrossPos(bR,bL,isoValue);
@@ -285,6 +376,9 @@ public class MeshGenerator
             indeces.Add(bLI);
             indeces.Add(tI);
             indeces.Add(bI);
+
+            outlines.Add(tI);
+            outlines.Add(bI);
             break;
             case 13:
             r = CrossPos(tL,bR,isoValue);
@@ -301,6 +395,9 @@ public class MeshGenerator
             indeces.Add(bLI);
             indeces.Add(rI);
             indeces.Add(bRI);
+
+            outlines.Add(tI);
+            outlines.Add(rI);
             break;
             case 14:
             b = CrossPos(bR,bL,isoValue);
@@ -317,6 +414,9 @@ public class MeshGenerator
             indeces.Add(tLI);
             indeces.Add(tRI);
             indeces.Add(rI);
+
+            outlines.Add(rI);
+            outlines.Add(bI);
             break;
             case 15:
             // all wall caes: isoContour on GridPoints
