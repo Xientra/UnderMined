@@ -8,10 +8,6 @@ public struct MeshInfo {
 
     public Vector3[] vertices;
 
-    [SerializeField]
-    [Tooltip("determines side length of one Cell")]
-    private float cellSize = 1f;
-
     public MeshInfo(int[] _indeces, Vector3[] _vertices) 
     {
         indeces = _indeces;
