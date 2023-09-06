@@ -5,18 +5,17 @@ using UnityEngine;
 public class StartGame : Interactable
 {
     [SerializeField] private DrillController drill;
-    public override bool Interact(CharacterInputController player)
+    public override void Interact(CharacterInputController player)
     {
         if(!player.pickUp)
         {
             drill.StartMoving();
-            this.gameObject.GetComponent<SteeringWheel>().enabled = true;
-            this.gameObject.GetComponent<StartGame>().enabled = false;
-            return true;
+            this.gameObject.AddComponent<SteeringWheel>();
+            this.GetComponent<SteeringWheel>().drill = drill;
+            this.gameObject.SetActive(false);
+            this.gameObject.SetActive(true);
+            Destroy(this);
         }
-        else
-        {
-            return false;
-        }
+
     }
 }

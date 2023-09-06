@@ -7,17 +7,13 @@ public class Refill : Interactable
 {
     [SerializeField] private DrillController drill;
 
-    public override bool Interact(CharacterInputController player)
+    public override void Interact(CharacterInputController player)
     {
-        if (player.pickUp.Type == PickUp.PickUpType.Coal)
+        if(player.pickUp && player.pickUp.Type == PickUp.PickUpType.Coal)
         {
             drill.AddCoal(player.pickUp.amount);
-            Destroy(player.pickUp);
-            return true;
-        }
-        else
-        {
-            return false;
+            Destroy(player.pickUp.gameObject);
+            player.currentInteractable = null;
         }
     }
 }
