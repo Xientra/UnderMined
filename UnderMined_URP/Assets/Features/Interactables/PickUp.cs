@@ -22,7 +22,7 @@ public class PickUp : Interactable
         col = GetComponent<BoxCollider>();
     }
 
-    public override bool Interact(CharacterInputController player) //pick up
+    public override void Interact(CharacterInputController player) //pick up
     {
         if (!player.pickUp) //player isnt carrying anything
         {
@@ -41,12 +41,5 @@ public class PickUp : Interactable
             Destroy(gameObject);
             player.currentInteractable = null;
         }
-        else
-        {
-            //do error sound
-            return false;
-        }
-
-        return true;
     }
 }
