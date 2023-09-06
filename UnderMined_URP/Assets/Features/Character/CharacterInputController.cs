@@ -8,10 +8,11 @@ using UnityEngine.InputSystem;
 public class CharacterInputController : MonoBehaviour
 {
     private CharacterController _characterController;
+    public DrillController _drillController;
 
     [Header("Move Variables")]
     [SerializeField] private float moveSpeed = 10.0f;
-    [SerializeField] public Vector3 moveVec = Vector3.zero;
+    [SerializeField] private Vector3 moveVec = Vector3.zero;
     [SerializeField] private bool moveAvailable = true;
     
     [Header("Dash Variables")]
@@ -57,6 +58,10 @@ public class CharacterInputController : MonoBehaviour
 
             if (moveVec != Vector3.zero)
                 transform.forward = moveVec;
+        }
+        else
+        {
+            _drillController.Steer(moveVec.x);
         }
     }
     
@@ -134,6 +139,12 @@ public class CharacterInputController : MonoBehaviour
                         pickUp = null;
                         currentInteractable = null;
                     }
+                    else if (isSteeringDrill)
+                    {
+                        isSteeringDrill = false;
+                        this.gameObject.transform.SetParent(null);
+                    }
+                    
                 }
             }
         }
