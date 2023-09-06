@@ -6,7 +6,7 @@ using UnityEngine.VFX;
 public class DrillController : MonoBehaviour
 {
     [SerializeField]
-    private bool isRunning = false;
+    public bool isRunning = false;
 
     public float timeRemaining = 30f;
 

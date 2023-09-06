@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -470,6 +470,7 @@ MonoBehaviour:
   width: 64
   height: 64
   cellSize: 1
+  isoValue: 0.5
 --- !u!4 &199912117
 Transform:
   m_ObjectHideFlags: 0
@@ -2798,7 +2799,7 @@ PrefabInstance:
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20
+      value: -8.67
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
@@ -2858,6 +2859,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4577619305305869357, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: m_MaxPlayerCount
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6473315721619898602, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_Name
@@ -2928,6 +2934,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: -0.000000020699305
       objectReference: {fileID: 0}
@@ -2940,6 +2951,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Virtual Camera Drill
+      objectReference: {fileID: 0}
+    - target: {fileID: 3672984835343866861, guid: 193e6d928d8c3a545ba6974832207bae,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.33
       objectReference: {fileID: 0}
     - target: {fileID: 7038975781556209133, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
@@ -3022,7 +3038,7 @@ PrefabInstance:
     - target: {fileID: 5412496386125770247, guid: 19645f926d6082343a5a4e1d95d3f9e7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 11.33
       objectReference: {fileID: 0}
     - target: {fileID: 5412496386125770247, guid: 19645f926d6082343a5a4e1d95d3f9e7,
         type: 3}
