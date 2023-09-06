@@ -69,7 +69,7 @@ MonoBehaviour:
   oreFrequencies:
   - 0.05
   - 0.01
-  oreAmount: 0.7
+  oreAmount: 0.5
 --- !u!1001 &1528041128362470864
 PrefabInstance:
   m_ObjectHideFlags: 0

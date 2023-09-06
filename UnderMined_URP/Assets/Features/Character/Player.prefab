@@ -675,10 +675,12 @@ MonoBehaviour:
   triggerArea: {fileID: 0}
   currentInteractable: {fileID: 0}
   isSteeringDrill: 0
+  revivePrefab: {fileID: 0}
   health: 1
   isFallen: 0
   damage: 1
   attackCube: {fileID: 6258074923782504398}
   attackCooldown: 1
   attackAvailable: 1
-  revivePrefab: {fileID: 0}
+  miningStrength: 0.5
+  miningRadius: 2

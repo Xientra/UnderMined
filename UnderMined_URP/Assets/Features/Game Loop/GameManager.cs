@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Features.Cave.Chunk_System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,10 @@ public class GameManager : MonoBehaviour
     public JoinManager joinManager;
     public DrillController drill;
     public EnemySpawner enemySpawner;
+
+    [Header("Starting Zone:")]
+    
+    public float startingZoneSize = 15f;
     
     [Header("Menu:")]
     
@@ -37,6 +42,8 @@ public class GameManager : MonoBehaviour
         drill = FindObjectOfType<DrillController>();
         enemySpawner = FindObjectOfType<EnemySpawner>();
         drill.die.AddListener(OnDrillDie);
+
+        ChunkManager.instance.MineWall(drill.transform.position, startingZoneSize, 1.0f);
     }
 
     private void Update()

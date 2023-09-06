@@ -113,7 +113,8 @@ namespace Features.Cave.Chunk_System
             for (int x = 0; x < size; x++)
             {
                 Vector3 gridPointPos = gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
-                float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
+                //float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
+                float value = 1f;
                 GridPoint p = new GridPoint(gridPointPos, value);
                 p.wallType = GetWallType(gridPointPos);
                 newField[x, y] = p;
@@ -178,8 +179,11 @@ namespace Features.Cave.Chunk_System
             instance = null;
         }
 
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
+            if (target == null)
+                return;
+            
             Gizmos.color = Color.blue;
             Gizmos.DrawSphere(GridToWorldPosition(GetTargetChunkGridPosition()), 5f);
         }
