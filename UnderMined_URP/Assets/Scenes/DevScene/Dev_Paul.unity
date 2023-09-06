@@ -527,6 +527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43531ca6f637ccf47a2452189762396a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noiseScale: 0.1
   target: {fileID: 1226990512}
   chunkPool:
   - {fileID: 1373536344}
