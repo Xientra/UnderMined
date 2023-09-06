@@ -15,26 +15,6 @@ public struct MeshInfo {
     }
 }
 
-public struct GridPoint
-    {
-        /// <summary> world space pos of grid point</summary>
-        public Vector3 pos;
-
-        /// <summary> SignedDistanceField Value of this GridPoint </summary>
-        public float value;
-
-        public GridPoint(Vector3 _pos, float _value)
-        {
-            pos = _pos;
-            value = _value;
-        }
-
-        public GridPoint(Vector3 _pos)
-        {
-            pos = _pos;
-            value = 1f;
-        }
-    }
 
 /// <summary> contains information of a full grid cell </summary>
 public struct GridSquare
