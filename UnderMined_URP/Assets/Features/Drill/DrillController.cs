@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.VFX;
 
 [SelectionBase]
 public class DrillController : MonoBehaviour
 {
-    public bool isRunning = false;
+    [SerializeField]
+    private bool isRunning = false;
 
     public float timeRemaining = 30f;
 
@@ -16,9 +18,14 @@ public class DrillController : MonoBehaviour
 
     public UnityEvent die;
 
+    [Header("Effects:")]
+    
+    public VisualEffect drillVfx;
+
     public void StartMoving()
     {
         isRunning = true;
+        drillVfx.Play();
     }
 
     private void Update()
@@ -53,6 +60,7 @@ public class DrillController : MonoBehaviour
     private void OnDie()
     {
         isRunning = false;
+        drillVfx.Stop();
         die.Invoke();
     }
 
