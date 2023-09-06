@@ -130,13 +130,36 @@ public class CharacterInputController : MonoBehaviour
         {
             if (context.started)
             {
-                if (currentInteractable)
+                if (currentInteractable)    //interact
                 {
                     currentInteractable.Interact(this);
+
+                    Type interactableType = currentInteractable.GetType();
+                    switch (currentInteractable)
+                    {
+                        case PickUp:
+                            break;
+                        
+                        case Refill:
+                            break;
+
+                        case SteeringWheel:
+                            break;
+                        
+                        case Revive:
+                            break;
+
+                        case StartGame:
+                            break;
+                        
+                        default:
+                            //todo: explode
+                            break;
+                    }
                 }
                 else 
                 {
-                    if (pickUp)
+                    if (pickUp) //drop carried stuff
                     {
                         pickUp.transform.SetParent(null);
                         pickUp.rb.useGravity = true;
@@ -144,11 +167,13 @@ public class CharacterInputController : MonoBehaviour
                         pickUp.col.enabled = true;
                         pickUp = null;
                         currentInteractable = null;
+                        //todo: default back to idle/walking anim
                     }
-                    else if (isSteeringDrill)
+                    else if (isSteeringDrill) //get out of drill
                     {
                         isSteeringDrill = false;
                         this.gameObject.transform.SetParent(null);
+                        //todo: default back to idle/walking anim
                     }
                     
                 }
