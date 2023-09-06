@@ -53,8 +53,6 @@ public class CaveMapGenerator : MonoBehaviour
     private MeshGenerator meshGenerator;
 
     private GridPoint[,] map;
-    /// <summary> stores gridPoint Positions with their index </summary>
-    private Dictionary<Vector3, int> gridPointDic;
 
     private MeshInfo meshInfo;
 
@@ -63,8 +61,6 @@ public class CaveMapGenerator : MonoBehaviour
     private void Start()
     {
         meshGenerator = new MeshGenerator();
-
-        gridPointDic = new Dictionary<Vector3, int>();
 
         meshFilter = GetComponent<MeshFilter>();
 
@@ -78,6 +74,7 @@ public class CaveMapGenerator : MonoBehaviour
     private void InitializeMap(Vector3 gridOrigin)
     {
         map = new GridPoint[width, height];
+        Dictionary<Vector3, int> gridPointDic = new Dictionary<Vector3, int>();
 
         int index = 0;
 

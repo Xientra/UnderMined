@@ -13,7 +13,20 @@ namespace Features.Cave.Chunk_System
 
         public const float CellSize = 1.0f;
 
-        private Dictionary<Vector2Int, GridPoint[,]> _caveChunkValues = new Dictionary<Vector2Int, GridPoint[,]>();
+        public const float IsoValue = 0.1f;
+
+        private class ChunkInfo
+        {
+            public readonly GridPoint[,] valueField;
+            public readonly Dictionary<Vector3, int> gridPoints;
+            public ChunkInfo(GridPoint[,] valueField, Dictionary<Vector3, int> gridPoints)
+            {
+                this.valueField = valueField;
+                this.gridPoints = gridPoints;
+            }
+        }
+
+        private Dictionary<Vector2Int, ChunkInfo> _caveChunkValues = new Dictionary<Vector2Int, ChunkInfo>();
 
         public float noiseScale = 0.2f;
 
@@ -34,7 +47,6 @@ namespace Features.Cave.Chunk_System
         public void Awake()
         {
             instance = this;
-            _caveChunkValues = new Dictionary<Vector2Int, GridPoint[,]>();
 
             randomOffsetPerRun = new Vector3(Random.Range(-100, 100), Random.Range(-100, 100), Random.Range(-100, 100));
         }
@@ -62,18 +74,19 @@ namespace Features.Cave.Chunk_System
         private void SetChunkValues(int chunkIndex, Vector2Int gridPos)
         {
             chunkPool[chunkIndex].transform.position = GridToWorldPosition(gridPos);
-            chunkPool[chunkIndex].SetChunkValueField(GetValueFieldAtGridPos(gridPos));
+            ChunkInfo ci = GetChunkInfoAtGridPos(gridPos);
+            chunkPool[chunkIndex].SetChunkValueField(ci.valueField, ci.gridPoints);
         }
 
-        private GridPoint[,] GetValueFieldAtGridPos(Vector2Int gridPos)
+        private ChunkInfo GetChunkInfoAtGridPos(Vector2Int gridPos)
         {
             if (_caveChunkValues.TryGetValue(gridPos, out var valueField))
                 return valueField;
             else
             {
-                GridPoint[,] newField = CreateValueField(GridToWorldPosition(gridPos));
-                _caveChunkValues.Add(gridPos, newField);
-                return newField;
+                ChunkInfo newChunkInfo = CreateValueField(GridToWorldPosition(gridPos));
+                _caveChunkValues.Add(gridPos, newChunkInfo);
+                return newChunkInfo;
             }
         }
 
@@ -104,23 +117,30 @@ namespace Features.Cave.Chunk_System
         /// Creates a ValueField at the given position and returns it.
         /// </summary>
         /// <param name="gridOrigin"> is world space pos at the bottom left of the grid</param>
-        private GridPoint[,] CreateValueField(Vector3 gridOrigin)
+        private ChunkInfo CreateValueField(Vector3 gridOrigin)
         {
             int size = ChunkSize;
             GridPoint[,] newField = new GridPoint[size, size];
+            
+            int index = 0;
+            Dictionary<Vector3, int> gridPointDic = new Dictionary<Vector3, int>();
 
             for (int y = 0; y < size; y++)
-            for (int x = 0; x < size; x++)
-            {
-                Vector3 gridPointPos = gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
-                //float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
-                float value = 1f;
-                GridPoint p = new GridPoint(gridPointPos, value);
-                p.wallType = GetWallType(gridPointPos);
-                newField[x, y] = p;
-            }
+                for (int x = 0; x < size; x++)
+                {
+                    Vector3 gridPointPos = gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
+                    //float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
+                    float value = 1f;
+                    GridPoint p = new GridPoint(gridPointPos, value);
+                    p.wallType = GetWallType(gridPointPos);
+                    newField[x, y] = p;
+                    
+                    gridPointDic.Add(p.pos, index++);
+                }
 
-            return newField;
+            //Debug.Log(gridPointDic.Values.Count);
+            
+            return new ChunkInfo(newField, gridPointDic);
         }
 
         private Vector2Int GetTargetChunkGridPosition()
@@ -150,7 +170,7 @@ namespace Features.Cave.Chunk_System
             
             Vector2Int chunkGridPos = WorldToGridPosition(point);
 
-            GridPoint[,] valueField = GetValueFieldAtGridPos(chunkGridPos);
+            GridPoint[,] valueField = GetChunkInfoAtGridPos(chunkGridPos).valueField;
             
             // TODO: make this cross chunks
             MiningResult mr = new MiningResult();
