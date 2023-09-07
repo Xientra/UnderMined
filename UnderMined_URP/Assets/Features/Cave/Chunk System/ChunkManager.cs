@@ -72,7 +72,7 @@ namespace Features.Cave.Chunk_System
         {
             // set chunks free that are too far away
             for (int i = 0; i < chunkPool.Length; i++)
-                if (CheckChunkReplaceable(WorldToGridPosition(chunkPool[i].transform.position), targetGridPos))
+                if (CheckChunkReplaceable(WorldToChunkCoord(chunkPool[i].transform.position), targetGridPos))
                     chunkPool[i].canBeReplaced = true;
 
             // put far away chunks to near position
@@ -104,12 +104,12 @@ namespace Features.Cave.Chunk_System
         private void SetChunkValues(int chunkIndex, Vector2Int gridPos)
         {
             chunkPool[chunkIndex].transform.position = GridToWorldPosition(gridPos);
-            ChunkInfo ci = GetChunkInfoAtGridPos(gridPos);
+            ChunkInfo ci = GetChunkInfoAtChunkCoord(gridPos);
             chunkPool[chunkIndex].SetChunkValueField(ci.valueField, ci.gridPoints);
             chunkPool[chunkIndex].canBeReplaced = false;
         }
 
-        private ChunkInfo GetChunkInfoAtGridPos(Vector2Int gridPos)
+        private ChunkInfo GetChunkInfoAtChunkCoord(Vector2Int gridPos)
         {
             if (_caveChunkValues.TryGetValue(gridPos, out var valueField))
                 return valueField;
@@ -176,14 +176,14 @@ namespace Features.Cave.Chunk_System
 
         private Vector2Int GetTargetChunkGridPosition()
         {
-            return WorldToGridPosition(target.transform.position);
+            return WorldToChunkCoord(target.transform.position);
         }
 
-        private Vector2Int WorldToGridPosition(Vector3 worldPos)
+        private Vector2Int WorldToChunkCoord(Vector3 worldPos)
         {
             return new Vector2Int(
-                Mathf.FloorToInt(worldPos.x / ChunkSize) % ChunkSize,
-                Mathf.FloorToInt(worldPos.z / ChunkSize) % ChunkSize);
+                Mathf.FloorToInt(worldPos.x / ChunkSize),
+                Mathf.FloorToInt(worldPos.z / ChunkSize));
         }
 
         private Vector3 GridToWorldPosition(Vector2Int gridPos)
@@ -208,10 +208,10 @@ namespace Features.Cave.Chunk_System
         {
             // TODO: make this cross chunks
 
-            Vector2Int chunkGridPos = WorldToGridPosition(point);
+            Vector2Int chunkGridPos = WorldToChunkCoord(point);
 
-            GridPoint[,] valueField = GetChunkInfoAtGridPos(chunkGridPos).valueField;
-
+            GridPoint[,] valueField = GetChunkInfoAtChunkCoord(chunkGridPos).valueField;
+            
             // TODO: make this cross chunks
             MiningResult mr = new MiningResult();
 
@@ -261,5 +261,12 @@ namespace Features.Cave.Chunk_System
         public float stoneAmount = 0f;
         public float coalAmount = 0f;
         public float goldAmount = 0f;
+
+        public void Add(MiningResult mr)
+        {
+            stoneAmount = mr.stoneAmount;
+            coalAmount = mr.coalAmount;
+            goldAmount = mr.goldAmount;
+        }
     }
 }

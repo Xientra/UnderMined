@@ -191,13 +191,41 @@ public class CharacterInputController : MonoBehaviour
             {
                 if(attackAvailable)
                 {
-                    ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
+                    MiningResult mr = ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
+                    SpawnPickups(mr);
                     StartCoroutine(attackHandling());
                     StartCoroutine(attackCooldownHandling(attackCooldown));
                 }
             }
         }
+
         
+        [Header("Ore Pickup Spawn:")] // TODO: put this somewhere else at some point
+        public float minOreAmount = 0.5f;
+        public PickUp goldPickup;
+        public PickUp coalPickup;
+
+        private MiningResult storedOre = new MiningResult();
+        
+        private void SpawnPickups(MiningResult mr)
+        {
+            storedOre.Add(mr);
+
+            if (storedOre.goldAmount > minOreAmount)
+            {
+                Instantiate(goldPickup.gameObject, transform.position, Quaternion.identity)
+                    .GetComponent<PickUp>().amount = mr.goldAmount;
+                storedOre.goldAmount -= minOreAmount;
+            }
+
+            if (storedOre.coalAmount > minOreAmount)
+            {
+                Instantiate(coalPickup.gameObject, transform.position, Quaternion.identity)
+                    .GetComponent<PickUp>().amount = mr.coalAmount;
+                storedOre.coalAmount -= minOreAmount;
+            }
+        }
+
         public void Throw(InputAction.CallbackContext context)
         {
             if (pickUp)

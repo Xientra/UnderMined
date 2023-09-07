@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 public class PickUp : Interactable
 {
     public enum PickUpType {Coal, Iron, Gold}
@@ -14,12 +15,12 @@ public class PickUp : Interactable
     public float amount = 1.0f;
 
     public Rigidbody rb;
-    public BoxCollider col;
+    public Collider col;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        col = GetComponent<BoxCollider>();
+        col = GetComponent<Collider>();
     }
 
     public override void Interact(CharacterInputController player) //pick up
@@ -32,7 +33,7 @@ public class PickUp : Interactable
             rb.useGravity = false;
             rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.rotation = Quaternion.Euler(Vector3.zero);
-            col.enabled = false;
+            //col.enabled = false;
             player.currentInteractable = null;
         }
         else if (player.pickUp.Type == Type && player.pickUp.amount < player.maxCarryAmount)
