@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AvatarMask_DrillRight
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Drill-chan
+    m_Weight: 0
+  - m_Path: Drill.Armature
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/CoalHatch.L
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/CoalHatch.R
+    m_Weight: 1
+  - m_Path: Drill.Armature/ROOT/MainBody/Drill
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/LowerBody
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/LowerBody/Wheel.Back
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/LowerBody/Wheel.Center
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/LowerBody/Wheel.Front
+    m_Weight: 0
+  - m_Path: Drill.Armature/ROOT/MainBody/Platform
+    m_Weight: 0
