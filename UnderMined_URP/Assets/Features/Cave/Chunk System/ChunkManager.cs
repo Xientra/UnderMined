@@ -270,3 +270,33 @@ namespace Features.Cave.Chunk_System
         }
     }
 }
+
+public struct MeshInfo {
+    public int[] indeces;
+
+    public Vector3[] vertices;
+
+    public List<Vector2> oreUVs;
+
+    public MeshInfo(int[] _indeces, Vector3[] _vertices, List<Vector2> _oreUVs) 
+    {
+        indeces = _indeces;
+        vertices = _vertices;
+        oreUVs = _oreUVs;
+    }
+}
+/// <summary> contains information of a full grid cell </summary>
+public struct GridSquare
+{
+    public GridPoint bottomLeft;
+    public GridPoint topLeft;
+    public GridPoint topRight;
+    public GridPoint bottomRight;
+
+    public GridSquare(GridPoint _bottomLeft,GridPoint _topLeft,GridPoint _topRight,GridPoint _bottomRight) {
+        bottomLeft = _bottomLeft;
+        topLeft = _topLeft;
+        topRight = _topRight;
+        bottomRight = _bottomRight;
+    }
+}
