@@ -504,6 +504,7 @@ MonoBehaviour:
   attackAvailable: 1
   miningStrength: 0.8
   miningRadius: 2
+  animator: {fileID: 7072611103913513593}
   minOreAmount: 1
   goldPickup: {fileID: 3350196191448095415, guid: f35d262f2f2fd6743ae390a411f56498,
     type: 3}
@@ -603,7 +604,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 3dfd46ef984d8f94d83d78e827e05d40, type: 2}
+      objectReference: {fileID: 9100000, guid: b197254c0c777cf4489c32d7e1f7007c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -612,6 +613,12 @@ PrefabInstance:
 --- !u!4 &3802967209358280707 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b8775d5a48f876e419337d8891d97bd4,
+    type: 3}
+  m_PrefabInstance: {fileID: 3696439321050427368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &7072611103913513593 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: b8775d5a48f876e419337d8891d97bd4,
     type: 3}
   m_PrefabInstance: {fileID: 3696439321050427368}
   m_PrefabAsset: {fileID: 0}
