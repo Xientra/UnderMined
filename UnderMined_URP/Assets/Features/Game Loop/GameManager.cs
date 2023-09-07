@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         enemySpawner = FindObjectOfType<EnemySpawner>();
         drill.die.AddListener(OnDrillDie);
 
-        ChunkManager.instance.MineWall(drill.transform.position, startingZoneSize, 1.0f);
+        ChunkManager.instance.MineWall(drill.transform.position, startingZoneSize, 0.75f);
     }
 
     private void Update()
