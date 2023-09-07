@@ -14,8 +14,6 @@ namespace Features.Cave.Chunk_System
 
         private MeshGenerator _meshGenerator;
         private MeshFilter _meshFilter;
-        
-        private float cellSize = 1f;
 
         public bool canBeReplaced = true;
 
@@ -26,7 +24,6 @@ namespace Features.Cave.Chunk_System
         private MeshFilter _wallFilter;
 
         private MeshCollider _wallCollider;
-
 
         private void Awake()
         {
@@ -64,6 +61,7 @@ namespace Features.Cave.Chunk_System
 
             top.SetVertices(topInfo.vertices);
             top.SetIndices(topInfo.indeces, MeshTopology.Triangles, 0);
+            top.SetUVs(1,topInfo.oreUVs);
             top.RecalculateNormals();
 
             _meshFilter.mesh = top;
@@ -76,6 +74,7 @@ namespace Features.Cave.Chunk_System
             wall.SetVertices(wallInfo.vertices);
             wall.SetIndices(wallInfo.indeces, MeshTopology.Triangles, 0);
             wall.RecalculateNormals();
+
 
             _wallFilter.mesh = wall;
             _wallCollider.sharedMesh = wall;
@@ -104,7 +103,7 @@ namespace Features.Cave.Chunk_System
                         }
 
                         if (chunkValueField[x, y].value > ChunkManager.IsoValue)
-                            Gizmos.DrawCube(chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * cellSize * Vector3.one);
+                            Gizmos.DrawCube(chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
                     }
                 }
             }

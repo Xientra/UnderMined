@@ -15,12 +15,14 @@ public class MeshGenerator
         // growing list of triangle indeces
         List<int> indeces = new List<int>();
 
+        List<Vector2> oreUVs = new List<Vector2>();
+
         // march through squares
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines);
+                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines, oreUVs);
             }
         }
 
@@ -31,13 +33,11 @@ public class MeshGenerator
             vertices[gridPointDic[key]] = key;
         }
 
-
-
         int[] indecesArr = indeces.ToArray();
 
         MeshInfo[] result = new MeshInfo[2];
 
-        result[0] = new MeshInfo(indecesArr, vertices);
+        result[0] = new MeshInfo(indecesArr, vertices, oreUVs);
         result[1] = TriangulateWall(wallHeight, outlines,vertices);
 
         return result;
@@ -104,7 +104,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines) {
+    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines, List<Vector2> oreUVs) {
         
         /// <summary>
         /// linear interpolation to find position at which isoContour to the isoValue is
@@ -125,6 +125,12 @@ public class MeshGenerator
         GridPoint tL = square.topLeft;
         GridPoint tR = square.topRight;
         GridPoint bR = square.bottomRight;
+
+        // add oreUVs
+        oreUVs.Add((int)bL.wallType * Vector2Int.right);
+        oreUVs.Add((int)tL.wallType * Vector2Int.right);
+        oreUVs.Add((int)tR.wallType * Vector2Int.right);
+        oreUVs.Add((int)bR.wallType * Vector2Int.right);
 
         // indeces of the grid points
         int bLI = GridPointDic[bL.pos];
