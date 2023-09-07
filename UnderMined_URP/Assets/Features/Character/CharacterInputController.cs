@@ -137,7 +137,6 @@ public class CharacterInputController : MonoBehaviour
             {
                 if (currentInteractable)    //interact
                 {
-                    currentInteractable.Interact(this);
 
                     Type interactableType = currentInteractable.GetType();
                     switch (currentInteractable)
@@ -161,6 +160,7 @@ public class CharacterInputController : MonoBehaviour
                             //todo: explode
                             break;
                     }
+                    currentInteractable.Interact(this);
                 }
                 else 
                 {
