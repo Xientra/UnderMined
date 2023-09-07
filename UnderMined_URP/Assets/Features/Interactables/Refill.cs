@@ -14,13 +14,18 @@ public class Refill : Interactable
             if(player.pickUp.Type == PickUp.PickUpType.Coal)
             {
                 drill.AddCoal(player.pickUp.amount);
-                Destroy(player.pickUp.gameObject);
-                player.currentInteractable = null;
+                
             }
             else if (player.pickUp.Type == PickUp.PickUpType.Gold)
             {
-                
+                GameManager.instance.gold += player.pickUp.amount;
             }
+            else if (player.pickUp.Type == PickUp.PickUpType.Iron)
+            {
+                //idk
+            }
+            Destroy(player.pickUp.gameObject);
+            player.currentInteractable = null;
         }
     }
 }
