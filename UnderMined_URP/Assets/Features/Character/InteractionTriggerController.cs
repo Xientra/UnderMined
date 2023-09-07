@@ -15,6 +15,7 @@ public class InteractionTriggerController : MonoBehaviour
         Interactable interactable = other.gameObject.GetComponent<Interactable>();
         if (interactable)
         {
+            //other.gameObject.GetComponent<MeshRenderer>().materials.ad
             player.currentInteractable = interactable;
         }
     }
