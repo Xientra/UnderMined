@@ -6,7 +6,7 @@ using UnityEngine;
 public class SteeringWheel : Interactable
 {
     [SerializeField] public DrillController drill;
-    [SerializeField] private Vector3 playerOffset = new Vector3(0, .81f, 1.0f);
+    [SerializeField] private Vector3 playerOffset = new Vector3(0, .81f, 0);
 
     public override void Interact(CharacterInputController player)
     {
