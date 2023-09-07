@@ -9,11 +9,18 @@ public class Refill : Interactable
 
     public override void Interact(CharacterInputController player)
     {
-        if(player.pickUp && player.pickUp.Type == PickUp.PickUpType.Coal)
+        if(player.pickUp)
         {
-            drill.AddCoal(player.pickUp.amount);
-            Destroy(player.pickUp.gameObject);
-            player.currentInteractable = null;
+            if(player.pickUp.Type == PickUp.PickUpType.Coal)
+            {
+                drill.AddCoal(player.pickUp.amount);
+                Destroy(player.pickUp.gameObject);
+                player.currentInteractable = null;
+            }
+            else if (player.pickUp.Type == PickUp.PickUpType.Gold)
+            {
+                
+            }
         }
     }
 }
