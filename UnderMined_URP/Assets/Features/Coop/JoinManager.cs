@@ -9,7 +9,7 @@ public class JoinManager : MonoBehaviour
     public PlayerInput[] players = new PlayerInput[4];
     private int _playerCount = 0;
 
-    public float spawnRadius = 6f;
+    public float spawnRadius = 2f;
 
     public CinemachineTargetGroup targetGroup;
     
@@ -23,21 +23,22 @@ public class JoinManager : MonoBehaviour
 
     private Vector3 GetPlayerSpawnPosition()
     {
-        Vector2 rndCircleEdge = Random.insideUnitCircle;
-        return GameManager.instance.drill.transform.position + new Vector3(rndCircleEdge.x, 0, rndCircleEdge.y) * spawnRadius;
+        Vector2 rndCircleEdge = Random.insideUnitCircle.normalized;
+        Vector3 newPos = GameManager.instance.drill.transform.position + new Vector3(rndCircleEdge.x, 1, rndCircleEdge.y) * spawnRadius;
+        return newPos;
     }
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         players[_playerCount++] = playerInput;
 
-        targetGroup.AddMember(playerInput.transform, 1, 1);
         StartCoroutine(SetPlayerPosAfter1Frame(playerInput.gameObject));
+        targetGroup.AddMember(playerInput.transform, 1, 1);
     }
 
     private IEnumerator SetPlayerPosAfter1Frame(GameObject go)
     {
-        yield return null;
+        yield return new WaitForSeconds(1f);
         go.transform.position = GetPlayerSpawnPosition();
     }
 
