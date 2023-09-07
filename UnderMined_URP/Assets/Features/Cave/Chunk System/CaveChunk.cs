@@ -39,7 +39,7 @@ namespace Features.Cave.Chunk_System
 
         private void Start()
         {
-            chunkValueField = new GridPoint[64, 64];
+            chunkValueField = new GridPoint[ChunkManager.ChunkSize, ChunkManager.ChunkSize];
         }
 
         public void SetChunkValueField(GridPoint[,] valueField, Dictionary<Vector3, int> gridPoints)
@@ -55,7 +55,7 @@ namespace Features.Cave.Chunk_System
         {
             // generate mesh for top and walls
             
-            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue);
+            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue, ChunkManager.WallHeight);
             
             // assign top
             MeshInfo topInfo = meshInfos[0];
