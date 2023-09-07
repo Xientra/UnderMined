@@ -30,6 +30,7 @@ public class PickUp : Interactable
             player.pickUp = this;
             transform.position = player.transform.position + player.transform.forward * 2;
             transform.SetParent(player.transform);
+            transform.position += new Vector3(0, 0.8f, 0);
             rb.useGravity = false;
             rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.rotation = Quaternion.Euler(Vector3.zero);
