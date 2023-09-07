@@ -1026,6 +1026,7 @@ MonoBehaviour:
   joinManager: {fileID: 0}
   drill: {fileID: 0}
   enemySpawner: {fileID: 0}
+  startingZoneSize: 15
   mainMenu: {fileID: 7505054108448339283}
   inGameMenu: {fileID: 4566039659948849404}
   timerLabel: {fileID: 6985529969084917491}
@@ -1808,7 +1809,7 @@ PrefabInstance:
     - target: {fileID: 6995539954415119974, guid: 943e48ffffd31944ea9d8412f36b20c2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6995539954415119974, guid: 943e48ffffd31944ea9d8412f36b20c2,
         type: 3}

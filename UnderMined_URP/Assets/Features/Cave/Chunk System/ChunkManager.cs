@@ -103,7 +103,7 @@ namespace Features.Cave.Chunk_System
 
         private void SetChunkValues(int chunkIndex, Vector2Int gridPos)
         {
-            chunkPool[chunkIndex].transform.position = GridToWorldPosition(gridPos);
+            chunkPool[chunkIndex].transform.localPosition = GridToWorldPosition(gridPos);
             ChunkInfo ci = GetChunkInfoAtChunkCoord(gridPos);
             chunkPool[chunkIndex].SetChunkValueField(ci.valueField, ci.gridPoints);
             chunkPool[chunkIndex].canBeReplaced = false;
