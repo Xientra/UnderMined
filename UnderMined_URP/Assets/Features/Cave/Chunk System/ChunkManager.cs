@@ -254,5 +254,12 @@ namespace Features.Cave.Chunk_System
         public float stoneAmount = 0f;
         public float coalAmount = 0f;
         public float goldAmount = 0f;
+
+        public void Add(MiningResult mr)
+        {
+            stoneAmount = mr.stoneAmount;
+            coalAmount = mr.coalAmount;
+            goldAmount = mr.goldAmount;
+        }
     }
 }

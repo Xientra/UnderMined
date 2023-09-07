@@ -23,7 +23,7 @@ public class DrillController : MonoBehaviour
 
     [Header("Mining:")]
     
-    public float miningSize = 2f;
+    public Vector2 miningSizeMinMax = new Vector2(4f, 4.5f);
     public float miningStrength = 0.8f;
     public GameObject miningPoint;
     
@@ -67,7 +67,7 @@ public class DrillController : MonoBehaviour
     {
         if (Time.time > _mineTimestamp)
         {
-            ChunkManager.instance.MineWall(miningPoint.transform.position, miningSize, miningStrength);
+            ChunkManager.instance.MineWall(miningPoint.transform.position, Random.Range(miningSizeMinMax.x, miningSizeMinMax.y), miningStrength);
             _mineTimestamp = Time.time + mineDelay;
         }
     }

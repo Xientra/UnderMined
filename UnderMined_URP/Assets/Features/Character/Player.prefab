@@ -682,5 +682,10 @@ MonoBehaviour:
   attackCube: {fileID: 6258074923782504398}
   attackCooldown: 1
   attackAvailable: 1
-  miningStrength: 0.5
+  miningStrength: 0.8
   miningRadius: 2
+  minOreAmount: 1
+  goldPickup: {fileID: 3350196191448095415, guid: f35d262f2f2fd6743ae390a411f56498,
+    type: 3}
+  coalPickup: {fileID: 5301539416658108682, guid: c7129cfc58fb8af499012195786b4fd3,
+    type: 3}
