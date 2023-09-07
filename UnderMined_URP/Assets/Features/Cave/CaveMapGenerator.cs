@@ -83,7 +83,7 @@ public class CaveMapGenerator : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Vector3 gridPointPos = gridOrigin + x * cellSize * Vector3.right + y * cellSize * Vector3.forward;
-                GridPoint p = new GridPoint(gridPointPos);
+                GridPoint p = new GridPoint(gridPointPos, Mathf.PerlinNoise(gridPointPos.x/64*4,gridPointPos.z/64*4));
                 map[x, y] = p;
 
                 gridPointDic.Add(p.pos, index++);
