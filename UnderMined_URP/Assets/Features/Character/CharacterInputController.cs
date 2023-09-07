@@ -49,6 +49,10 @@ public class CharacterInputController : MonoBehaviour
     [Header("Animation")]
     
     public Animator animator;
+
+    [Header("VFX:")]
+    
+    public GameObject throwVfxPrefab;
     
     private void Awake()
     {
@@ -257,6 +261,8 @@ public class CharacterInputController : MonoBehaviour
                 pickUp.rb.AddForce((moveVec + (transform.forward + Vector3.up / 2)) * throwPower);
                 pickUp = null;
                 currentInteractable = null;
+
+                Instantiate(throwVfxPrefab, pickUp.transform.position, pickUp.transform.rotation, pickUp.transform);
             }
         }
 
