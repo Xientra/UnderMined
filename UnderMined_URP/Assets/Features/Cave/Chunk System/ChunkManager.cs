@@ -18,6 +18,8 @@ namespace Features.Cave.Chunk_System
 
         public const float WallHeight = 3f;
 
+        public AnimationCurve miningFalloff = AnimationCurve.EaseInOut(0, 1, 0, 0);
+
         private class ChunkInfo
         {
             public readonly GridPoint[,] valueField;
@@ -221,9 +223,10 @@ namespace Features.Cave.Chunk_System
                 for (int x = 0; x < ChunkSize + 1; x++)
                 {
                     Vector3 globalGridPos = valueField[x, y].pos + new Vector3(ChunkSize * chunkGridPos.x, 0, ChunkSize * chunkGridPos.y);
-                    if ((globalGridPos - point).sqrMagnitude < radius * radius)
+                    float distance = (globalGridPos - point).magnitude;
+                    if (distance < radius)
                     {
-                        float removeAmount = Mathf.Min(valueField[x, y].value, strength);
+                        float removeAmount = Mathf.Min(valueField[x, y].value, strength * miningFalloff.Evaluate(distance / radius));
                         valueField[x, y].value -= removeAmount;
                         if (valueField[x, y].wallType == GridPoint.WallType.Stone)
                             mr.stoneAmount += removeAmount;
