@@ -28,12 +28,17 @@ public class Enemy : MonoBehaviour, IHittable
 
     public float coalSteal = 0.5f;
 
+    public bool dead = false;
+    
     [Space(5)]
     
     public GameObject graphic;
     public VisualEffect diggingVfx;
-    
+
     [Header("Effects:")]
+    public Animator animator;
+    
+    [Space(5)]
     
     public GameObject emergeVFX;
 
@@ -46,6 +51,9 @@ public class Enemy : MonoBehaviour, IHittable
 
     private void Update()
     {
+        if (dead)
+            return;
+        
         Vector3 toTarget = target.transform.position - transform.position;
         if (toTarget.sqrMagnitude < attackRange * attackRange)
         {
@@ -55,11 +63,14 @@ public class Enemy : MonoBehaviour, IHittable
                 AttackTarget();
                 _timeTillAttack = attackCooldown;
             }
+            animator.SetBool("Movement/isWalking", false);
         }
         else
         {
             _timeTillAttack = attackCooldown;
             Move();
+            if (digging == false)
+                animator.SetBool("Movement/isWalking", true);
         }
         
         if (toTarget.sqrMagnitude > killDistance * killDistance)
@@ -75,6 +86,8 @@ public class Enemy : MonoBehaviour, IHittable
             // turn towards target
             Vector3 toTarget = target.transform.position - transform.position;
             transform.forward = Vector3.SmoothDamp(transform.forward, toTarget, ref _turnVelocity, turnSpeed);
+            
+            animator.SetFloat("Movement/walkSpeed", speed * Time.deltaTime);
         }
 
         transform.position += transform.forward * (speed * Time.deltaTime);
@@ -105,7 +118,7 @@ public class Enemy : MonoBehaviour, IHittable
 
     private void AttackTarget()
     {
-        Debug.Log("NYEH!! (attack drill)");
+        animator.SetTrigger("Action/Attack");
         target.StealCoal(coalSteal);
     }
 
@@ -129,6 +142,9 @@ public class Enemy : MonoBehaviour, IHittable
     private void Die()
     {
         // TODO: die vfx + die animation
-        Destroy(this.gameObject);
+        dead = true;
+        animator.SetTrigger("Action/Die");
+        
+        Destroy(this.gameObject, 2f);
     }
 }
