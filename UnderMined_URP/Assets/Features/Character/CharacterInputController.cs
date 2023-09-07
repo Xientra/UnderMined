@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,6 +31,8 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] private BoxCollider triggerArea;
     [SerializeField] public Interactable currentInteractable;
     [SerializeField] public bool isSteeringDrill = false;
+	[Space(5)]
+	[SerializeField] private GameObject revivePrefab;
 
     [Header("Combat Variables")]
     [SerializeField] private int health = 1;
@@ -39,8 +42,10 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] private float attackCooldown = 1.0f;
     [SerializeField] private bool attackAvailable = true;
 
-    [SerializeField] private GameObject revivePrefab;
-
+    [Header("Mining Variables")]
+    [SerializeField] private float miningStrength = 0.5f;
+    [SerializeField] private float miningRadius = 1f;
+    
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -186,6 +191,7 @@ public class CharacterInputController : MonoBehaviour
             {
                 if(attackAvailable)
                 {
+                    ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
                     StartCoroutine(attackHandling());
                     StartCoroutine(attackCooldownHandling(attackCooldown));
                 }
@@ -227,8 +233,4 @@ public class CharacterInputController : MonoBehaviour
         this.isFallen = true;
         Instantiate(revivePrefab).GetComponent<Revive>().fallenplayer = this;
     }
-
-   
-
-    
 }

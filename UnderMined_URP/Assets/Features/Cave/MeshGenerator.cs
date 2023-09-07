@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class MeshGenerator
 {
-    public MeshInfo GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue) {
+    public MeshInfo[] GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue) {
         int width = map.GetLength(0) - 1;
         int height = map.GetLength(1) - 1;
         // create squares in map
         GridSquare[,] squares = GenerateGridSquares(map, width, height);
+
+        List<int> outlines = new List<int>();
 
         // growing list of triangle indeces
         List<int> indeces = new List<int>();
@@ -18,7 +20,7 @@ public class MeshGenerator
         {
             for (int y = 0; y < height; y++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces);
+                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines);
             }
         }
 
@@ -29,9 +31,61 @@ public class MeshGenerator
             vertices[gridPointDic[key]] = key;
         }
 
+
+
         int[] indecesArr = indeces.ToArray();
 
-        return new MeshInfo(indecesArr, vertices);
+        MeshInfo[] result = new MeshInfo[2];
+
+        result[0] = new MeshInfo(indecesArr, vertices);
+        result[1] = TriangulateWall(5f, outlines,vertices);
+
+        return result;
+    }
+
+    private MeshInfo TriangulateWall(float wallheight, List<int> outlineIndeces, Vector3[] vertices) {
+        MeshInfo meshInfo = new MeshInfo();
+        int wallSegmentCount = outlineIndeces.Count / 2;
+
+        Vector3[] wallVerts = new Vector3[wallSegmentCount * 4];
+        List<int> wallIndeces = new List<int>();
+
+        
+        for(int i = 0; i < wallSegmentCount; i++) {
+            int wallSegmentIndex = i * 2;
+            int startIndex = i * 4;
+
+            Vector3 aPos = vertices[outlineIndeces[wallSegmentIndex]];
+            Vector3 dPos = vertices[outlineIndeces[wallSegmentIndex+1]];
+
+            Vector3 bPos = aPos + Vector3.down * wallheight;
+            Vector3 cPos = dPos + Vector3.down * wallheight;
+
+            int aI = startIndex;
+            int bI = startIndex + 1;
+            int cI = startIndex + 2;
+            int dI = startIndex + 3;
+
+            wallVerts[aI] = aPos;
+            wallVerts[bI] = bPos;
+
+            wallVerts[cI] = cPos;
+            wallVerts[dI] = dPos;
+
+            wallIndeces.Add(aI);
+            wallIndeces.Add(cI);
+            wallIndeces.Add(bI);
+            
+            wallIndeces.Add(aI);
+            wallIndeces.Add(dI);
+            wallIndeces.Add(cI);
+        }
+
+        meshInfo.vertices = wallVerts;
+        //jank
+        meshInfo.indeces = wallIndeces.ToArray();
+
+        return meshInfo;
     }
 
     private GridSquare[,] GenerateGridSquares(GridPoint[,] map, int width, int height) {
@@ -50,7 +104,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces) {
+    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines) {
         
         /// <summary>
         /// linear interpolation to find position at which isoContour to the isoValue is
@@ -59,7 +113,15 @@ public class MeshGenerator
         /// <param name="higher"> is world space pos at the bottom left of the grid</param>
         /// <param name="isoValue"> is world space pos at the bottom left of the grid</param>
         Vector3 CrossPos(GridPoint lower, GridPoint higher, float isoValue) {
-            return (1-isoValue) * lower.pos + isoValue * higher.pos;
+            Vector3 result = Vector3.zero;
+            if(!lower.value.Equals(higher.value)) {
+                float t = (isoValue - lower.value) / (higher.value - lower.value);
+                result = (1-t) * lower.pos + t * higher.pos;
+                if(float.IsNaN(result.x)) {
+                    Debug.Log(lower.value + ", " + higher.value);
+                }
+            }
+            return result;
         }
         
         GridPoint bL = square.bottomLeft;
@@ -77,16 +139,28 @@ public class MeshGenerator
         int nextIndex = GridPointDic.Values.Count;
 
         // predefine possibly required iso contour poses
-        Vector3 b;
-        Vector3 r;
-        Vector3 t;
-        Vector3 l;
+        Vector3 b = CrossPos(bL,bR,isoValue);
+        Vector3 r = CrossPos(tR,bR,isoValue);
+        Vector3 t = CrossPos(tL,tR,isoValue);
+        Vector3 l = CrossPos(bL,tL,isoValue);
+
+        /// <summary> if the vertex position has been added already, take the index of the existing vertex otherwise choose next bigger index and add it to dictionary </summary>
+        int assignIndex(Vector3 pos) {
+            int index;
+            if(GridPointDic.TryGetValue(pos, out int value)) {
+                index = value;
+            } else {
+                index = nextIndex++;
+                GridPointDic.Add(pos, index);
+            }
+            return index;
+        }
 
         // indeces of iso contour points
-        int bI;
-        int rI;
-        int tI;
-        int lI;
+        int bI = assignIndex(b);
+        int rI = assignIndex(r);
+        int tI = assignIndex(t);
+        int lI = assignIndex(l);
 
         int caseNumber = 0;
 
@@ -97,10 +171,10 @@ public class MeshGenerator
         if(tL.value > isoValue) {
             caseNumber += 4;
         }
-        if(bL.value > isoValue) {
+        if(tR.value > isoValue) {
             caseNumber += 2;
         }
-        if(bL.value > isoValue) {
+        if(bR.value > isoValue) {
             caseNumber += 1;
         }
 
@@ -112,297 +186,252 @@ public class MeshGenerator
             b = CrossPos(bL,bR,isoValue);
             r = CrossPos(tR,bR,isoValue);
 
-            bI = nextIndex++;
-            rI = nextIndex++;
-
-            GridPointDic.Add(b,bI);
-            GridPointDic.Add(r,rI);
-
             indeces.Add(bI);
-            indeces.Add(bRI);
             indeces.Add(rI);
+            indeces.Add(bRI);
+
+            outlines.Add(rI);
+            outlines.Add(bI);
             break;
             case 2:
             r = CrossPos(bR,tR,isoValue);
             t = CrossPos(tL,tR,isoValue);
 
-            rI = nextIndex++;
-            tI = nextIndex++;
-
-            GridPointDic.Add(r,rI);
-            GridPointDic.Add(t,tI);
-
             indeces.Add(rI);
-            indeces.Add(tRI);
             indeces.Add(tI);
+            indeces.Add(tRI);
+
+            outlines.Add(tI);
+            outlines.Add(rI);
             break;
             case 3:
             b = CrossPos(bL,bR,isoValue);
             t = CrossPos(tL,tR,isoValue);
 
-            bI = nextIndex++;
-            tI = nextIndex++;
-
-            GridPointDic.Add(b,bI);
-            GridPointDic.Add(t,tI);
-
             indeces.Add(bI);
+            indeces.Add(tRI);
             indeces.Add(bRI);
-            indeces.Add(tRI);
 
             indeces.Add(bI);
-            indeces.Add(tRI);
             indeces.Add(tI);
+            indeces.Add(tRI);
+
+            outlines.Add(tI);
+            outlines.Add(bI);
             break;
             case 4:
             t = CrossPos(tR,tL,isoValue);
             l = CrossPos(bL,tL,isoValue);
 
-            tI = nextIndex++;
-            lI = nextIndex++;
-
-            GridPointDic.Add(t,tI);
-            GridPointDic.Add(l,lI);
-
             indeces.Add(lI);
-            indeces.Add(tI);
             indeces.Add(tLI);
+            indeces.Add(tI);
+
+            outlines.Add(tI);
+            outlines.Add(lI);
             break;
             case 5:
             l = CrossPos(bL,tL,isoValue);
             b = CrossPos(bL,bR,isoValue);
 
-            lI = nextIndex++;
-            bI = nextIndex++;
-
-            GridPointDic.Add(l,lI);
-            GridPointDic.Add(b,bI);
-
             r = CrossPos(tR,bR,isoValue);
             t = CrossPos(tR,tL,isoValue);
 
-            rI = nextIndex++;
-            tI = nextIndex++;
-
-            GridPointDic.Add(r,rI);
-            GridPointDic.Add(t,tI);
-
             indeces.Add(tLI);
+            indeces.Add(bI);
             indeces.Add(lI);
-            indeces.Add(bI);
 
             indeces.Add(tLI);
-            indeces.Add(bI);
-            indeces.Add(tI);
-
             indeces.Add(tI);
             indeces.Add(bI);
-            indeces.Add(bRI);
 
             indeces.Add(tI);
             indeces.Add(bRI);
+            indeces.Add(bI);
+
+            indeces.Add(tI);
             indeces.Add(rI);
+            indeces.Add(bRI);
+            
+            outlines.Add(bI);
+            outlines.Add(lI);
+            
+            outlines.Add(tI);
+            outlines.Add(rI);
+
             break;
             case 6:
             l = CrossPos(bL,tL,isoValue);
             r = CrossPos(bR,tR,isoValue);
 
-            lI = nextIndex++;
-            rI = nextIndex++;
-
-            GridPointDic.Add(l,lI);
-            GridPointDic.Add(r,rI);
-
             indeces.Add(lI);
-            indeces.Add(tRI);
             indeces.Add(tLI);
+            indeces.Add(tRI);
 
             indeces.Add(lI);
-            indeces.Add(rI);
             indeces.Add(tRI);
+            indeces.Add(rI);
+
+            outlines.Add(rI);
+            outlines.Add(lI);
             break;
             case 7:
             l = CrossPos(bL,tL,isoValue);
             b = CrossPos(bL,bR,isoValue);
 
-            lI = nextIndex++;
-            bI = nextIndex++;
-
-            GridPointDic.Add(l,lI);
-            GridPointDic.Add(b,bI);
-
             indeces.Add(lI);
-            indeces.Add(tRI);
             indeces.Add(tLI);
+            indeces.Add(tRI);
 
             indeces.Add(lI);
-            indeces.Add(bI);
             indeces.Add(tRI);
+            indeces.Add(bI);
 
             indeces.Add(bI);
-            indeces.Add(bRI);
             indeces.Add(tRI);
+            indeces.Add(bRI);
+
+            outlines.Add(bI);
+            outlines.Add(lI);
             break;
             case 8:
             l = CrossPos(tL,bL,isoValue);
             b = CrossPos(bR,bL,isoValue);
 
-            lI = nextIndex++;
-            bI = nextIndex++;
-
-            GridPointDic.Add(l,lI);
-            GridPointDic.Add(b,bI);
-
             indeces.Add(lI);
-            indeces.Add(bLI);
             indeces.Add(bI);
+            indeces.Add(bLI);
+
+            outlines.Add(bI);
+            outlines.Add(lI);
             break;
             case 9:
             l = CrossPos(tL,bL,isoValue);
             r = CrossPos(tR,bR,isoValue);
 
-            lI = nextIndex++;
-            rI = nextIndex++;
-
-            GridPointDic.Add(l,lI);
-            GridPointDic.Add(r,rI);
-
             indeces.Add(lI);
-            indeces.Add(bLI);
             indeces.Add(rI);
+            indeces.Add(bLI);
 
             indeces.Add(bLI);
-            indeces.Add(bRI);
             indeces.Add(rI);
+            indeces.Add(bRI);
+
+            outlines.Add(rI);
+            outlines.Add(lI);
             break;
             case 10:
             t = CrossPos(tL,tR,isoValue);
             l = CrossPos(tL,bL,isoValue);
 
-            tI = nextIndex++;
-            lI = nextIndex++;
-
-            GridPointDic.Add(t,tI);
-            GridPointDic.Add(l,lI);
-
             b = CrossPos(bR,bL,isoValue);
             r = CrossPos(bR,tR,isoValue);
 
-            bI = nextIndex++;
-            rI = nextIndex++;
-
-            GridPointDic.Add(b,bI);
-            GridPointDic.Add(r,rI);
-
             indeces.Add(lI);
+            indeces.Add(bI);
             indeces.Add(bLI);
-            indeces.Add(bI);
 
             indeces.Add(lI);
-            indeces.Add(bI);
-            indeces.Add(tI);
-
             indeces.Add(tI);
             indeces.Add(bI);
-            indeces.Add(rI);
 
             indeces.Add(tI);
             indeces.Add(rI);
+            indeces.Add(bI);
+
+            indeces.Add(tI);
             indeces.Add(tRI);
+            indeces.Add(rI);
+
+            outlines.Add(lI);
+            outlines.Add(tI);
+
+            outlines.Add(rI);
+            outlines.Add(bI);
             break;
             case 11:
             t = CrossPos(tL,tR,isoValue);
             l = CrossPos(tL,bL,isoValue);
-            
-            tI = nextIndex++;
-            lI = nextIndex++;
-
-            GridPointDic.Add(t,tI);
-            GridPointDic.Add(l,lI);
 
             indeces.Add(lI);
+            indeces.Add(bRI);
             indeces.Add(bLI);
-            indeces.Add(bRI);
 
             indeces.Add(lI);
-            indeces.Add(bRI);
             indeces.Add(tI);
+            indeces.Add(bRI);
 
             indeces.Add(tI);
-            indeces.Add(bRI);
             indeces.Add(tRI);
+            indeces.Add(bRI);
+
+            outlines.Add(lI);
+            outlines.Add(bI);
             break;
             case 12:
             b = CrossPos(bR,bL,isoValue);
             t = CrossPos(tR,tL,isoValue);
 
-            bI = nextIndex++;
-            tI = nextIndex++;
-
-            GridPointDic.Add(b,bI);
-            GridPointDic.Add(t,tI);
-
             indeces.Add(bLI);
-            indeces.Add(tI);
             indeces.Add(tLI);
+            indeces.Add(tI);
 
             indeces.Add(bLI);
-            indeces.Add(bI);
             indeces.Add(tI);
+            indeces.Add(bI);
+
+            outlines.Add(tI);
+            outlines.Add(bI);
             break;
             case 13:
             r = CrossPos(tL,bR,isoValue);
             t = CrossPos(tR,tL,isoValue);
-            
-            rI = nextIndex++;
-            tI = nextIndex++;
 
-            GridPointDic.Add(r,rI);
-            GridPointDic.Add(t,tI);
+            indeces.Add(bLI);
+            indeces.Add(tLI);
+            indeces.Add(tI);
 
             indeces.Add(bLI);
             indeces.Add(tI);
-            indeces.Add(tLI);
+            indeces.Add(rI);
 
             indeces.Add(bLI);
             indeces.Add(rI);
-            indeces.Add(tI);
-
-            indeces.Add(bLI);
             indeces.Add(bRI);
-            indeces.Add(tI);
+
+            outlines.Add(tI);
+            outlines.Add(rI);
             break;
             case 14:
             b = CrossPos(bR,bL,isoValue);
             r = CrossPos(bR,tR,isoValue);
 
-            bI = nextIndex++;
-            rI = nextIndex++;
-
-            GridPointDic.Add(b,bI);
-            GridPointDic.Add(r,rI);
-
             indeces.Add(tLI);
+            indeces.Add(bI);
             indeces.Add(bLI);
+
+            indeces.Add(tLI);
+            indeces.Add(rI);
             indeces.Add(bI);
 
             indeces.Add(tLI);
-            indeces.Add(bI);
+            indeces.Add(tRI);
             indeces.Add(rI);
 
-            indeces.Add(tLI);
-            indeces.Add(bI);
-            indeces.Add(tRI);
+            outlines.Add(rI);
+            outlines.Add(bI);
             break;
             case 15:
             // all wall caes: isoContour on GridPoints
+
+            indeces.Add(bLI);
+            indeces.Add(tLI);
+            indeces.Add(tRI);
+
             indeces.Add(bLI);
             indeces.Add(tRI);
-            indeces.Add(tLI);
-
-            indeces.Add(tLI);
             indeces.Add(bRI);
-            indeces.Add(tRI);
+
             break;
         }
     }
