@@ -13,7 +13,6 @@ namespace Features.Cave.Chunk_System
 
         private MeshGenerator _meshGenerator;
         private MeshFilter _meshFilter;
-        private MeshRenderer _meshRenderer;
         
         private float cellSize = 1f;
 
@@ -21,11 +20,18 @@ namespace Features.Cave.Chunk_System
 
         private float DEBUG_boxSize = 1f;
 
+        private MeshFilter _wallFilter;
+
+        private MeshCollider _wallCollider;
+
+
         private void Awake()
         {
             _meshGenerator = new MeshGenerator();
             _meshFilter = GetComponent<MeshFilter>();
-            _meshRenderer = GetComponent<MeshRenderer>();
+
+            _wallFilter = GetComponentInChildren<MeshFilter>();
+            _wallCollider = GetComponentInChildren<MeshCollider>();
         }
 
         private void Start()
@@ -38,18 +44,32 @@ namespace Features.Cave.Chunk_System
             chunkValueField = valueField;
             gridPointDic = gridPoints;
 
-            // generate mesh
+            // generate mesh for top and walls
             
             MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(valueField, gridPointDic, ChunkManager.IsoValue);
-            MeshInfo meshInfo = meshInfos[0];
-            Mesh mesh = new Mesh();
-
-            mesh.SetVertices(meshInfo.vertices);
-            mesh.SetIndices(meshInfo.indeces, MeshTopology.Triangles, 0);
-            mesh.RecalculateNormals();
-
-            _meshFilter.mesh = mesh;
             
+            // assign top
+            MeshInfo topInfo = meshInfos[0];
+            Mesh top = new Mesh();
+            top.name = "top";
+
+            top.SetVertices(topInfo.vertices);
+            top.SetIndices(topInfo.indeces, MeshTopology.Triangles, 0);
+            top.RecalculateNormals();
+
+            _meshFilter.mesh = top;
+
+            // assign walls
+            MeshInfo wallInfo = meshInfos[1];
+            Mesh wall = new Mesh();
+            wall.name = "wall";
+
+            wall.SetVertices(wallInfo.vertices);
+            wall.SetIndices(wallInfo.indeces, MeshTopology.Triangles, 0);
+            wall.RecalculateNormals();
+
+            _wallFilter.mesh = wall;
+            _wallCollider.sharedMesh = wall;
         }
 
         public bool DEBUG_drawValueField = true;

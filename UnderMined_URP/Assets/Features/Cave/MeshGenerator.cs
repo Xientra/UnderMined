@@ -45,16 +45,18 @@ public class MeshGenerator
 
     private MeshInfo TriangulateWall(float wallheight, List<int> outlineIndeces, Vector3[] vertices) {
         MeshInfo meshInfo = new MeshInfo();
-        int wallSegmentCount = outlineIndeces.Count;
+        int wallSegmentCount = outlineIndeces.Count / 2;
 
         Vector3[] wallVerts = new Vector3[wallSegmentCount * 4];
         List<int> wallIndeces = new List<int>();
 
+        
         for(int i = 0; i < wallSegmentCount; i++) {
+            int wallSegmentIndex = i * 2;
             int startIndex = i * 4;
 
-            Vector3 aPos = vertices[outlineIndeces[startIndex]];
-            Vector3 dPos = vertices[outlineIndeces[startIndex+1]];
+            Vector3 aPos = vertices[outlineIndeces[wallSegmentIndex]];
+            Vector3 dPos = vertices[outlineIndeces[wallSegmentIndex+1]];
 
             Vector3 bPos = aPos + Vector3.down * wallheight;
             Vector3 cPos = dPos + Vector3.down * wallheight;
@@ -62,10 +64,11 @@ public class MeshGenerator
             int aI = startIndex;
             int bI = startIndex + 1;
             int cI = startIndex + 2;
-            int dI = startIndex + 4;
+            int dI = startIndex + 3;
 
             wallVerts[aI] = aPos;
             wallVerts[bI] = bPos;
+
             wallVerts[cI] = cPos;
             wallVerts[dI] = dPos;
 
