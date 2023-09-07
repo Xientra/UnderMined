@@ -32,15 +32,11 @@ public class JoinManager : MonoBehaviour
     {
         players[_playerCount++] = playerInput;
 
-        StartCoroutine(SetPlayerPosAfter1Frame(playerInput.gameObject));
+        CharacterController cic = playerInput.GetComponent<CharacterController>();
+        
         targetGroup.AddMember(playerInput.transform, 1, 1);
     }
 
-    private IEnumerator SetPlayerPosAfter1Frame(GameObject go)
-    {
-        yield return new WaitForSeconds(1f);
-        go.transform.position = GetPlayerSpawnPosition();
-    }
 
     public void OnPlayerLeft(PlayerInput playerInput)
     {

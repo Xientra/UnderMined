@@ -87,8 +87,6 @@ public class Enemy : MonoBehaviour, IHittable
             // turn towards target
             Vector3 toTarget = target.transform.position - transform.position;
             transform.forward = Vector3.SmoothDamp(transform.forward, toTarget, ref _turnVelocity, turnSpeed);
-            
-            animator.SetFloat("Movement/walkSpeed", speed * Time.deltaTime);
         }
 
         transform.position += transform.forward * (speed * Time.deltaTime);
