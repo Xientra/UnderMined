@@ -217,9 +217,11 @@ namespace Features.Cave.Chunk_System
 
             // TODO: maybe optimize 
 
-            for (int y = 0; y < ChunkSize; y++)
-                for (int x = 0; x < ChunkSize; x++)
-                    if ((valueField[x, y].pos - point).sqrMagnitude < radius * radius)
+            for (int y = 0; y < ChunkSize + 1; y++)
+                for (int x = 0; x < ChunkSize + 1; x++)
+                {
+                    Vector3 globalGridPos = valueField[x, y].pos + new Vector3(ChunkSize * chunkGridPos.x, 0, ChunkSize * chunkGridPos.y);
+                    if ((globalGridPos - point).sqrMagnitude < radius * radius)
                     {
                         float removeAmount = Mathf.Min(valueField[x, y].value, strength);
                         valueField[x, y].value -= removeAmount;
@@ -230,6 +232,7 @@ namespace Features.Cave.Chunk_System
                         else if (valueField[x, y].wallType == GridPoint.WallType.Gold)
                             mr.goldAmount += removeAmount;
                     }
+                }
 
 
             GetChunkThatHoldsValues(valueField).UpdateMesh();
