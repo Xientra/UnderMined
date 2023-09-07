@@ -14,7 +14,9 @@ namespace Features.Cave.Chunk_System
 
         public const float CellSize = 1.0f;
 
-        public const float IsoValue = 0.1f;
+        public const float IsoValue = 0.5f;
+
+        public const float WallHeight = 3f;
 
         private class ChunkInfo
         {
@@ -148,7 +150,7 @@ namespace Features.Cave.Chunk_System
         /// <param name="gridOrigin"> is world space pos at the bottom left of the grid</param>
         private ChunkInfo CreateValueField(Vector3 gridOrigin)
         {
-            int size = ChunkSize;
+            int size = ChunkSize + 1;
             GridPoint[,] newField = new GridPoint[size, size];
 
             int index = 0;
@@ -158,8 +160,10 @@ namespace Features.Cave.Chunk_System
             for (int x = 0; x < size; x++)
             {
                 Vector3 gridPointPos = new Vector3(x * CellSize, 0, y * CellSize);
-                //float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
+                //float value = Mathf.PerlinNoise(gridPointPos.x / ChunkSize * noiseScale, gridPointPos.z/ ChunkSize * noiseScale);
                 float value = 1f;
+                //if(x > size/2) value = 0f;
+
                 GridPoint p = new GridPoint(gridPointPos, value);
                 p.wallType = GetWallType(gridPointPos);
                 newField[x, y] = p;

@@ -136,6 +136,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1768012861}
+    - target: {fileID: 5991892648522864223, guid: 943e48ffffd31944ea9d8412f36b20c2,
+        type: 3}
+      propertyPath: noiseScale
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 6995539954415119974, guid: 943e48ffffd31944ea9d8412f36b20c2,
         type: 3}
       propertyPath: m_LocalPosition.x
