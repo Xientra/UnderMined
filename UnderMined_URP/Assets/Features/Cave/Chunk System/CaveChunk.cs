@@ -55,7 +55,7 @@ namespace Features.Cave.Chunk_System
         {
             // generate mesh for top and walls
             
-            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(valueField, gridPointDic, ChunkManager.IsoValue);
+            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue);
             
             // assign top
             MeshInfo topInfo = meshInfos[0];
