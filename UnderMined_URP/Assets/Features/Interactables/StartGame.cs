@@ -11,6 +11,8 @@ public class StartGame : Interactable
         {
             this.gameObject.AddComponent<SteeringWheel>();
             this.GetComponent<SteeringWheel>().drill = drill;
+            this.gameObject.SetActive(false);
+            this.gameObject.SetActive(true);
             Destroy(this);
 
             GameManager.instance.StartGame();
