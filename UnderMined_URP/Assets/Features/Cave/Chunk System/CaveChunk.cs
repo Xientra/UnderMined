@@ -21,6 +21,8 @@ namespace Features.Cave.Chunk_System
 
         private float DEBUG_boxSize = 1f;
 
+        [SerializeField]
+        private GameObject wallChild;
         private MeshFilter _wallFilter;
 
         private MeshCollider _wallCollider;
@@ -31,8 +33,8 @@ namespace Features.Cave.Chunk_System
             _meshGenerator = new MeshGenerator();
             _meshFilter = GetComponent<MeshFilter>();
 
-            _wallFilter = GetComponentInChildren<MeshFilter>();
-            _wallCollider = GetComponentInChildren<MeshCollider>();
+            _wallFilter = wallChild.GetComponent<MeshFilter>();
+            _wallCollider = wallChild.GetComponent<MeshCollider>();
         }
 
         private void Start()
@@ -53,7 +55,7 @@ namespace Features.Cave.Chunk_System
         {
             // generate mesh for top and walls
             
-            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(valueField, gridPointDic, ChunkManager.IsoValue);
+            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue);
             
             // assign top
             MeshInfo topInfo = meshInfos[0];
