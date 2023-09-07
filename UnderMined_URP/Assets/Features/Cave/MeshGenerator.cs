@@ -15,12 +15,24 @@ public class MeshGenerator
         // growing list of triangle indeces
         List<int> indeces = new List<int>();
 
+        List<Vector2> oreUVs = new List<Vector2>();
+
         // march through squares
-        for (int x = 0; x < width; x++)
+        for (int y = 0; y < width + 1; y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < height + 1; x++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines);
+                GridPoint p = map[x,y];
+                oreUVs.Add((int)p.wallType * Vector2.right);
+            }
+        }
+
+        // march through squares a second time
+        for (int y = 0; y < width; y++)
+        {
+            for (int x = 0; x < height; x++)
+            {
+                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines, oreUVs);
             }
         }
 
@@ -31,13 +43,11 @@ public class MeshGenerator
             vertices[gridPointDic[key]] = key;
         }
 
-
-
         int[] indecesArr = indeces.ToArray();
 
         MeshInfo[] result = new MeshInfo[2];
 
-        result[0] = new MeshInfo(indecesArr, vertices);
+        result[0] = new MeshInfo(indecesArr, vertices, oreUVs);
         result[1] = TriangulateWall(wallHeight, outlines,vertices);
 
         return result;
@@ -104,7 +114,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines) {
+    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines, List<Vector2> oreUVs) {
         
         /// <summary>
         /// linear interpolation to find position at which isoContour to the isoValue is
@@ -149,6 +159,7 @@ public class MeshGenerator
             } else {
                 index = nextIndex++;
                 GridPointDic.Add(pos, index);
+                oreUVs.Add((int)GridPoint.WallType.Stone * Vector2.right);
             }
             return index;
         }

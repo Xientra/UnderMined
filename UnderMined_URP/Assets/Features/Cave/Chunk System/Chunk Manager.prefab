@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseScale: 0.1
-  currentCenterChunkIndex: {x: 0, y: 0}
+  oldCenterChunkIndex: {x: 0, y: 0}
   target: {fileID: 0}
   chunkPool:
   - {fileID: 4134857317390550594}

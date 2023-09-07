@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(CharacterController))]
 public class CharacterInputController : MonoBehaviour
@@ -49,6 +50,12 @@ public class CharacterInputController : MonoBehaviour
     [Header("Animation")]
     
     public Animator animator;
+
+    [Header("VFX:")]
+    
+    public GameObject throwVfxPrefab;
+
+    public VisualEffect mineVfx;
     
     private void Awake()
     {
@@ -207,6 +214,7 @@ public class CharacterInputController : MonoBehaviour
                 if(attackAvailable)
                 {
                     animator.SetTrigger("Action/Attack");
+                    mineVfx.Play();
                     MiningResult mr = ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
                     SpawnPickups(mr);
                     StartCoroutine(attackHandling());
@@ -253,6 +261,8 @@ public class CharacterInputController : MonoBehaviour
                 pickUp.rb.AddForce((moveVec + (transform.forward + Vector3.up / 2)) * throwPower);
                 pickUp = null;
                 currentInteractable = null;
+
+                Instantiate(throwVfxPrefab, pickUp.transform.position, pickUp.transform.rotation, pickUp.transform);
             }
         }
 
