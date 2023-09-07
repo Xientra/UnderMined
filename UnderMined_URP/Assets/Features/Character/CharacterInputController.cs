@@ -14,7 +14,7 @@ public class CharacterInputController : MonoBehaviour
     [Header("Move Variables")]
     [SerializeField] private float moveSpeed = 10.0f;
     [SerializeField] private Vector3 moveVec = Vector3.zero;
-    [SerializeField] private bool moveAvailable = true;
+    [SerializeField] public bool moveAvailable = false;
     
     [Header("Dash Variables")]
     [SerializeField] private float dashPower = 3.0f;
@@ -58,7 +58,6 @@ public class CharacterInputController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -68,13 +67,10 @@ public class CharacterInputController : MonoBehaviour
         {
             if (!isSteeringDrill)
             {
-                _characterController.Move(moveVec * (moveSpeed * Time.deltaTime));
+                _characterController.Move(moveVec * (moveSpeed * Time.deltaTime) - new Vector3(0,10.0f, 0));
 
                 if (moveVec != Vector3.zero)
                     transform.forward = moveVec;
-                
-                
-                
             }
             else
             {

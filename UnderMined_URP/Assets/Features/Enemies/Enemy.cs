@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.VFX;
 using Random = UnityEngine.Random;
@@ -91,11 +92,11 @@ public class Enemy : MonoBehaviour, IHittable
 
     private void OnCollisionExit(Collision other)
     {
-        if (digging)
+        if (digging && other.gameObject.layer == 9)
             Emerge(Vector3.up);
     }
 
-    private void Emerge(Vector3 normal)
+    private void Emerge(Vector3 normal) 
     {
         digging = false;
         diggingVfx.Stop();
