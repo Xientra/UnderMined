@@ -18,9 +18,19 @@ public class MeshGenerator
         List<Vector2> oreUVs = new List<Vector2>();
 
         // march through squares
-        for (int x = 0; x < width; x++)
+        for (int y = 0; y < width + 1; y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < height + 1; x++)
+            {
+                GridPoint p = map[x,y];
+                oreUVs.Add((int)p.wallType * Vector2.right);
+            }
+        }
+
+        // march through squares a second time
+        for (int y = 0; y < width; y++)
+        {
+            for (int x = 0; x < height; x++)
             {
                 TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines, oreUVs);
             }
@@ -126,12 +136,6 @@ public class MeshGenerator
         GridPoint tR = square.topRight;
         GridPoint bR = square.bottomRight;
 
-        // add oreUVs
-        oreUVs.Add((int)bL.wallType * Vector2Int.right);
-        oreUVs.Add((int)tL.wallType * Vector2Int.right);
-        oreUVs.Add((int)tR.wallType * Vector2Int.right);
-        oreUVs.Add((int)bR.wallType * Vector2Int.right);
-
         // indeces of the grid points
         int bLI = GridPointDic[bL.pos];
         int tLI = GridPointDic[tL.pos];
@@ -155,6 +159,7 @@ public class MeshGenerator
             } else {
                 index = nextIndex++;
                 GridPointDic.Add(pos, index);
+                oreUVs.Add((int)GridPoint.WallType.Stone * Vector2.right);
             }
             return index;
         }
