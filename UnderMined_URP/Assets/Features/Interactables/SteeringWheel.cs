@@ -6,12 +6,7 @@ using UnityEngine;
 public class SteeringWheel : Interactable
 {
     [SerializeField] public DrillController drill;
-
-    private void Awake()
-    {
-        this.enabled = false;
-    }
-
+    
     public override void Interact(CharacterInputController player)
     {
         if(!player.pickUp && drill.isRunning)
