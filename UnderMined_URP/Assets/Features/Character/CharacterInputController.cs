@@ -45,6 +45,10 @@ public class CharacterInputController : MonoBehaviour
     [Header("Mining Variables")]
     [SerializeField] private float miningStrength = 0.5f;
     [SerializeField] private float miningRadius = 1f;
+
+    [Header("Animation")]
+    
+    public Animator animator;
     
     private void Awake()
     {
@@ -68,12 +72,24 @@ public class CharacterInputController : MonoBehaviour
 
                 if (moveVec != Vector3.zero)
                     transform.forward = moveVec;
+                
+                
+                
             }
             else
             {
                 _drillController.Steer(moveVec.x);
             }
+            
+            if ((moveVec * (moveSpeed * Time.deltaTime)).magnitude > 0.1f)
+                animator.SetBool("Movement/isWalking", true);
+            animator.SetFloat("Movement/walkSpeed", (moveVec * (moveSpeed * Time.deltaTime)).magnitude);
         }
+        
+        if (pickUp != null)
+            animator.SetBool("Action/isCarrying", true);
+        
+        
     }
     
 
@@ -137,7 +153,6 @@ public class CharacterInputController : MonoBehaviour
             {
                 if (currentInteractable)    //interact
                 {
-
                     Type interactableType = currentInteractable.GetType();
                     switch (currentInteractable)
                     {
@@ -145,15 +160,19 @@ public class CharacterInputController : MonoBehaviour
                             break;
                         
                         case Refill:
+                            animator.SetTrigger("Action/Interact");
                             break;
 
                         case SteeringWheel:
+                            animator.SetTrigger("Action/Interact");
                             break;
                         
                         case Revive:
+                            animator.SetTrigger("Action/Interact");
                             break;
 
                         case StartGame:
+                            animator.SetTrigger("Action/Interact");
                             break;
                         
                         default:
@@ -191,6 +210,7 @@ public class CharacterInputController : MonoBehaviour
             {
                 if(attackAvailable)
                 {
+                    animator.SetTrigger("Action/Attack");
                     MiningResult mr = ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
                     SpawnPickups(mr);
                     StartCoroutine(attackHandling());
@@ -260,5 +280,6 @@ public class CharacterInputController : MonoBehaviour
     {
         this.isFallen = true;
         Instantiate(revivePrefab).GetComponent<Revive>().fallenplayer = this;
+        animator.SetTrigger("Action/Die");
     }
 }
