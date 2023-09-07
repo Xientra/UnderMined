@@ -33,7 +33,7 @@ public class PickUp : Interactable
             rb.useGravity = false;
             rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.rotation = Quaternion.Euler(Vector3.zero);
-            //col.enabled = false;
+            col.enabled = false;
             player.currentInteractable = null;
         }
         else if (player.pickUp.Type == Type && player.pickUp.amount < player.maxCarryAmount)
