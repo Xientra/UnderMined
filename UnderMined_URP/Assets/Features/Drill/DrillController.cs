@@ -10,7 +10,9 @@ public class DrillController : MonoBehaviour
     public bool isRunning = false;
 
     public float timeRemaining = 30f;
+    public float maxTimeAmount = 60f;
 
+    
     public float coalToTimeRatio = 10f;
 
     public float speed = 2f;
@@ -36,10 +38,14 @@ public class DrillController : MonoBehaviour
     
     public VisualEffect drillVfx;
 
+    public Animator animator;
+
     public void StartMoving()
     {
         isRunning = true;
         drillVfx.Play();
+        animator.SetBool("isMining", true);
+        animator.SetBool("isDriving", true);
     }
 
     private void Update()
@@ -75,6 +81,8 @@ public class DrillController : MonoBehaviour
     public void AddCoal(float amount)
     {
         timeRemaining += amount * coalToTimeRatio;
+        if (timeRemaining > maxTimeAmount)
+            timeRemaining = maxTimeAmount;
     }
 
     public void StealCoal(float amount)
@@ -85,6 +93,8 @@ public class DrillController : MonoBehaviour
     private void OnDie()
     {
         isRunning = false;
+        animator.SetBool("isMining", false);
+        animator.SetBool("isDriving", false);
         drillVfx.Stop();
         die.Invoke();
     }

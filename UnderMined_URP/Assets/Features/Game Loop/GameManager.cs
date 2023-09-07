@@ -5,6 +5,7 @@ using Features.Cave.Chunk_System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class GameManager : MonoBehaviour
     public GameObject inGameMenu;
     public TextMeshProUGUI timerLabel;
     public GameObject endScreen;
+
+    [Space(5)]
+    
+    public Image healthBar;
+
+    public TextMeshProUGUI moneyLabel;
+    public float goldWorth = 10000f;
 
     [Space(10)]
     
@@ -49,7 +57,13 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (gameIsRunning)
-            timerLabel.text = TimeSpan.FromSeconds(drill.timeRemaining).ToString("hh':'mm':'ss");
+        {
+            //timerLabel.text = TimeSpan.FromSeconds(drill.timeRemaining).ToString("hh':'mm':'ss");
+
+            healthBar.fillAmount = drill.timeRemaining / drill.maxTimeAmount;
+            
+            moneyLabel.text = gold * goldWorth + "";
+        }
     }
 
     public void Btn_StartGame()
