@@ -59,11 +59,12 @@ public class JoinManager : MonoBehaviour
         else
         {
             for (int i = 0; i < players.Length; i++)
-            {
-                CharacterInputController player = players[i].GetComponent<CharacterInputController>();
-                player.isSteeringDrill = false;
-                player.transform.parent = null;
-            }
+                if (players[i] != null)
+                {
+                    CharacterInputController player = players[i].GetComponent<CharacterInputController>();
+                    player.isSteeringDrill = false;
+                    player.transform.parent = null;
+                }
         }
         
     }
