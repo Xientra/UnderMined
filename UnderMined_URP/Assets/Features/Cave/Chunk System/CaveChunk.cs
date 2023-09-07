@@ -9,6 +9,7 @@ namespace Features.Cave.Chunk_System
     public class CaveChunk : MonoBehaviour
     {
         private GridPoint[,] chunkValueField;
+        public GridPoint[,] ChunkValueField => chunkValueField;
         private Dictionary<Vector3, int> gridPointDic;
 
         private MeshGenerator _meshGenerator;
@@ -39,8 +40,12 @@ namespace Features.Cave.Chunk_System
             gridPointDic = gridPoints;
 
             // generate mesh
-            
-            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(valueField, gridPointDic, ChunkManager.IsoValue);
+            UpdateMesh();
+        }
+
+        public void UpdateMesh()
+        {
+            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue);
             MeshInfo meshInfo = meshInfos[0];
             Mesh mesh = new Mesh();
 
@@ -49,7 +54,6 @@ namespace Features.Cave.Chunk_System
             mesh.RecalculateNormals();
 
             _meshFilter.mesh = mesh;
-            
         }
 
         public bool DEBUG_drawValueField = true;

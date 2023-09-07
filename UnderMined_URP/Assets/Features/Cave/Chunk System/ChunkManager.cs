@@ -20,6 +20,7 @@ namespace Features.Cave.Chunk_System
         {
             public readonly GridPoint[,] valueField;
             public readonly Dictionary<Vector3, int> gridPoints;
+
             public ChunkInfo(GridPoint[,] valueField, Dictionary<Vector3, int> gridPoints)
             {
                 this.valueField = valueField;
@@ -32,19 +33,18 @@ namespace Features.Cave.Chunk_System
         public float noiseScale = 0.2f;
 
 
-        [FormerlySerializedAs("currentCenterChunkIndex")] public Vector2Int oldCenterChunkIndex;
+        [FormerlySerializedAs("currentCenterChunkIndex")]
+        public Vector2Int oldCenterChunkIndex;
 
         public GameObject target;
 
         public CaveChunk[] chunkPool = new CaveChunk[9];
 
 
-        [Header("Ore Generation:")]
-        
-        public float[] oreFrequencies = new[] { 0.1f, 0.5f };
+        [Header("Ore Generation:")] public float[] oreFrequencies = new[] { 0.1f, 0.5f };
         public float oreAmount = 0.5f;
         private Vector3 randomOffsetPerRun = Vector3.zero;
-        
+
         public void Awake()
         {
             instance = this;
@@ -64,8 +64,6 @@ namespace Features.Cave.Chunk_System
 
             if (oldCenterChunkIndex != targetGridPos)
                 UpdateChunks(targetGridPos);
-
-
         }
 
         private void UpdateChunks(Vector2Int targetGridPos)
@@ -74,9 +72,9 @@ namespace Features.Cave.Chunk_System
             for (int i = 0; i < chunkPool.Length; i++)
                 if (CheckChunkReplaceable(WorldToGridPosition(chunkPool[i].transform.position), targetGridPos))
                     chunkPool[i].canBeReplaced = true;
-            
+
             // put far away chunks to near position
-            
+
             // hard settings chunks for now
             SetChunkValues(0, targetGridPos + new Vector2Int(-1, -1));
             SetChunkValues(1, targetGridPos + new Vector2Int(0, -1));
@@ -87,7 +85,7 @@ namespace Features.Cave.Chunk_System
             SetChunkValues(6, targetGridPos + new Vector2Int(-1, 1));
             SetChunkValues(7, targetGridPos + new Vector2Int(0, 1));
             SetChunkValues(8, targetGridPos + new Vector2Int(1, 1));
-            
+
             oldCenterChunkIndex = GetTargetChunkGridPosition();
         }
 
@@ -126,7 +124,7 @@ namespace Features.Cave.Chunk_System
             bool isCoal = OreGeneratorFunction(position + new Vector3(0, 0, 100));
             if (isCoal)
                 return GridPoint.WallType.Coal;
-            
+
             bool isGold = OreGeneratorFunction(position + new Vector3(100, 0, 0));
             if (isGold)
                 return GridPoint.WallType.Gold;
@@ -137,7 +135,7 @@ namespace Features.Cave.Chunk_System
         private bool OreGeneratorFunction(Vector3 position)
         {
             float oreValue = 1f;
-            
+
             for (int i = 0; i < oreFrequencies.Length; i++)
                 oreValue *= Mathf.PerlinNoise(position.x * oreFrequencies[i], position.z * oreFrequencies[i]);
 
@@ -152,22 +150,22 @@ namespace Features.Cave.Chunk_System
         {
             int size = ChunkSize;
             GridPoint[,] newField = new GridPoint[size, size];
-            
+
             int index = 0;
             Dictionary<Vector3, int> gridPointDic = new Dictionary<Vector3, int>();
 
             for (int y = 0; y < size; y++)
-                for (int x = 0; x < size; x++)
-                {
-                    Vector3 gridPointPos = gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
-                    //float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
-                    float value = 1f;
-                    GridPoint p = new GridPoint(gridPointPos, value);
-                    p.wallType = GetWallType(gridPointPos);
-                    newField[x, y] = p;
-                    
-                    gridPointDic.Add(p.pos, index++);
-                }
+            for (int x = 0; x < size; x++)
+            {
+                Vector3 gridPointPos = new Vector3(x * CellSize, 0, y * CellSize);
+                //float value = Mathf.PerlinNoise(gridPointPos.x * noiseScale, gridPointPos.z * noiseScale);
+                float value = 1f;
+                GridPoint p = new GridPoint(gridPointPos, value);
+                p.wallType = GetWallType(gridPointPos);
+                newField[x, y] = p;
+
+                gridPointDic.Add(p.pos, index++);
+            }
 
             return new ChunkInfo(newField, gridPointDic);
         }
@@ -180,13 +178,22 @@ namespace Features.Cave.Chunk_System
         private Vector2Int WorldToGridPosition(Vector3 worldPos)
         {
             return new Vector2Int(
-                Mathf.FloorToInt(worldPos.x / ChunkSize) % ChunkSize, 
+                Mathf.FloorToInt(worldPos.x / ChunkSize) % ChunkSize,
                 Mathf.FloorToInt(worldPos.z / ChunkSize) % ChunkSize);
         }
-        
+
         private Vector3 GridToWorldPosition(Vector2Int gridPos)
         {
             return new Vector3(gridPos.x * ChunkSize, 0, gridPos.y * ChunkSize);
+        }
+
+        private CaveChunk GetChunkThatHoldsValues(GridPoint[,] values)
+        {
+            for (int i = 0; i < chunkPool.Length; i++)
+                if (chunkPool[i].ChunkValueField == values)
+                    return chunkPool[i];
+            
+            return null;
         }
 
         /// <summary>
@@ -196,29 +203,32 @@ namespace Features.Cave.Chunk_System
         public MiningResult MineWall(Vector3 point, float radius, float strength)
         {
             // TODO: make this cross chunks
-            
+
             Vector2Int chunkGridPos = WorldToGridPosition(point);
 
             GridPoint[,] valueField = GetChunkInfoAtGridPos(chunkGridPos).valueField;
-            
+
             // TODO: make this cross chunks
             MiningResult mr = new MiningResult();
 
             // TODO: maybe optimize 
-            
+
             for (int y = 0; y < ChunkSize; y++)
                 for (int x = 0; x < ChunkSize; x++)
-                if ((valueField[x, y].pos - point).sqrMagnitude < radius * radius)
-                {
-                    float removeAmount = Mathf.Min(valueField[x, y].value, strength);
-                    valueField[x, y].value -= removeAmount;
-                    if (valueField[x, y].wallType == GridPoint.WallType.Stone)
-                        mr.stoneAmount += removeAmount;
-                    else if (valueField[x, y].wallType == GridPoint.WallType.Coal)
-                        mr.coalAmount += removeAmount;
-                    else if (valueField[x, y].wallType == GridPoint.WallType.Gold)
-                        mr.goldAmount += removeAmount;
-                }
+                    if ((valueField[x, y].pos - point).sqrMagnitude < radius * radius)
+                    {
+                        float removeAmount = Mathf.Min(valueField[x, y].value, strength);
+                        valueField[x, y].value -= removeAmount;
+                        if (valueField[x, y].wallType == GridPoint.WallType.Stone)
+                            mr.stoneAmount += removeAmount;
+                        else if (valueField[x, y].wallType == GridPoint.WallType.Coal)
+                            mr.coalAmount += removeAmount;
+                        else if (valueField[x, y].wallType == GridPoint.WallType.Gold)
+                            mr.goldAmount += removeAmount;
+                    }
+
+
+            GetChunkThatHoldsValues(valueField).UpdateMesh();
 
             return mr;
         }
@@ -232,7 +242,7 @@ namespace Features.Cave.Chunk_System
         {
             if (target == null)
                 return;
-            
+
             Gizmos.color = Color.blue;
             Gizmos.DrawSphere(GridToWorldPosition(GetTargetChunkGridPosition()), 5f);
         }
