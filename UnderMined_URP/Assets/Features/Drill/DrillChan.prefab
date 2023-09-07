@@ -440,6 +440,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drill: {fileID: 6890680919256053849}
+--- !u!1 &5685946414493229396
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5442158341934892069}
+  m_Layer: 7
+  m_Name: SeatPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5442158341934892069
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5685946414493229396}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3145153144365278008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5771709245030451377
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +682,7 @@ GameObject:
   - component: {fileID: 3390746658501429535}
   - component: {fileID: 3130376752599509270}
   m_Layer: 7
-  m_Name: Start/SteeringWHeel
+  m_Name: Start/SteeringWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -669,7 +700,8 @@ Transform:
   m_LocalPosition: {x: -0.04, y: 0.81, z: -4.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5442158341934892069}
   m_Father: {fileID: 5412496386125770247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9026075844087726642
@@ -920,7 +952,7 @@ MonoBehaviour:
   die:
     m_PersistentCalls:
       m_Calls: []
-  miningSize: 2
+  miningSizeMinMax: {x: 4, y: 4.5}
   miningStrength: 0.8
   miningPoint: {fileID: 5771709245030451377}
   mineDelay: 0.5
