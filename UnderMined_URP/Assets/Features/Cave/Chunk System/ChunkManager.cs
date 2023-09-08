@@ -279,9 +279,9 @@ public struct MeshInfo {
 
     public Vector3[] vertices;
 
-    public List<Vector2> oreUVs;
+    public List<Color> oreUVs;
 
-    public MeshInfo(int[] _indeces, Vector3[] _vertices, List<Vector2> _oreUVs) 
+    public MeshInfo(int[] _indeces, Vector3[] _vertices, List<Color> _oreUVs) 
     {
         indeces = _indeces;
         vertices = _vertices;
