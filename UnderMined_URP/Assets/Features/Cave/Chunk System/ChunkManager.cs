@@ -167,7 +167,7 @@ namespace Features.Cave.Chunk_System
                 //if(x > size/2) value = 0f;
 
                 GridPoint p = new GridPoint(gridPointPos, value);
-                p.wallType = GetWallType(gridPointPos);
+                p.wallType = GetWallType(gridOrigin + gridPointPos);
                 newField[x, y] = p;
 
                 gridPointDic.Add(p.pos, index++);
