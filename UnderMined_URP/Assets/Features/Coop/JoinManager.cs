@@ -9,6 +9,8 @@ public class JoinManager : MonoBehaviour
     public PlayerInput[] players = new PlayerInput[4];
     private int _playerCount = 0;
 
+    public Material[] playerMaterials = new Material[4];
+
     public float spawnRadius = 2f;
 
     public CinemachineTargetGroup targetGroup;
@@ -30,9 +32,12 @@ public class JoinManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        players[_playerCount++] = playerInput;
+        players[_playerCount] = playerInput;
+        playerInput.GetComponentInChildren<Renderer>().material = playerMaterials[_playerCount];
+        _playerCount++;
 
         CharacterController cic = playerInput.GetComponent<CharacterController>();
+
         
         targetGroup.AddMember(playerInput.transform, 1, 1);
     }
