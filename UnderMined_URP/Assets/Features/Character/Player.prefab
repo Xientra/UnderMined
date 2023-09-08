@@ -148,8 +148,8 @@ Transform:
   m_GameObject: {fileID: 2647120775997438785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 1}
-  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0.75}
+  m_LocalScale: {x: 2, y: 1, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5843183996874581282}
@@ -604,7 +604,7 @@ MonoBehaviour:
   moveSpeed: 15
   moveVec: {x: 0, y: 0, z: 0}
   moveAvailable: 1
-  dashPower: 5
+  dashPower: 4
   dashCD: 0.5
   dashDuration: 0.05
   dashAvailable: 1

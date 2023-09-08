@@ -16,6 +16,7 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] private float moveSpeed = 10.0f;
     [SerializeField] private Vector3 moveVec = Vector3.zero;
     [SerializeField] public bool moveAvailable = false;
+    [SerializeField] private float rotationSpeed = 15.0f;
     
     [Header("Dash Variables")]
     [SerializeField] private float dashPower = 3.0f;
@@ -79,7 +80,7 @@ public class CharacterInputController : MonoBehaviour
                 _characterController.Move(moveVec * (moveSpeed * Time.deltaTime) - new Vector3(0,10.0f, 0));
 
                 if (moveVec != Vector3.zero)
-                    transform.forward = moveVec;
+                    transform.forward = Vector3.Lerp(transform.forward, moveVec, Time.deltaTime * rotationSpeed);
             }
             else
             {
