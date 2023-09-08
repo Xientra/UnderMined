@@ -35,9 +35,4 @@ public class Tutorial : MonoBehaviour
     {
         TutorialText.SetActive(false);
     }
-
-    private void OnDestroy()
-    {
-        TutorialText.SetActive(false);
-    }
 }
