@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     [Header("Starting Zone:")]
     
     public float startingZoneSize = 15f;
+
+    public float startTime = 30f;
     
     [Header("Menu:")]
     
@@ -75,7 +77,8 @@ public class GameManager : MonoBehaviour
     {
         mainMenu.SetActive(false);
         inGameMenu.SetActive(true);
-        
+
+        drill.timeRemaining = startTime;
         drill.StartMoving();
         gameIsRunning = true;
         enemySpawner.isSpawning = true;

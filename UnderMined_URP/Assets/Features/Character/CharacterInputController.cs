@@ -56,6 +56,8 @@ public class CharacterInputController : MonoBehaviour
     public GameObject throwVfxPrefab;
 
     public VisualEffect mineVfx;
+
+    public bool canMine = false;
     
     private void Awake()
     {
@@ -211,7 +213,7 @@ public class CharacterInputController : MonoBehaviour
         {
             if (context.started)
             {
-                if(attackAvailable)
+                if(canMine && attackAvailable)
                 {
                     animator.SetTrigger("Action/Attack");
                     mineVfx.Play();

@@ -46,12 +46,12 @@ public class JoinManager : MonoBehaviour
     public void EnableMining(bool value)
     {
         
+        for (int i = 0; i < players.Length; i++)
+            players[i].GetComponent<CharacterInputController>().canMine = value;
+        
         if (value)
         {
-            for (int i = 0; i < players.Length; i++)
-            {
-                //players[i].
-            }
+            
         }
         else
         {
