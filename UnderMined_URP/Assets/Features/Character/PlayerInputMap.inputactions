@@ -76,17 +76,6 @@
                 },
                 {
                     "name": "",
-                    "id": "9608534a-d42c-420f-b3ed-bf1cb371a1e0",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardOnly",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d3e2a466-637c-4aad-b70c-2270969056bd",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -103,17 +92,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "464de112-06d4-459f-9011-aeb21abe9cd3",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardOnly",
                     "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -142,11 +120,11 @@
                 },
                 {
                     "name": "",
-                    "id": "2a240e7b-b00b-41ce-9261-6f5f2982ebb0",
+                    "id": "27f904cf-a67c-4886-82b6-64cf3f503de9",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardOnly",
+                    "groups": "Keyboard and Mouse",
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -175,11 +153,11 @@
                 },
                 {
                     "name": "",
-                    "id": "e9d3831b-5ea3-4b41-ae23-a4697d8f63a7",
+                    "id": "6c07eb19-a220-4472-a450-ca6051e0bce9",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
-                    "groups": "KeyboardOnly",
+                    "groups": "Keyboard and Mouse",
                     "action": "Throw",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -304,50 +282,6 @@
                     "action": "Move",
                     "isComposite": true,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "c6fc4cf6-507f-4819-a74f-0411ba6c70d0",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardOnly",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "10663fda-b658-4239-a245-6a9da1f1c0ff",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardOnly",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "4957d97f-8ccb-4946-8443-8432dde501b0",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardOnly",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "36a7386e-c88a-4d04-815e-ef77f263de36",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardOnly",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 }
             ]
         }
@@ -359,12 +293,12 @@
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
-                    "isOptional": true,
+                    "isOptional": false,
                     "isOR": false
                 },
                 {
                     "devicePath": "<Mouse>",
-                    "isOptional": true,
+                    "isOptional": false,
                     "isOR": false
                 }
             ]
@@ -375,18 +309,7 @@
             "devices": [
                 {
                     "devicePath": "<Gamepad>",
-                    "isOptional": true,
-                    "isOR": false
-                }
-            ]
-        },
-        {
-            "name": "KeyboardOnly",
-            "bindingGroup": "KeyboardOnly",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": true,
+                    "isOptional": false,
                     "isOR": false
                 }
             ]
