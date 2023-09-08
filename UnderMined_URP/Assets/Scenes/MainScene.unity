@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2778,12 +2778,12 @@ PrefabInstance:
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000020699305
+      value: 0.000000020699312
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000012792876
+      value: -0.00000001279288
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
@@ -2828,6 +2828,71 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 4249681930032841241}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[1].value
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[0].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[1].inSlope
+      value: -1.5843669
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[1].inWeight
+      value: 0.06750578
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[1].outSlope
+      value: -1.5843669
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[0].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: miningFalloff.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2271792083422699260, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4c101d054f229ca4494927a16c546e42, type: 2}
     - target: {fileID: 2400253674318421008, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2924,12 +2989,12 @@ PrefabInstance:
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000020699305
+      value: 0.000000020699312
       objectReference: {fileID: 0}
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000012792876
+      value: -0.00000001279288
       objectReference: {fileID: 0}
     - target: {fileID: 1001227417301961611, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}

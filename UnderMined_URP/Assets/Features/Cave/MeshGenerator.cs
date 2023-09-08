@@ -23,7 +23,7 @@ public class MeshGenerator
             for (int x = 0; x < height + 1; x++)
             {
                 GridPoint p = map[x,y];
-                oreUVs.Add((int)p.wallType * Vector2.right);
+                oreUVs.Add(new Vector2((int)p.wallType, p.value));
             }
         }
 

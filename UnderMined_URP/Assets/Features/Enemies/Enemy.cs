@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.VFX;
 using Random = UnityEngine.Random;
@@ -28,12 +29,17 @@ public class Enemy : MonoBehaviour, IHittable
 
     public float coalSteal = 0.5f;
 
+    public bool dead = false;
+    
     [Space(5)]
     
     public GameObject graphic;
     public VisualEffect diggingVfx;
-    
+
     [Header("Effects:")]
+    public Animator animator;
+    
+    [Space(5)]
     
     public GameObject emergeVFX;
 
@@ -46,6 +52,9 @@ public class Enemy : MonoBehaviour, IHittable
 
     private void Update()
     {
+        if (dead)
+            return;
+        
         Vector3 toTarget = target.transform.position - transform.position;
         if (toTarget.sqrMagnitude < attackRange * attackRange)
         {
@@ -55,11 +64,14 @@ public class Enemy : MonoBehaviour, IHittable
                 AttackTarget();
                 _timeTillAttack = attackCooldown;
             }
+            animator.SetBool("Movement/isWalking", false);
         }
         else
         {
             _timeTillAttack = attackCooldown;
             Move();
+            if (digging == false)
+                animator.SetBool("Movement/isWalking", true);
         }
         
         if (toTarget.sqrMagnitude > killDistance * killDistance)
@@ -91,11 +103,11 @@ public class Enemy : MonoBehaviour, IHittable
 
     private void OnCollisionExit(Collision other)
     {
-        if (digging)
+        if (digging && other.gameObject.layer == 9)
             Emerge(Vector3.up);
     }
 
-    private void Emerge(Vector3 normal)
+    private void Emerge(Vector3 normal) 
     {
         digging = false;
         diggingVfx.Stop();
@@ -105,7 +117,7 @@ public class Enemy : MonoBehaviour, IHittable
 
     private void AttackTarget()
     {
-        Debug.Log("NYEH!! (attack drill)");
+        animator.SetTrigger("Action/Attack");
         target.StealCoal(coalSteal);
     }
 
@@ -129,6 +141,9 @@ public class Enemy : MonoBehaviour, IHittable
     private void Die()
     {
         // TODO: die vfx + die animation
-        Destroy(this.gameObject);
+        dead = true;
+        animator.SetTrigger("Action/Die");
+        
+        Destroy(this.gameObject, 2f);
     }
 }
