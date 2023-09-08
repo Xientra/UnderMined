@@ -40,6 +40,8 @@ public class DrillController : MonoBehaviour
 
     public Animator animator;
 
+    public VisualEffect explodeVfx;
+    
     public void StartMoving()
     {
         isRunning = true;
@@ -100,6 +102,7 @@ public class DrillController : MonoBehaviour
         animator.SetBool("isMining", false);
         animator.SetBool("isDriving", false);
         drillVfx.Stop();
+        explodeVfx.Play();
         die.Invoke();
     }
 
