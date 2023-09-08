@@ -51,8 +51,7 @@ namespace Features.Cave.Chunk_System
 
         public void Awake()
         {
-            if (instance == null)
-                instance = this;
+            instance = this;
 
             randomOffsetPerRun = new Vector3(Random.Range(-200, 200), Random.Range(-1000, 1000), Random.Range(-1000, 1000));
         }
