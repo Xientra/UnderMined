@@ -10272,7 +10272,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3145153144365278008}
-  - component: {fileID: 3130376752599509270}
+  - component: {fileID: 5264992522189643685}
   - component: {fileID: 1144199044505523380}
   m_Layer: 7
   m_Name: Start/SteeringWheel
@@ -10297,7 +10297,7 @@ Transform:
   - {fileID: 5442158341934892069}
   m_Father: {fileID: 5412496386125770247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3130376752599509270
+--- !u!114 &5264992522189643685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10306,10 +10306,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6898261631721550902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7237c77a4a7c0744fbad1003d3751ee7, type: 3}
+  m_Script: {fileID: 11500000, guid: 85723aaf24df6854191eae86219cf493, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   drill: {fileID: 6890680919256053849}
+  playerOffset: {x: 0, y: 0.81, z: 0}
 --- !u!65 &1144199044505523380
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10405,7 +10406,7 @@ MonoBehaviour:
   isRunning: 0
   timeRemaining: 30
   maxTimeAmount: 60
-  coalToTimeRatio: 10
+  coalToTimeRatio: 4
   speed: 1
   acceleration: 0.02
   steerSpeed: 25

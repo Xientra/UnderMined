@@ -119,3 +119,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  playerMaterials:
+  - {fileID: 2100000, guid: a22f2f11d465ec448899bb18f77cbed4, type: 2}
+  - {fileID: 2100000, guid: b89513490d3abce4dbefec66ee07ed96, type: 2}
+  - {fileID: 2100000, guid: 768ea13413358144c974373419c0cb2f, type: 2}
+  - {fileID: 2100000, guid: aeb71a71413e3844c80047e53cf21810, type: 2}
+  spawnRadius: 2
+  targetGroup: {fileID: 0}

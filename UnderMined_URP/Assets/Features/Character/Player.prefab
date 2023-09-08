@@ -148,8 +148,8 @@ Transform:
   m_GameObject: {fileID: 2647120775997438785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 1}
-  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0.75}
+  m_LocalScale: {x: 2, y: 1, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5843183996874581282}
@@ -604,7 +604,7 @@ MonoBehaviour:
   moveSpeed: 15
   moveVec: {x: 0, y: 0, z: 0}
   moveAvailable: 1
-  dashPower: 10
+  dashPower: 4
   dashCD: 0.5
   dashDuration: 0.05
   dashAvailable: 1
@@ -619,14 +619,15 @@ MonoBehaviour:
   isFallen: 0
   damage: 1
   attackCube: {fileID: 6258074923782504398}
-  attackCooldown: 1
+  attackCooldown: 0.5
   attackAvailable: 1
-  miningStrength: 0.8
+  miningStrength: 0.7
   miningRadius: 2
   animator: {fileID: 7072611103913513593}
   throwVfxPrefab: {fileID: 5933461591243006694, guid: 9b21736129f517c4ab457405671e5f06,
     type: 3}
   mineVfx: {fileID: 4439333757721418960}
+  canMine: 0
   minOreAmount: 1
   goldPickup: {fileID: 3350196191448095415, guid: f35d262f2f2fd6743ae390a411f56498,
     type: 3}

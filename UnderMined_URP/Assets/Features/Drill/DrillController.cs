@@ -9,7 +9,7 @@ public class DrillController : MonoBehaviour
     [SerializeField]
     public bool isRunning = false;
 
-    public float timeRemaining = 30f;
+    public float timeRemaining = 0;
     public float maxTimeAmount = 60f;
 
     
@@ -80,6 +80,10 @@ public class DrillController : MonoBehaviour
 
     public void AddCoal(float amount)
     {
+        if (amount == -1)
+            GameManager.instance.StartGame();
+            
+        
         timeRemaining += amount * coalToTimeRatio;
         if (timeRemaining > maxTimeAmount)
             timeRemaining = maxTimeAmount;
