@@ -7,7 +7,7 @@ public class StartGame : Interactable
     [SerializeField] private DrillController drill;
     public override void Interact(CharacterInputController player)
     {
-        if(!player.pickUp)
+        if(!player.pickUp && GameManager.instance.gameIsRunning)
         {
             this.gameObject.AddComponent<SteeringWheel>();
             this.GetComponent<SteeringWheel>().drill = drill;

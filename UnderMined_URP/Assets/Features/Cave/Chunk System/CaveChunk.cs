@@ -61,7 +61,7 @@ namespace Features.Cave.Chunk_System
 
             top.SetVertices(topInfo.vertices);
             top.SetIndices(topInfo.indeces, MeshTopology.Triangles, 0);
-            top.SetUVs(0,topInfo.oreUVs);
+            top.SetColors(topInfo.oreUVs);
             top.RecalculateNormals();
 
             _meshFilter.mesh = top;

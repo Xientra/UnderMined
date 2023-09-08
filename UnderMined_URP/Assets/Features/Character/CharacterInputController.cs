@@ -56,6 +56,8 @@ public class CharacterInputController : MonoBehaviour
     public GameObject throwVfxPrefab;
 
     public VisualEffect mineVfx;
+
+    public bool canMine = false;
     
     private void Awake()
     {
@@ -84,8 +86,8 @@ public class CharacterInputController : MonoBehaviour
                 _drillController.Steer(moveVec.x);
             }
             
-            if ((moveVec * (moveSpeed * Time.deltaTime)).magnitude > 0.1f)
-                animator.SetBool("Movement/isWalking", true);
+            
+            animator.SetBool("Movement/isWalking", (moveVec * (moveSpeed * Time.deltaTime)).magnitude > 0.1f);
             animator.SetFloat("Movement/walkSpeed", (moveVec * (moveSpeed * Time.deltaTime)).magnitude);
         }
         
@@ -211,7 +213,7 @@ public class CharacterInputController : MonoBehaviour
         {
             if (context.started)
             {
-                if(attackAvailable)
+                if(canMine && attackAvailable)
                 {
                     animator.SetTrigger("Action/Attack");
                     mineVfx.Play();
