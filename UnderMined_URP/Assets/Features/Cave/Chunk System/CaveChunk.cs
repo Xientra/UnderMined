@@ -59,9 +59,35 @@ namespace Features.Cave.Chunk_System
             Mesh top = new Mesh();
             top.name = "top";
 
+            // this part is for shading of mesh
+            List<Color> ores = new List<Color>();
+            for(int i = 0; i < topInfo.vertices.Length; i++) {
+                Vector3 v = topInfo.vertices[i];
+                int x = Mathf.RoundToInt(v.x);
+                int y = Mathf.RoundToInt(v.z);
+
+                if(x < 0 || x > ChunkManager.ChunkSize || y < 0 || y > ChunkManager.ChunkSize) {
+                    ores.Add(Color.magenta);
+                } else {
+                    GridPoint p = ChunkValueField[x,y];
+                    
+                    switch(p.wallType) {
+                        case GridPoint.WallType.Stone:
+                            ores.Add(Color.grey);
+                        break;
+                        case GridPoint.WallType.Coal:
+                            ores.Add(Color.black);
+                        break;
+                        case GridPoint.WallType.Gold:
+                            ores.Add(Color.yellow);
+                        break;
+                    }
+                }
+            }
+
             top.SetVertices(topInfo.vertices);
             top.SetIndices(topInfo.indeces, MeshTopology.Triangles, 0);
-            top.SetColors(topInfo.oreUVs);
+            top.SetColors(ores);
             top.RecalculateNormals();
 
             _meshFilter.mesh = top;

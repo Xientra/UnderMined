@@ -15,25 +15,12 @@ public class MeshGenerator
         // growing list of triangle indeces
         List<int> indeces = new List<int>();
 
-        List<Color> oreUVs = new List<Color>();
-
         // march through squares
         for (int y = 0; y < width + 1; y++)
         {
             for (int x = 0; x < height + 1; x++)
             {
                 GridPoint p = map[x,y];
-                switch(p.wallType) {
-                    case GridPoint.WallType.Stone:
-                        oreUVs.Add(Color.grey);
-                    break;
-                    case GridPoint.WallType.Coal:
-                        oreUVs.Add(Color.black);
-                    break;
-                    case GridPoint.WallType.Gold:
-                        oreUVs.Add(Color.yellow);
-                    break;
-                }
             }
         }
 
@@ -42,7 +29,7 @@ public class MeshGenerator
         {
             for (int x = 0; x < height; x++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines, oreUVs);
+                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines);
             }
         }
 
@@ -57,7 +44,7 @@ public class MeshGenerator
 
         MeshInfo[] result = new MeshInfo[2];
 
-        result[0] = new MeshInfo(indecesArr, vertices, oreUVs);
+        result[0] = new MeshInfo(indecesArr, vertices);
         result[1] = TriangulateWall(wallHeight, outlines,vertices);
 
         return result;
@@ -124,7 +111,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines, List<Color> oreUVs) {
+    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines) {
         
         /// <summary>
         /// linear interpolation to find position at which isoContour to the isoValue is
@@ -169,7 +156,6 @@ public class MeshGenerator
             } else {
                 index = nextIndex++;
                 GridPointDic.Add(pos, index);
-                oreUVs.Add(Color.gray);
             }
             return index;
         }
