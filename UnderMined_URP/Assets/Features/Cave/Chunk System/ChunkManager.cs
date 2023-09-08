@@ -51,9 +51,10 @@ namespace Features.Cave.Chunk_System
 
         public void Awake()
         {
-            instance = this;
+            if (instance == null)
+                instance = this;
 
-            randomOffsetPerRun = new Vector3(Random.Range(-100, 100), Random.Range(-100, 100), Random.Range(-100, 100));
+            randomOffsetPerRun = new Vector3(Random.Range(-200, 200), Random.Range(-1000, 1000), Random.Range(-1000, 1000));
         }
 
         private void Start()
@@ -139,6 +140,8 @@ namespace Features.Cave.Chunk_System
         private bool OreGeneratorFunction(Vector3 position)
         {
             float oreValue = 1f;
+
+            position += randomOffsetPerRun;
 
             for (int i = 0; i < oreFrequencies.Length; i++)
                 oreValue *= Mathf.PerlinNoise(position.x * oreFrequencies[i], position.z * oreFrequencies[i]);
@@ -279,13 +282,10 @@ public struct MeshInfo {
 
     public Vector3[] vertices;
 
-    public List<Color> oreUVs;
-
-    public MeshInfo(int[] _indeces, Vector3[] _vertices, List<Color> _oreUVs) 
+    public MeshInfo(int[] _indeces, Vector3[] _vertices) 
     {
         indeces = _indeces;
         vertices = _vertices;
-        oreUVs = _oreUVs;
     }
 }
 /// <summary> contains information of a full grid cell </summary>
