@@ -47,7 +47,8 @@ public class JoinManager : MonoBehaviour
     {
         
         for (int i = 0; i < players.Length; i++)
-            players[i].GetComponent<CharacterInputController>().canMine = value;
+            if (players[i] != null)
+                players[i].GetComponent<CharacterInputController>().canMine = value;
         
         if (value)
         {
