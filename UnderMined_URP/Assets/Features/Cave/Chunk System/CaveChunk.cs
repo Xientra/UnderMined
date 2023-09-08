@@ -60,26 +60,29 @@ namespace Features.Cave.Chunk_System
             top.name = "top";
 
             // this part is for shading of mesh
-            List<Color> ores = new List<Color>();
+            //List<Vector2> ores = new List<Vector2>();
+            List<Color> oreColor = new List<Color>();
+
+            Vector2 WallToUV(GridPoint p) {return new Vector2((int)p.wallType, p.value);}
+
             for(int i = 0; i < topInfo.vertices.Length; i++) {
                 Vector3 v = topInfo.vertices[i];
                 int x = Mathf.RoundToInt(v.x);
                 int y = Mathf.RoundToInt(v.z);
 
                 if(x < 0 || x > ChunkManager.ChunkSize || y < 0 || y > ChunkManager.ChunkSize) {
-                    ores.Add(Color.magenta);
+                    //ores.Add((int)GridPoint.WallType.Stone * Vector2.right);
+                    oreColor.Add(Color.magenta);
                 } else {
                     GridPoint p = ChunkValueField[x,y];
-                    
-                    switch(p.wallType) {
-                        case GridPoint.WallType.Stone:
-                            ores.Add(Color.grey);
+                    //ores.Add(WallToUV(p));
+
+                    switch(p.wallType){
+                        case GridPoint.WallType.Stone: oreColor.Add(Color.gray);
                         break;
-                        case GridPoint.WallType.Coal:
-                            ores.Add(Color.black);
+                        case GridPoint.WallType.Coal: oreColor.Add(Color.black);
                         break;
-                        case GridPoint.WallType.Gold:
-                            ores.Add(Color.yellow);
+                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0.83f, 0.65f, 0));
                         break;
                     }
                 }
@@ -87,7 +90,8 @@ namespace Features.Cave.Chunk_System
 
             top.SetVertices(topInfo.vertices);
             top.SetIndices(topInfo.indeces, MeshTopology.Triangles, 0);
-            top.SetColors(ores);
+            //top.SetUVs(0,ores);
+            top.SetColors(oreColor);
             top.RecalculateNormals();
 
             _meshFilter.mesh = top;

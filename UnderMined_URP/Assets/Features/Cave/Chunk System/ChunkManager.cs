@@ -53,7 +53,7 @@ namespace Features.Cave.Chunk_System
         {
             instance = this;
 
-            randomOffsetPerRun = new Vector3(Random.Range(-100, 100), Random.Range(-100, 100), Random.Range(-100, 100));
+            randomOffsetPerRun = new Vector3(Random.Range(-200, 200), Random.Range(-1000, 1000), Random.Range(-1000, 1000));
         }
 
         private void Start()
@@ -139,6 +139,8 @@ namespace Features.Cave.Chunk_System
         private bool OreGeneratorFunction(Vector3 position)
         {
             float oreValue = 1f;
+
+            position += randomOffsetPerRun;
 
             for (int i = 0; i < oreFrequencies.Length; i++)
                 oreValue *= Mathf.PerlinNoise(position.x * oreFrequencies[i], position.z * oreFrequencies[i]);
