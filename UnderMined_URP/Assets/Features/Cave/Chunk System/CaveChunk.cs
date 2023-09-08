@@ -78,11 +78,11 @@ namespace Features.Cave.Chunk_System
                     //ores.Add(WallToUV(p));
 
                     switch(p.wallType){
-                        case GridPoint.WallType.Stone: oreColor.Add(Color.gray);
+                        case GridPoint.WallType.Stone: oreColor.Add(new Color(0.25f, 0.25f, 0.25f, 0f));
                         break;
-                        case GridPoint.WallType.Coal: oreColor.Add(Color.black);
+                        case GridPoint.WallType.Coal: oreColor.Add(new Color(0, 0f, 0f, 0f));
                         break;
-                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0.83f, 0.65f, 0));
+                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0.83f, 0.65f, 0, 1));
                         break;
                     }
                 }
