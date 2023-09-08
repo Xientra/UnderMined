@@ -214,6 +214,37 @@ namespace Features.Cave.Chunk_System
 
             Vector2Int chunkGridPos = WorldToChunkCoord(point);
 
+            Vector2 localMinePoint = new Vector2(point.x % ChunkSize, point.z % ChunkSize);
+
+            MiningResult mr = MineChunk(point, radius, strength, chunkGridPos);
+
+            MiningResult temp = new MiningResult();
+
+            void MineNeighbor(Vector2Int dir) {
+                temp = MineChunk(point, radius, strength, chunkGridPos + dir);
+                mr.coalAmount += temp.coalAmount;
+                mr.goldAmount += temp.goldAmount;
+                mr.stoneAmount += temp.stoneAmount;
+            }
+
+            bool goUp = localMinePoint.y + radius > 64;
+            bool goDown = localMinePoint.y - radius < 0;
+            bool goRight = localMinePoint.x + radius > 64;
+            bool goLeft = localMinePoint.x - radius < 0;
+
+            if(goRight && goUp) MineNeighbor(Vector2Int.right + Vector2Int.up);
+            else if(goRight && goDown) MineNeighbor(Vector2Int.right + Vector2Int.down);
+            else if(goLeft && goUp) MineNeighbor(Vector2Int.left + Vector2Int.up);
+            else if(goLeft && goDown) MineNeighbor(Vector2Int.left + Vector2Int.down);
+            else if(goUp) MineNeighbor(Vector2Int.up);
+            else if(goDown) MineNeighbor(Vector2Int.down);
+            else if(goRight) MineNeighbor(Vector2Int.right);
+            else if(goLeft) MineNeighbor(Vector2Int.left);
+
+            return mr;
+        }
+
+        private MiningResult MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos) {
             GridPoint[,] valueField = GetChunkInfoAtChunkCoord(chunkGridPos).valueField;
             
             // TODO: make this cross chunks
