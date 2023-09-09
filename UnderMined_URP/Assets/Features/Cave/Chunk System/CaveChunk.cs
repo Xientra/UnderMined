@@ -79,12 +79,12 @@ namespace Features.Cave.Chunk_System
 
                   
                     switch(p.wallType){
-                        case GridPoint.WallType.Stone: oreColor.Add(new Color(1f, 0, 0, chunkValueField[x, y].value));
-                        break;
-                        case GridPoint.WallType.Coal: oreColor.Add(new Color(0, 1f, 0f, chunkValueField[x, y].value));
-                        break;
-                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0, 0, 1f, chunkValueField[x, y].value));
-                        break;
+                        case GridPoint.WallType.Stone: oreColor.Add(ChunkManager.instance.stoneColor);
+                            break;
+                        case GridPoint.WallType.Coal: oreColor.Add(ChunkManager.instance.coalColor);
+                            break;
+                        case GridPoint.WallType.Gold: oreColor.Add(ChunkManager.instance.goldColor);
+                            break;
                     }
                 }
             }
@@ -112,7 +112,7 @@ namespace Features.Cave.Chunk_System
         }
 
         public bool DEBUG_drawValueField = true;
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             if (DEBUG_drawValueField == false) 
                 return;
@@ -134,7 +134,7 @@ namespace Features.Cave.Chunk_System
                         }
 
                         if (chunkValueField[x, y].value > ChunkManager.IsoValue)
-                            Gizmos.DrawCube(chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
+                            Gizmos.DrawCube(transform.position + chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
                     }
                 }
             }

@@ -20,6 +20,13 @@ namespace Features.Cave.Chunk_System
 
         public AnimationCurve miningFalloff = AnimationCurve.EaseInOut(0, 1, 0, 0);
 
+        [Header("Chunk Settings:")]
+        
+        // the alpha is the metallic value
+        public Color stoneColor = new Color(0.25f, 0.25f, 0.25f, 0f);
+        public Color coalColor = new Color(0, 0f, 0f, 0f);
+        public Color goldColor = new Color(0.83f, 0.65f, 0, 1f);
+
         private class ChunkInfo
         {
             public readonly GridPoint[,] valueField;

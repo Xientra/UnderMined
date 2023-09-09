@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canBeReplaced: 1
   wallChild: {fileID: 1197003828328159709}
-  DEBUG_drawValueField: 0
+  DEBUG_drawValueField: 1
 --- !u!1 &1197003828328159709
 GameObject:
   m_ObjectHideFlags: 0
