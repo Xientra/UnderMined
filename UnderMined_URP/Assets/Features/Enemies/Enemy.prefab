@@ -83,7 +83,7 @@ MonoBehaviour:
   target: {fileID: 0}
   health: 2
   digSpeed: 8
-  moveSpeed: 2
+  moveSpeed: 5
   turnSpeed: 0.1
   digging: 1
   aimAccuracy: 15
@@ -91,10 +91,13 @@ MonoBehaviour:
   attackRange: 2
   attackCooldown: 1
   coalSteal: 0.5
+  dead: 0
   graphic: {fileID: 886191027308611246}
   diggingVfx: {fileID: 5001006419244544036}
   animator: {fileID: 7209476945942142793}
   emergeVFX: {fileID: 2824223047872886140, guid: e252253129be6d14097d0e1a1f805a18,
+    type: 3}
+  coalPrefab: {fileID: 1825357697098228184, guid: c7129cfc58fb8af499012195786b4fd3,
     type: 3}
 --- !u!65 &2062019389059094710
 BoxCollider:

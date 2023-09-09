@@ -3994,6 +3994,12 @@ PrefabInstance:
       propertyPath: miningFalloff.m_Curve.Array.data[1].tangentMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1644101827536578316, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: enemyPrefab
+      value: 
+      objectReference: {fileID: 653410583639567009, guid: 6e7e19798e9a141489a3aa858cd8f694,
+        type: 3}
     - target: {fileID: 1991396077000211870, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -4033,6 +4039,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -115
+      objectReference: {fileID: 0}
+    - target: {fileID: 2646021819956909822, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: startTime
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3168312980166564591, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
@@ -4339,6 +4350,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6890680919256053849, guid: 19645f926d6082343a5a4e1d95d3f9e7,
+        type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6890680919256053849, guid: 19645f926d6082343a5a4e1d95d3f9e7,
+        type: 3}
+      propertyPath: acceleration
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8033692403588707408, guid: 19645f926d6082343a5a4e1d95d3f9e7,
         type: 3}

@@ -265,7 +265,7 @@ public class CharacterInputController : MonoBehaviour
                 pickUp = null;
                 currentInteractable = null;
 
-                Instantiate(throwVfxPrefab, pickUp.transform.position, pickUp.transform.rotation, pickUp.transform);
+                //Instantiate(throwVfxPrefab, pickUp.transform.position, pickUp.transform.rotation, pickUp.transform);
             }
         }
 
