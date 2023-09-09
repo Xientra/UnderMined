@@ -1046,7 +1046,7 @@ MonoBehaviour:
   drill: {fileID: 0}
   enemySpawner: {fileID: 0}
   startingZoneSize: 15
-  startTime: 30
+  startTime: 60
   mainMenu: {fileID: 7505054108448339283}
   inGameMenu: {fileID: 4566039659948849404}
   timerLabel: {fileID: 0}
