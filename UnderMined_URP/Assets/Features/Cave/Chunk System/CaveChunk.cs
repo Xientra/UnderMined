@@ -77,12 +77,13 @@ namespace Features.Cave.Chunk_System
                     GridPoint p = ChunkValueField[x,y];
                     //ores.Add(WallToUV(p));
 
+                  
                     switch(p.wallType){
-                        case GridPoint.WallType.Stone: oreColor.Add(new Color(0.25f, 0.25f, 0.25f, 0f));
+                        case GridPoint.WallType.Stone: oreColor.Add(new Color(1f, 0, 0, chunkValueField[x, y].value));
                         break;
-                        case GridPoint.WallType.Coal: oreColor.Add(new Color(0, 0f, 0f, 0f));
+                        case GridPoint.WallType.Coal: oreColor.Add(new Color(0, 1f, 0f, chunkValueField[x, y].value));
                         break;
-                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0.83f, 0.65f, 0, 1));
+                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0, 0, 1f, chunkValueField[x, y].value));
                         break;
                     }
                 }
