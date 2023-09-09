@@ -605,7 +605,7 @@ MonoBehaviour:
   moveVec: {x: 0, y: 0, z: 0}
   moveAvailable: 1
   rotationSpeed: 45
-  dashPower: 4
+  dashPower: 5
   dashCD: 0.5
   dashDuration: 0.05
   dashAvailable: 1

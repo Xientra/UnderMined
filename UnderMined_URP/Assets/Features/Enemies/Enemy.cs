@@ -45,6 +45,8 @@ public class Enemy : MonoBehaviour, IHittable
 
     private Vector3 _turnVelocity;
 
+    public GameObject coalPrefab;
+
     private void Start()
     {
         SetRandomDirection();
@@ -143,7 +145,8 @@ public class Enemy : MonoBehaviour, IHittable
         // TODO: die vfx + die animation
         dead = true;
         animator.SetTrigger("Action/Die");
-        
+        if (Random.Range(0, 1f) > 0.5f)
+            Instantiate(coalPrefab, transform.position, Quaternion.identity);
         Destroy(this.gameObject, 2f);
     }
 }
