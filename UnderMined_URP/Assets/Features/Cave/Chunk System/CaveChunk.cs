@@ -8,21 +8,26 @@ namespace Features.Cave.Chunk_System
     [RequireComponent(typeof(MeshRenderer))]
     public class CaveChunk : MonoBehaviour
     {
+        /// <summary>contains local position at grid point and the value there </summary>
         private GridPoint[,] chunkValueField;
         public GridPoint[,] ChunkValueField => chunkValueField;
+
+        /// <summary>contains all vertices and their indeces for mesh generation </summary>
         private Dictionary<Vector3, int> gridPointDic;
 
         private MeshGenerator _meshGenerator;
+
         private MeshFilter _meshFilter;
 
         public bool canBeReplaced = true;
 
         private float DEBUG_boxSize = 1f;
 
+       
         [SerializeField]
+        [Tooltip("Object for chunk wall; must have a MeshFilter + MeshCollider components")]
         private GameObject wallChild;
         private MeshFilter _wallFilter;
-
         private MeshCollider _wallCollider;
 
         private void Awake()
@@ -77,13 +82,14 @@ namespace Features.Cave.Chunk_System
                     GridPoint p = ChunkValueField[x,y];
                     //ores.Add(WallToUV(p));
 
+                  
                     switch(p.wallType){
-                        case GridPoint.WallType.Stone: oreColor.Add(new Color(0.25f, 0.25f, 0.25f, 0f));
-                        break;
-                        case GridPoint.WallType.Coal: oreColor.Add(new Color(0, 0f, 0f, 0f));
-                        break;
-                        case GridPoint.WallType.Gold: oreColor.Add(new Color(0.83f, 0.65f, 0, 1));
-                        break;
+                        case GridPoint.WallType.Stone: oreColor.Add(ChunkManager.instance.stoneColor);
+                            break;
+                        case GridPoint.WallType.Coal: oreColor.Add(ChunkManager.instance.coalColor);
+                            break;
+                        case GridPoint.WallType.Gold: oreColor.Add(ChunkManager.instance.goldColor);
+                            break;
                     }
                 }
             }
@@ -106,12 +112,12 @@ namespace Features.Cave.Chunk_System
             wall.RecalculateNormals();
 
 
-            _wallFilter.mesh = wall;
+            //_wallFilter.mesh = wall;
             _wallCollider.sharedMesh = wall;
         }
 
         public bool DEBUG_drawValueField = true;
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             if (DEBUG_drawValueField == false) 
                 return;
@@ -133,7 +139,7 @@ namespace Features.Cave.Chunk_System
                         }
 
                         if (chunkValueField[x, y].value > ChunkManager.IsoValue)
-                            Gizmos.DrawCube(chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
+                            Gizmos.DrawCube(transform.position + chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
                     }
                 }
             }

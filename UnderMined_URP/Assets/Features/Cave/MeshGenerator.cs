@@ -4,32 +4,38 @@ using UnityEngine;
 
 public class MeshGenerator
 {
+    /// <summary>
+    /// Implementation of a Marching Squares Algorithm
+    /// </summary>
+    /// <param name="map">contains the signed distance field values with local positions</param>
+    /// <param name="gridPointDic">contains local grid positions as keys and their vertex index as value</param>
+    /// <param name="isoValue">determines what counts as wall/air. Values lower than this count as air</param>
+    /// <param name="wallHeight"></param>
+    /// <returns>two <see cref="MeshInfo"/>s in an Array. At [0] is the top of the mesh. At [1] are the walls</returns>
     public MeshInfo[] GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue, float wallHeight) {
         int width = map.GetLength(0) - 1;
         int height = map.GetLength(1) - 1;
         // create squares in map
         GridSquare[,] squares = GenerateGridSquares(map, width, height);
 
+        // keeps track of used Vertices
+        Dictionary<int, Vector3> indexToVertex = new Dictionary<int, Vector3>();
+        Dictionary<Vector3, int> vertexToIndex = new Dictionary<Vector3, int>();
+
         List<int> outlines = new List<int>();
 
         // growing list of triangle indeces
         List<int> indeces = new List<int>();
 
-        // march through squares
-        for (int y = 0; y < width + 1; y++)
-        {
-            for (int x = 0; x < height + 1; x++)
-            {
-                GridPoint p = map[x,y];
-            }
-        }
+        // growing list of vertex positions
+        List<Vector3> verts = new List<Vector3>();
 
         // march through squares a second time
         for (int y = 0; y < width; y++)
         {
             for (int x = 0; x < height; x++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, outlines);
+                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, verts, outlines, indexToVertex, vertexToIndex);
             }
         }
 
@@ -44,7 +50,7 @@ public class MeshGenerator
 
         MeshInfo[] result = new MeshInfo[2];
 
-        result[0] = new MeshInfo(indecesArr, vertices);
+        result[0] = new MeshInfo(indecesArr, verts.ToArray());
         result[1] = TriangulateWall(wallHeight, outlines,vertices);
 
         return result;
@@ -111,10 +117,10 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<int> outlines) {
-        
+    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<Vector3> vertices, List<int> outlines
+        , Dictionary<int, Vector3> indexToVertex, Dictionary<Vector3, int> vertexToIndex) {
         /// <summary>
-        /// linear interpolation to find position at which isoContour to the isoValue is
+        /// to find position at which isoContour to the isoValue is
         /// </summary>
         /// <param name="lower"> is world space pos at the bottom left of the grid</param>
         /// <param name="higher"> is world space pos at the bottom left of the grid</param>
@@ -127,44 +133,48 @@ public class MeshGenerator
             }
             return result;
         }
-        
+
+        // predefinitions
+        // index just counts upwards depending on length of gridpointDic
+        int currentIndex = vertices.Count;
+
         GridPoint bL = square.bottomLeft;
         GridPoint tL = square.topLeft;
         GridPoint tR = square.topRight;
         GridPoint bR = square.bottomRight;
 
-        // indeces of the grid points
-        int bLI = GridPointDic[bL.pos];
-        int tLI = GridPointDic[tL.pos];
-        int tRI = GridPointDic[tR.pos];
-        int bRI = GridPointDic[bR.pos];
+        Vector3 l;
+        Vector3 t;
+        Vector3 r;
+        Vector3 b;
 
-        // index just counts upwards depending on length of gridpointDic
-        int nextIndex = GridPointDic.Values.Count;
+        int bLI;
+        int tLI;
+        int tRI;
+        int bRI;
 
-        // predefine possibly required iso contour poses
-        Vector3 b = CrossPos(bL,bR,isoValue);
-        Vector3 r = CrossPos(tR,bR,isoValue);
-        Vector3 t = CrossPos(tL,tR,isoValue);
-        Vector3 l = CrossPos(bL,tL,isoValue);
+        int lI;
+        int tI;
+        int rI;
+        int bI;
 
         /// <summary> if the vertex position has been added already, take the index of the existing vertex otherwise choose next bigger index and add it to dictionary </summary>
-        int assignIndex(Vector3 pos) {
+        int assignIndex(Vector3 pos)
+        {
             int index;
-            if(GridPointDic.TryGetValue(pos, out int value)) {
+            if (vertexToIndex.TryGetValue(pos, out int value))
+            {
                 index = value;
-            } else {
-                index = nextIndex++;
-                GridPointDic.Add(pos, index);
+            }
+            else
+            {
+                index = currentIndex++;
+                vertices.Add(pos);
+                vertexToIndex.Add(pos, index);
+                indexToVertex.Add(index, pos);
             }
             return index;
         }
-
-        // indeces of iso contour points
-        int bI = assignIndex(b);
-        int rI = assignIndex(r);
-        int tI = assignIndex(t);
-        int lI = assignIndex(l);
 
         int caseNumber = 0;
 
@@ -187,254 +197,336 @@ public class MeshGenerator
             // all empty case
             break;
             case 1:
-            b = CrossPos(bL,bR,isoValue);
-            r = CrossPos(tR,bR,isoValue);
+                b = CrossPos(bL,bR,isoValue);
+                r = CrossPos(tR,bR,isoValue);
 
-            indeces.Add(bI);
-            indeces.Add(rI);
-            indeces.Add(bRI);
+                bI = assignIndex(b);
+                rI = assignIndex(r);
+                bRI = assignIndex(bR.pos);
 
-            outlines.Add(rI);
-            outlines.Add(bI);
+                indeces.Add(bI);
+                indeces.Add(rI);
+                indeces.Add(bRI);
+
+                outlines.Add(rI);
+                outlines.Add(bI);
             break;
             case 2:
-            r = CrossPos(bR,tR,isoValue);
-            t = CrossPos(tL,tR,isoValue);
+                r = CrossPos(bR,tR,isoValue);
+                t = CrossPos(tL,tR,isoValue);
 
-            indeces.Add(rI);
-            indeces.Add(tI);
-            indeces.Add(tRI);
+                rI = assignIndex(r);
+                tI = assignIndex(t);
+                tRI = assignIndex(tR.pos);
 
-            outlines.Add(tI);
-            outlines.Add(rI);
+                indeces.Add(rI);
+                indeces.Add(tI);
+                indeces.Add(tRI);
+
+                outlines.Add(tI);
+                outlines.Add(rI);
             break;
             case 3:
-            b = CrossPos(bL,bR,isoValue);
-            t = CrossPos(tL,tR,isoValue);
+                b = CrossPos(bL,bR,isoValue);
+                t = CrossPos(tL,tR,isoValue);
 
-            indeces.Add(bI);
-            indeces.Add(tRI);
-            indeces.Add(bRI);
+                bI = assignIndex(b);
+                tI = assignIndex(t);
+                tRI = assignIndex(tR.pos);
+                bRI = assignIndex(bR.pos);
 
-            indeces.Add(bI);
-            indeces.Add(tI);
-            indeces.Add(tRI);
+                indeces.Add(bI);
+                indeces.Add(tRI);
+                indeces.Add(bRI);
 
-            outlines.Add(tI);
-            outlines.Add(bI);
+                indeces.Add(bI);
+                indeces.Add(tI);
+                indeces.Add(tRI);
+
+                outlines.Add(tI);
+                outlines.Add(bI);
             break;
             case 4:
-            t = CrossPos(tR,tL,isoValue);
-            l = CrossPos(bL,tL,isoValue);
+                t = CrossPos(tR,tL,isoValue);
+                l = CrossPos(bL,tL,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(tLI);
-            indeces.Add(tI);
+                tI = assignIndex(t);
+                lI = assignIndex(l);
+                tLI = assignIndex(tL.pos);
 
-            outlines.Add(lI);
-            outlines.Add(tI);
+                indeces.Add(lI);
+                indeces.Add(tLI);
+                indeces.Add(tI);
+
+                outlines.Add(lI);
+                outlines.Add(tI);
             break;
             case 5:
-            l = CrossPos(bL,tL,isoValue);
-            b = CrossPos(bL,bR,isoValue);
+                l = CrossPos(bL,tL,isoValue);
+                b = CrossPos(bL,bR,isoValue);
 
-            r = CrossPos(tR,bR,isoValue);
-            t = CrossPos(tR,tL,isoValue);
+                r = CrossPos(tR,bR,isoValue);
+                t = CrossPos(tR,tL,isoValue);
 
-            indeces.Add(tLI);
-            indeces.Add(bI);
-            indeces.Add(lI);
+                lI = assignIndex(l);
+                bI = assignIndex(b);
 
-            indeces.Add(tLI);
-            indeces.Add(tI);
-            indeces.Add(bI);
+                rI = assignIndex(r);
+                tI = assignIndex(t);
 
-            indeces.Add(tI);
-            indeces.Add(bRI);
-            indeces.Add(bI);
+                tLI = assignIndex(tL.pos);
+                bRI = assignIndex(bR.pos);
 
-            indeces.Add(tI);
-            indeces.Add(rI);
-            indeces.Add(bRI);
+                indeces.Add(tLI);
+                indeces.Add(bI);
+                indeces.Add(lI);
+
+                indeces.Add(tLI);
+                indeces.Add(tI);
+                indeces.Add(bI);
+
+                indeces.Add(tI);
+                indeces.Add(bRI);
+                indeces.Add(bI);
+
+                indeces.Add(tI);
+                indeces.Add(rI);
+                indeces.Add(bRI);
             
-            outlines.Add(bI);
-            outlines.Add(lI);
+                outlines.Add(bI);
+                outlines.Add(lI);
             
-            outlines.Add(tI);
-            outlines.Add(rI);
-
-            break;
+                outlines.Add(tI);
+                outlines.Add(rI);
+                break;
             case 6:
-            l = CrossPos(bL,tL,isoValue);
-            r = CrossPos(bR,tR,isoValue);
+                l = CrossPos(bL,tL,isoValue);
+                r = CrossPos(bR,tR,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(tLI);
-            indeces.Add(tRI);
+                lI = assignIndex(l);
+                rI = assignIndex(r);
 
-            indeces.Add(lI);
-            indeces.Add(tRI);
-            indeces.Add(rI);
+                tLI = assignIndex(tL.pos);
+                tRI = assignIndex(tR.pos);
 
-            outlines.Add(lI);
-            outlines.Add(rI);
-            break;
+                indeces.Add(lI);
+                indeces.Add(tLI);
+                indeces.Add(tRI);
+
+                indeces.Add(lI);
+                indeces.Add(tRI);
+                indeces.Add(rI);
+
+                outlines.Add(lI);
+                outlines.Add(rI);
+                break;
             case 7:
-            l = CrossPos(bL,tL,isoValue);
-            b = CrossPos(bL,bR,isoValue);
+                l = CrossPos(bL,tL,isoValue);
+                b = CrossPos(bL,bR,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(tLI);
-            indeces.Add(tRI);
+                lI = assignIndex(l);
+                bI = assignIndex(b);
 
-            indeces.Add(lI);
-            indeces.Add(tRI);
-            indeces.Add(bI);
+                tLI = assignIndex(tL.pos);
+                tRI = assignIndex(tR.pos);
+                bRI = assignIndex(bR.pos);
 
-            indeces.Add(bI);
-            indeces.Add(tRI);
-            indeces.Add(bRI);
+                indeces.Add(lI);
+                indeces.Add(tLI);
+                indeces.Add(tRI);
 
-            outlines.Add(lI);
-            outlines.Add(bI);
+                indeces.Add(lI);
+                indeces.Add(tRI);
+                indeces.Add(bI);
+
+                indeces.Add(bI);
+                indeces.Add(tRI);
+                indeces.Add(bRI);
+
+                outlines.Add(lI);
+                outlines.Add(bI);
             break;
             case 8:
-            l = CrossPos(tL,bL,isoValue);
-            b = CrossPos(bR,bL,isoValue);
+                l = CrossPos(tL,bL,isoValue);
+                b = CrossPos(bR,bL,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(bI);
-            indeces.Add(bLI);
+                lI = assignIndex(l);
+                bI = assignIndex(b);
+                bLI = assignIndex(bL.pos);
 
-            outlines.Add(bI);
-            outlines.Add(lI);
+                indeces.Add(lI);
+                indeces.Add(bI);
+                indeces.Add(bLI);
+
+                outlines.Add(bI);
+                outlines.Add(lI);
             break;
             case 9:
-            l = CrossPos(tL,bL,isoValue);
-            r = CrossPos(tR,bR,isoValue);
+                l = CrossPos(tL,bL,isoValue);
+                r = CrossPos(tR,bR,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(rI);
-            indeces.Add(bLI);
+                lI = assignIndex(l);
+                rI = assignIndex(r);
+                bLI = assignIndex(bL.pos);
+                bRI = assignIndex(bR.pos);
 
-            indeces.Add(bLI);
-            indeces.Add(rI);
-            indeces.Add(bRI);
+                indeces.Add(lI);
+                indeces.Add(rI);
+                indeces.Add(bLI);
 
-            outlines.Add(rI);
-            outlines.Add(lI);
+                indeces.Add(bLI);
+                indeces.Add(rI);
+                indeces.Add(bRI);
+
+                outlines.Add(rI);
+                outlines.Add(lI);
             break;
             case 10:
-            t = CrossPos(tL,tR,isoValue);
-            l = CrossPos(tL,bL,isoValue);
+                t = CrossPos(tL,tR,isoValue);
+                l = CrossPos(tL,bL,isoValue);
 
-            b = CrossPos(bR,bL,isoValue);
-            r = CrossPos(bR,tR,isoValue);
+                b = CrossPos(bR,bL,isoValue);
+                r = CrossPos(bR,tR,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(bI);
-            indeces.Add(bLI);
+                tI = assignIndex(t);
+                lI = assignIndex(l);
+                bI = assignIndex(b);
+                rI = assignIndex(r);
+                bLI = assignIndex(bL.pos);
+                tRI = assignIndex(tR.pos);
 
-            indeces.Add(lI);
-            indeces.Add(tI);
-            indeces.Add(bI);
+                indeces.Add(lI);
+                indeces.Add(bI);
+                indeces.Add(bLI);
 
-            indeces.Add(tI);
-            indeces.Add(rI);
-            indeces.Add(bI);
+                indeces.Add(lI);
+                indeces.Add(tI);
+                indeces.Add(bI);
 
-            indeces.Add(tI);
-            indeces.Add(tRI);
-            indeces.Add(rI);
+                indeces.Add(tI);
+                indeces.Add(rI);
+                indeces.Add(bI);
 
-            outlines.Add(lI);
-            outlines.Add(tI);
+                indeces.Add(tI);
+                indeces.Add(tRI);
+                indeces.Add(rI);
 
-            outlines.Add(rI);
-            outlines.Add(bI);
+                outlines.Add(lI);
+                outlines.Add(tI);
+
+                outlines.Add(rI);
+                outlines.Add(bI);
             break;
             case 11:
-            t = CrossPos(tL,tR,isoValue);
-            l = CrossPos(tL,bL,isoValue);
+                t = CrossPos(tL,tR,isoValue);
+                l = CrossPos(tL,bL,isoValue);
 
-            indeces.Add(lI);
-            indeces.Add(bRI);
-            indeces.Add(bLI);
+                tI = assignIndex(t);
+                lI = assignIndex(l);
+                bRI = assignIndex(bR.pos);
+                bLI = assignIndex(bL.pos);
+                tRI = assignIndex(tR.pos);
 
-            indeces.Add(lI);
-            indeces.Add(tI);
-            indeces.Add(bRI);
+                indeces.Add(lI);
+                indeces.Add(bRI);
+                indeces.Add(bLI);
 
-            indeces.Add(tI);
-            indeces.Add(tRI);
-            indeces.Add(bRI);
+                indeces.Add(lI);
+                indeces.Add(tI);
+                indeces.Add(bRI);
 
-            outlines.Add(tI);
-            outlines.Add(lI);
+                indeces.Add(tI);
+                indeces.Add(tRI);
+                indeces.Add(bRI);
+
+                outlines.Add(tI);
+                outlines.Add(lI);
             break;
             case 12:
-            b = CrossPos(bR,bL,isoValue);
-            t = CrossPos(tR,tL,isoValue);
+                b = CrossPos(bR,bL,isoValue);
+                t = CrossPos(tR,tL,isoValue);
 
-            indeces.Add(bLI);
-            indeces.Add(tLI);
-            indeces.Add(tI);
+                bI = assignIndex(b);
+                tI = assignIndex(t);
+                bLI = assignIndex(bL.pos);
+                tLI = assignIndex(tL.pos);
 
-            indeces.Add(bLI);
-            indeces.Add(tI);
-            indeces.Add(bI);
+                indeces.Add(bLI);
+                indeces.Add(tLI);
+                indeces.Add(tI);
 
-            outlines.Add(bI);
-            outlines.Add(tI);
-            break;
+                indeces.Add(bLI);
+                indeces.Add(tI);
+                indeces.Add(bI);
+
+                outlines.Add(bI);
+                outlines.Add(tI);
+                break;
             case 13:
-            r = CrossPos(tL,bR,isoValue);
-            t = CrossPos(tR,tL,isoValue);
+                r = CrossPos(tL,bR,isoValue);
+                t = CrossPos(tR,tL,isoValue);
 
-            indeces.Add(bLI);
-            indeces.Add(tLI);
-            indeces.Add(tI);
+                rI = assignIndex(r);
+                tI = assignIndex(t);
+                bLI = assignIndex(bL.pos);
+                tLI = assignIndex(tL.pos);
+                bRI = assignIndex(bR.pos);
 
-            indeces.Add(bLI);
-            indeces.Add(tI);
-            indeces.Add(rI);
+                indeces.Add(bLI);
+                indeces.Add(tLI);
+                indeces.Add(tI);
 
-            indeces.Add(bLI);
-            indeces.Add(rI);
-            indeces.Add(bRI);
+                indeces.Add(bLI);
+                indeces.Add(tI);
+                indeces.Add(rI);
 
-            outlines.Add(rI);
-            outlines.Add(tI);
+                indeces.Add(bLI);
+                indeces.Add(rI);
+                indeces.Add(bRI);
+
+                outlines.Add(rI);
+                outlines.Add(tI);
             break;
             case 14:
-            b = CrossPos(bR,bL,isoValue);
-            r = CrossPos(bR,tR,isoValue);
+                b = CrossPos(bR,bL,isoValue);
+                r = CrossPos(bR,tR,isoValue);
 
-            indeces.Add(tLI);
-            indeces.Add(bI);
-            indeces.Add(bLI);
+                rI = assignIndex(r);
+                bI = assignIndex(b);
+                tLI = assignIndex(tL.pos);
+                bLI = assignIndex(bL.pos);
+                tRI = assignIndex(tR.pos);
 
-            indeces.Add(tLI);
-            indeces.Add(rI);
-            indeces.Add(bI);
+                indeces.Add(tLI);
+                indeces.Add(bI);
+                indeces.Add(bLI);
 
-            indeces.Add(tLI);
-            indeces.Add(tRI);
-            indeces.Add(rI);
+                indeces.Add(tLI);
+                indeces.Add(rI);
+                indeces.Add(bI);
 
-            outlines.Add(bI);
-            outlines.Add(rI);
+                indeces.Add(tLI);
+                indeces.Add(tRI);
+                indeces.Add(rI);
+
+                outlines.Add(bI);
+                outlines.Add(rI);
             break;
             case 15:
-            // all wall case: isoContour on GridPoints
+                // all wall case: isoContour on GridPoints
 
-            indeces.Add(bLI);
-            indeces.Add(tLI);
-            indeces.Add(tRI);
+                bLI = assignIndex(bL.pos);
+                tLI = assignIndex(tL.pos);
+                tRI = assignIndex(tR.pos);
+                bRI = assignIndex(bR.pos);
 
-            indeces.Add(bLI);
-            indeces.Add(tRI);
-            indeces.Add(bRI);
+                indeces.Add(bLI);
+                indeces.Add(tLI);
+                indeces.Add(tRI);
+
+                indeces.Add(bLI);
+                indeces.Add(tRI);
+                indeces.Add(bRI);
             break;
         }
     }

@@ -20,6 +20,13 @@ namespace Features.Cave.Chunk_System
 
         public AnimationCurve miningFalloff = AnimationCurve.EaseInOut(0, 1, 0, 0);
 
+        [Header("Chunk Settings:")]
+        
+        // the alpha is the metallic value
+        public Color stoneColor = new Color(0.25f, 0.25f, 0.25f, 0f);
+        public Color coalColor = new Color(0, 0f, 0f, 0f);
+        public Color goldColor = new Color(0.83f, 0.65f, 0, 1f);
+
         private class ChunkInfo
         {
             public readonly GridPoint[,] valueField;
@@ -51,8 +58,7 @@ namespace Features.Cave.Chunk_System
 
         public void Awake()
         {
-            if (instance == null)
-                instance = this;
+            instance = this;
 
             randomOffsetPerRun = new Vector3(Random.Range(-200, 200), Random.Range(-1000, 1000), Random.Range(-1000, 1000));
         }
@@ -233,11 +239,12 @@ namespace Features.Cave.Chunk_System
             bool goRight = localMinePoint.x + radius > 64;
             bool goLeft = localMinePoint.x - radius < 0;
 
+            /*
             if(goRight && goUp) MineNeighbor(Vector2Int.right + Vector2Int.up);
             else if(goRight && goDown) MineNeighbor(Vector2Int.right + Vector2Int.down);
             else if(goLeft && goUp) MineNeighbor(Vector2Int.left + Vector2Int.up);
             else if(goLeft && goDown) MineNeighbor(Vector2Int.left + Vector2Int.down);
-            else if(goUp) MineNeighbor(Vector2Int.up);
+            else*/ if(goUp) MineNeighbor(Vector2Int.up);
             else if(goDown) MineNeighbor(Vector2Int.down);
             else if(goRight) MineNeighbor(Vector2Int.right);
             else if(goLeft) MineNeighbor(Vector2Int.left);
