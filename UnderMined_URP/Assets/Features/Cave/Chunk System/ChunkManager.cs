@@ -130,17 +130,17 @@ namespace Features.Cave.Chunk_System
             }
         }
 
-        private GridPoint.WallType GetWallType(Vector3 position)
+        private WallType GetWallType(Vector3 position)
         {
             bool isCoal = OreGeneratorFunction(position + new Vector3(0, 0, 100));
             if (isCoal)
-                return GridPoint.WallType.Coal;
+                return WallType.Coal;
 
             bool isGold = OreGeneratorFunction(position + new Vector3(100, 0, 0));
             if (isGold)
-                return GridPoint.WallType.Gold;
+                return WallType.Gold;
 
-            return GridPoint.WallType.Stone;
+            return WallType.Stone;
         }
 
         private bool OreGeneratorFunction(Vector3 position)
@@ -269,11 +269,11 @@ namespace Features.Cave.Chunk_System
                     {
                         float removeAmount = Mathf.Min(valueField[x, y].value, strength * miningFalloff.Evaluate(distance / radius));
                         valueField[x, y].value -= removeAmount;
-                        if (valueField[x, y].wallType == GridPoint.WallType.Stone)
+                        if (valueField[x, y].wallType == WallType.Stone)
                             mr.stoneAmount += removeAmount;
-                        else if (valueField[x, y].wallType == GridPoint.WallType.Coal)
+                        else if (valueField[x, y].wallType == WallType.Coal)
                             mr.coalAmount += removeAmount;
-                        else if (valueField[x, y].wallType == GridPoint.WallType.Gold)
+                        else if (valueField[x, y].wallType == WallType.Gold)
                             mr.goldAmount += removeAmount;
                     }
                 }

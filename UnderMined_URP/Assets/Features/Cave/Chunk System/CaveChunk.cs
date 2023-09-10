@@ -79,11 +79,11 @@ namespace Features.Cave.Chunk_System
 
                   
                     switch(p.wallType){
-                        case GridPoint.WallType.Stone: oreColor.Add(ChunkManager.instance.stoneColor);
+                        case WallType.Stone: oreColor.Add(ChunkManager.instance.stoneColor);
                             break;
-                        case GridPoint.WallType.Coal: oreColor.Add(ChunkManager.instance.coalColor);
+                        case WallType.Coal: oreColor.Add(ChunkManager.instance.coalColor);
                             break;
-                        case GridPoint.WallType.Gold: oreColor.Add(ChunkManager.instance.goldColor);
+                        case WallType.Gold: oreColor.Add(ChunkManager.instance.goldColor);
                             break;
                     }
                 }
@@ -123,9 +123,9 @@ namespace Features.Cave.Chunk_System
                 {
                     for (int y = 0; y < chunkValueField.GetLength(1); y++)
                     {
-                        if (chunkValueField[x, y].wallType == GridPoint.WallType.Gold)
+                        if (chunkValueField[x, y].wallType == WallType.Gold)
                             Gizmos.color = new Color(1, 1, 0);
-                        else if (chunkValueField[x, y].wallType == GridPoint.WallType.Coal)
+                        else if (chunkValueField[x, y].wallType == WallType.Coal)
                             Gizmos.color = new Color(0, 0, 0);
                         else
                         {
