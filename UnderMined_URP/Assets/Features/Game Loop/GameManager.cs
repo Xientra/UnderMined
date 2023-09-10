@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Features.Cave.Chunk_System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,32 +10,30 @@ public class GameManager : MonoBehaviour
     public DrillController drill;
     public EnemySpawner enemySpawner;
 
+    [Header("Run Information:")]
+    
+    public bool gameIsRunning = false;
+    [Space(10)]
+    public float gold = 0f;
+    public float goldWorth = 10000f;
+    public float GoldAmount => gold * goldWorth;
+    
+    
     [Header("Starting Zone:")]
     
     public float startingZoneSize = 15f;
 
     public float startTime = 30f;
+    public float drillTime01 => drill.timeRemaining / drill.maxTimeAmount;
+    
     
     [Header("Menu:")]
     
     public GameObject mainMenu;
     public GameObject inGameMenu;
-    public TextMeshProUGUI timerLabel;
     public GameObject endScreen;
-
-    [Space(5)]
     
-    public Image healthBar;
-
-    public TextMeshProUGUI moneyLabel;
-    public float goldWorth = 10000f;
-
-    [Space(10)]
     
-    public bool gameIsRunning = false;
-
-    public float gold = 0f;
-
     private void Awake()
     {
         instance = this;
@@ -56,18 +49,6 @@ public class GameManager : MonoBehaviour
         ChunkManager.instance.MineWall(drill.transform.position, startingZoneSize, 0.75f);
     }
 
-    private void Update()
-    {
-        if (gameIsRunning)
-        {
-            //timerLabel.text = TimeSpan.FromSeconds(drill.timeRemaining).ToString("hh':'mm':'ss");
-
-            healthBar.fillAmount = drill.timeRemaining / drill.maxTimeAmount;
-            
-            moneyLabel.text = gold * goldWorth + "";
-        }
-    }
-
     public void Btn_StartGame()
     {
         StartGame();
@@ -75,6 +56,8 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log("uwu");
+        
         mainMenu.SetActive(false);
         inGameMenu.SetActive(true);
 

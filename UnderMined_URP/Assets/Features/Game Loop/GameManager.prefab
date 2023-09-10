@@ -829,6 +829,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4914119569546138890}
+  - component: {fileID: 7130159644700391352}
   m_Layer: 5
   m_Name: InGameMenu
   m_TagString: Untagged
@@ -857,6 +858,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7130159644700391352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4566039659948849404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d01ef5f7c25994ab39ea51872ecd1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 4066322248732506324}
+  moneyLabel: {fileID: 7008712991650479028}
+  timerLabel: {fileID: 0}
 --- !u!1 &5088715086336887381
 GameObject:
   m_ObjectHideFlags: 0

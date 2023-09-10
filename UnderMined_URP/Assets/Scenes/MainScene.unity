@@ -1418,6 +1418,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 4249681930032841241}
+    - target: {fileID: 981724892785489845, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1644101827536578316, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: enemyPrefab
@@ -1429,6 +1434,11 @@ PrefabInstance:
       propertyPath: targetGroup
       value: 
       objectReference: {fileID: 343111644}
+    - target: {fileID: 4830602391942147523, guid: 56d82fa12f100794eb0ac0d45063a168,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -683
+      objectReference: {fileID: 0}
     - target: {fileID: 6473315721619898602, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_Name
