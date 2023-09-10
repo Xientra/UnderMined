@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c0f479fd49b3e6479a473672d4e8ef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 0
+  wallType: 1
   amount: 1
   rb: {fileID: 0}
   col: {fileID: 0}
