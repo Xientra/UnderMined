@@ -1418,66 +1418,6 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 4249681930032841241}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[1].time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[1].value
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[0].inSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[1].inSlope
-      value: -1.5843669
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[0].outSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[1].inWeight
-      value: 0.06750578
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[1].outSlope
-      value: -1.5843669
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[0].outWeight
-      value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[0].tangentMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 676786349140936777, guid: 56d82fa12f100794eb0ac0d45063a168,
-        type: 3}
-      propertyPath: miningFalloff.m_Curve.Array.data[1].tangentMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1644101827536578316, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: enemyPrefab
@@ -1567,7 +1507,7 @@ PrefabInstance:
     - target: {fileID: 4728550497113397876, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 14.004822
+      value: 14.004761
       objectReference: {fileID: 0}
     - target: {fileID: 6473315721619898602, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
@@ -1577,7 +1517,7 @@ PrefabInstance:
     - target: {fileID: 6886173434381812977, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 13.999939
+      value: 13.999878
       objectReference: {fileID: 0}
     - target: {fileID: 7505054108448339283, guid: 56d82fa12f100794eb0ac0d45063a168,
         type: 3}

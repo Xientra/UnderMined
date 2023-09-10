@@ -53,6 +53,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43531ca6f637ccf47a2452189762396a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  miningFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: -1.5843669
+      outSlope: -1.5843669
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.06750578
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  stoneColor: {r: 0.25, g: 0.25, b: 0.25, a: 0}
+  coalColor: {r: 0, g: 0, b: 0, a: 0}
+  goldColor: {r: 0.83, g: 0.65, b: 0, a: 1}
   noiseScale: 0.1
   oldCenterChunkIndex: {x: 0, y: 0}
   target: {fileID: 0}
@@ -67,8 +94,8 @@ MonoBehaviour:
   - {fileID: 8574967064671631845}
   - {fileID: 6242261126501478844}
   oreFrequencies:
-  - 0.05
-  - 0.01
+  - 0.15
+  - 0.2
   oreAmount: 0.5
 --- !u!1001 &1528041128362470864
 PrefabInstance:

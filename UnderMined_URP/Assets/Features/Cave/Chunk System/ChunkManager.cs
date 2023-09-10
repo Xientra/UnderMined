@@ -279,7 +279,7 @@ namespace Features.Cave.Chunk_System
                 }
 
 
-            GetChunkThatHoldsValues(valueField).UpdateMesh();
+            GetChunkThatHoldsValues(valueField).UpdateMesh(); // TODO add null check
 
             return mr;
         }
