@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6631007731941888890}
   - component: {fileID: 7487027275315334902}
   - component: {fileID: 8947926406900658004}
+  - component: {fileID: -5230164842543533112}
   m_Layer: 0
   m_Name: Emerge VFX
   m_TagString: Untagged
@@ -114,3 +115,16 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &-5230164842543533112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2824223047872886140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c1221d6b7e852645a131894c73edf7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 3
