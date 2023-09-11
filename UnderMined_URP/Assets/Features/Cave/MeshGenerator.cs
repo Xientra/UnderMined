@@ -51,7 +51,7 @@ public class MeshGenerator
         MeshInfo[] result = new MeshInfo[2];
 
         result[0] = new MeshInfo(indecesArr, verts.ToArray());
-        result[1] = TriangulateWall(wallHeight, outlines,vertices);
+        //result[1] = TriangulateWall(wallHeight, outlines,vertices);
 
         return result;
     }
@@ -463,7 +463,7 @@ public class MeshGenerator
                 outlines.Add(tI);
                 break;
             case 13:
-                r = CrossPos(tL,bR,isoValue);
+                r = CrossPos(tR,bR,isoValue);
                 t = CrossPos(tR,tL,isoValue);
 
                 rI = assignIndex(r);
