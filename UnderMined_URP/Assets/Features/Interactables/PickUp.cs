@@ -8,9 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class PickUp : Interactable
 {
-    public enum PickUpType {Coal, Iron, Gold}
-
-    public PickUpType Type;
+    public WallType wallType;
     
     public float amount = 1.0f;
 
@@ -37,7 +35,7 @@ public class PickUp : Interactable
             col.enabled = false;
             player.currentInteractable = null;
         }
-        else if (player.pickUp.Type == Type && player.pickUp.amount < player.maxCarryAmount)
+        else if (player.pickUp.wallType == wallType && player.pickUp.amount < player.maxCarryAmount)
         {
             player.pickUp.amount += amount;
             Destroy(gameObject);

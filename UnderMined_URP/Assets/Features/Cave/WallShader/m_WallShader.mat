@@ -44,7 +44,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 0.153
-    - _TextureSize: 1
+    - _TextureSize: 64
     m_Colors:
     - _Color1: {r: 0.25241637, g: 0.24648446, b: 0.27358484, a: 1}
     - _Color2: {r: 0.62264144, g: 0.5749285, b: 0.5433428, a: 1}

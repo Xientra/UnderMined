@@ -10409,7 +10409,7 @@ MonoBehaviour:
   maxTimeAmount: 60
   coalToTimeRatio: 4
   speed: 1
-  acceleration: 0.02
+  acceleration: 0.01
   steerSpeed: 25
   die:
     m_PersistentCalls:

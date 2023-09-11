@@ -8,12 +8,7 @@ public struct GridPoint
     /// <summary> SignedDistanceField Value of this GridPoint </summary>
     public float value;
 
-    public enum WallType
-    {
-        Stone = 0,
-        Coal = 1,
-        Gold = 2
-    }
+
 
     public WallType wallType;
 
