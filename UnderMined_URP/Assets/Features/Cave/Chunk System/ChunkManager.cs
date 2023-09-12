@@ -30,12 +30,10 @@ namespace Features.Cave.Chunk_System
         private class ChunkInfo
         {
             public readonly GridPoint[,] valueField;
-            public readonly Dictionary<Vector3, int> gridPoints;
 
-            public ChunkInfo(GridPoint[,] valueField, Dictionary<Vector3, int> gridPoints)
+            public ChunkInfo(GridPoint[,] valueField)
             {
                 this.valueField = valueField;
-                this.gridPoints = gridPoints;
             }
         }
 
@@ -114,7 +112,7 @@ namespace Features.Cave.Chunk_System
         {
             chunkPool[chunkIndex].transform.localPosition = GridToWorldPosition(gridPos);
             ChunkInfo ci = GetChunkInfoAtChunkCoord(gridPos);
-            chunkPool[chunkIndex].SetChunkValueField(ci.valueField, ci.gridPoints);
+            chunkPool[chunkIndex].SetChunkValueField(ci.valueField);
             chunkPool[chunkIndex].canBeReplaced = false;
         }
 
@@ -164,7 +162,6 @@ namespace Features.Cave.Chunk_System
             int size = ChunkSize + 1;
             GridPoint[,] newField = new GridPoint[size, size];
 
-            int index = 0;
             Dictionary<Vector3, int> gridPointDic = new Dictionary<Vector3, int>();
 
             for (int y = 0; y < size; y++)
@@ -178,11 +175,9 @@ namespace Features.Cave.Chunk_System
                 GridPoint p = new GridPoint(gridPointPos, value);
                 p.wallType = GetWallType(gridOrigin + gridPointPos);
                 newField[x, y] = p;
-
-                gridPointDic.Add(p.pos, index++);
             }
 
-            return new ChunkInfo(newField, gridPointDic);
+            return new ChunkInfo(newField);
         }
 
         private Vector2Int GetTargetChunkGridPosition()

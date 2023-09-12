@@ -12,7 +12,7 @@ public class MeshGenerator
     /// <param name="isoValue">determines what counts as wall/air. Values lower than this count as air</param>
     /// <param name="wallHeight"></param>
     /// <returns>two <see cref="Mesh"/>s in an Array. At [0] is the top of the mesh. At [1] are the walls</returns>
-    public Mesh[] GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue, float wallHeight) {
+    public Mesh[] GenerateMeshFromMap(GridPoint[,] map, float isoValue, float wallHeight) {
         int width = map.GetLength(0) - 1;
         int height = map.GetLength(1) - 1;
         // create squares in map

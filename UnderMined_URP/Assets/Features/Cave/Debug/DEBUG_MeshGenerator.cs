@@ -35,7 +35,7 @@ public class DEBUG_MeshGenerator : MonoBehaviour
             }
         }
 
-        Mesh[] infos = gen.GenerateMeshFromMap(map, new Dictionary<Vector3, int>(), 0.1f, 3);
+        Mesh[] infos = gen.GenerateMeshFromMap(map, 0.1f, 3);
 
         mesh = infos[0];
 
