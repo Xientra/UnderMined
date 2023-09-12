@@ -57,12 +57,13 @@ namespace Features.Cave.Chunk_System
         {
             // generate mesh for top and walls
             
-            MeshInfo[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue, ChunkManager.WallHeight);
+            Mesh[] meshInfos =_meshGenerator.GenerateMeshFromMap(chunkValueField, gridPointDic, ChunkManager.IsoValue, ChunkManager.WallHeight);
             
             // assign top
-            MeshInfo topInfo = meshInfos[0];
-            Mesh top = new Mesh();
+            Mesh top = meshInfos[0];
             top.name = "top";
+
+            Vector3[] topVertices = top.vertices;
 
             // this part is for shading of mesh
             //List<Vector2> ores = new List<Vector2>();
@@ -70,8 +71,8 @@ namespace Features.Cave.Chunk_System
 
             Vector2 WallToUV(GridPoint p) {return new Vector2((int)p.wallType, p.value);}
 
-            for(int i = 0; i < topInfo.vertices.Length; i++) {
-                Vector3 v = topInfo.vertices[i];
+            for(int i = 0; i < topVertices.Length; i++) {
+                Vector3 v = topVertices[i];
                 int x = Mathf.RoundToInt(v.x);
                 int y = Mathf.RoundToInt(v.z);
 
@@ -94,8 +95,6 @@ namespace Features.Cave.Chunk_System
                 }
             }
 
-            top.SetVertices(topInfo.vertices);
-            top.SetIndices(topInfo.indeces, MeshTopology.Triangles, 0);
             //top.SetUVs(0,ores);
             top.SetColors(oreColor);
             top.RecalculateNormals();
@@ -103,18 +102,8 @@ namespace Features.Cave.Chunk_System
             _meshFilter.mesh = top;
 
             // assign walls
-            MeshInfo wallInfo = meshInfos[1];
-            Mesh wall = new Mesh();
+            Mesh wall = meshInfos[1];
             wall.name = "wall";
-
-            wall.SetVertices(wallInfo.vertices);
-            wall.SetIndices(wallInfo.indeces, MeshTopology.Triangles, 0);
-            wall.RecalculateNormals();
-
-            
-            Debug.Log("The TopMesh has: " + meshInfos[0].vertices.Length + " Vertices and: " + meshInfos[0].indeces.Length / 3 + " triangles");
-            Debug.Log("The WallMesh has: " + meshInfos[1].vertices.Length + " Vertices and: " + meshInfos[1].indeces.Length / 3 + " triangles");
-            
 
             _wallFilter.mesh = wall;
             _wallCollider.sharedMesh = wall;

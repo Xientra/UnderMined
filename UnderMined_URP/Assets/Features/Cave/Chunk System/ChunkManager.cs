@@ -315,17 +315,6 @@ namespace Features.Cave.Chunk_System
     }
 }
 
-public struct MeshInfo {
-    public int[] indeces;
-
-    public Vector3[] vertices;
-
-    public MeshInfo(int[] _indeces, Vector3[] _vertices) 
-    {
-        indeces = _indeces;
-        vertices = _vertices;
-    }
-}
 /// <summary> contains information of a full grid cell </summary>
 public struct GridSquare
 {

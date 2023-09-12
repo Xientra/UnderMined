@@ -11,8 +11,8 @@ public class MeshGenerator
     /// <param name="gridPointDic">contains local grid positions as keys and their vertex index as value</param>
     /// <param name="isoValue">determines what counts as wall/air. Values lower than this count as air</param>
     /// <param name="wallHeight"></param>
-    /// <returns>two <see cref="MeshInfo"/>s in an Array. At [0] is the top of the mesh. At [1] are the walls</returns>
-    public MeshInfo[] GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue, float wallHeight) {
+    /// <returns>two <see cref="Mesh"/>s in an Array. At [0] is the top of the mesh. At [1] are the walls</returns>
+    public Mesh[] GenerateMeshFromMap(GridPoint[,] map, Dictionary<Vector3, int> gridPointDic, float isoValue, float wallHeight) {
         int width = map.GetLength(0) - 1;
         int height = map.GetLength(1) - 1;
         // create squares in map
@@ -41,16 +41,21 @@ public class MeshGenerator
 
         int[] indecesArr = indeces.ToArray();
 
-        MeshInfo[] result = new MeshInfo[2];
+        Mesh[] result = new Mesh[2];
 
-        result[0] = new MeshInfo(indecesArr, vertices.ToArray());
+        Mesh topMesh = new Mesh();
+        topMesh.SetVertices(vertices);
+        topMesh.SetIndices(indecesArr, MeshTopology.Triangles, 0);
+        topMesh.RecalculateNormals();
+
+        result[0] = topMesh;
         result[1] = TriangulateWall(wallHeight, outlines, vertices);
 
         return result;
     }
 
-    private MeshInfo TriangulateWall(float wallheight, List<int> outlineIndeces, List<Vector3> vertices) {
-        MeshInfo meshInfo = new();
+    private Mesh TriangulateWall(float wallheight, List<int> outlineIndeces, List<Vector3> vertices) {
+        Mesh mesh = new();
         int wallSegmentCount = outlineIndeces.Count / 2;
 
         int wallIndex = 0;
@@ -110,11 +115,11 @@ public class MeshGenerator
             wallIndeces.Add(cI);
         }
 
-        meshInfo.vertices = wallVerts.ToArray();
-        //jank
-        meshInfo.indeces = wallIndeces.ToArray();
+        mesh.SetVertices(wallVerts);
+        mesh.SetIndices(wallIndeces, MeshTopology.Triangles, 0);
+        mesh.RecalculateNormals();
 
-        return meshInfo;
+        return mesh;
     }
 
     private GridSquare[,] GenerateGridSquares(GridPoint[,] map, int width, int height) {

@@ -35,11 +35,9 @@ public class DEBUG_MeshGenerator : MonoBehaviour
             }
         }
 
-        MeshInfo[] infos = gen.GenerateMeshFromMap(map, new Dictionary<Vector3, int>(), 0.1f, 3);
+        Mesh[] infos = gen.GenerateMeshFromMap(map, new Dictionary<Vector3, int>(), 0.1f, 3);
 
-        mesh.SetVertices(infos[0].vertices);
-        mesh.SetIndices(infos[0].indeces, MeshTopology.Triangles, 0);
-        mesh.RecalculateNormals();
+        mesh = infos[0];
 
         meshFilter.mesh = mesh;
     }
