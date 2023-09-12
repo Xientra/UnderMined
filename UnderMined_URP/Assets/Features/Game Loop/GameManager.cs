@@ -56,8 +56,6 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("uwu");
-        
         mainMenu.SetActive(false);
         inGameMenu.SetActive(true);
 

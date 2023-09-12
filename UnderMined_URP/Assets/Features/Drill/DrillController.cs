@@ -82,7 +82,6 @@ public class DrillController : MonoBehaviour
 
     public void AddCoal(float amount)
     {
-        Debug.Log("hello? " + amount);
         if (amount == -1)
             GameManager.instance.StartGame();
             
