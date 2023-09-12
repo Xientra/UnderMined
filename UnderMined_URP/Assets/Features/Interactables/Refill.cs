@@ -11,19 +11,8 @@ public class Refill : Interactable
     {
         if(player.pickUp)
         {
-            if(player.pickUp.wallType == WallType.Coal)
-            {
-                drill.AddCoal(player.pickUp.amount);
-                
-            }
-            else if (player.pickUp.wallType == WallType.Gold)
-            {
-                GameManager.instance.gold += player.pickUp.amount;
-            }
-            else if (player.pickUp.wallType == WallType.Iron)
-            {
-                //idk
-            }
+            drill.AddOre(player.pickUp.wallType, player.pickUp.amount);
+            
             Destroy(player.pickUp.gameObject);
             player.currentInteractable = null;
         }

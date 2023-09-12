@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,11 +15,9 @@ public class GameManager : MonoBehaviour
     
     public bool gameIsRunning = false;
     [Space(10)]
-    public float gold = 0f;
     public float goldWorth = 10000f;
-    public float GoldAmount => gold * goldWorth;
-    
-    
+    public float GoldAmount => drill.GetOreAmount(WallType.Gold) * goldWorth;
+
     [Header("Starting Zone:")]
     
     public float startingZoneSize = 15f;

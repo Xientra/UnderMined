@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.VFX;
+using Random = UnityEngine.Random;
 
 [SelectionBase]
 public class DrillController : MonoBehaviour
@@ -11,10 +14,10 @@ public class DrillController : MonoBehaviour
 
     public float timeRemaining = 0;
     public float maxTimeAmount = 60f;
-
-    
     public float coalToTimeRatio = 10f;
 
+    [Header("Movement:")]
+    
     public float speed = 2f;
     public float acceleration = 0.05f;
     public float steerSpeed = 25f;
@@ -34,6 +37,9 @@ public class DrillController : MonoBehaviour
     private float _mineTimestamp = 0f;
     
 
+    public Dictionary<WallType, float> collectedOre = new Dictionary<WallType, float>();
+    public Dictionary<WallType, float> totalCollectedOre = new Dictionary<WallType, float>();
+
     [Header("Effects:")]
     
     public VisualEffect drillVfx;
@@ -41,7 +47,22 @@ public class DrillController : MonoBehaviour
     public Animator animator;
 
     public VisualEffect explodeVfx;
-    
+
+    private void Awake()
+    {
+        // for things that are shown on UI
+        collectedOre.TryAdd(WallType.Gold, 0);
+        totalCollectedOre.TryAdd(WallType.Gold, 0);
+        collectedOre.TryAdd(WallType.Booster, 0);
+        totalCollectedOre.TryAdd(WallType.Booster, 0);
+    }
+
+    public float GetOreAmount(WallType ore)
+    {
+        collectedOre.TryGetValue(ore, out var amount);
+        return amount;
+    }
+
     public void StartMoving()
     {
         isRunning = true;
@@ -80,15 +101,28 @@ public class DrillController : MonoBehaviour
         }
     }
 
-    public void AddCoal(float amount)
+    public void AddOre(WallType oreType, float amount)
     {
-        if (amount == -1)
-            GameManager.instance.StartGame();
+        if (oreType == WallType.Coal)
+        {
+            // start game on first coal pickup
+            if (GameManager.instance.gameIsRunning == false)
+                GameManager.instance.StartGame();
             
+            // add time
+            timeRemaining += amount * coalToTimeRatio;
+            if (timeRemaining > maxTimeAmount)
+                timeRemaining = maxTimeAmount;
+        }
+        else
+        {
+            collectedOre.TryAdd(oreType, 0);
+            collectedOre[oreType] += amount;
+        }
+
         
-        timeRemaining += amount * coalToTimeRatio;
-        if (timeRemaining > maxTimeAmount)
-            timeRemaining = maxTimeAmount;
+        totalCollectedOre.TryAdd(oreType, 0);
+        totalCollectedOre[oreType] += amount;
     }
 
     public void StealCoal(float amount)
