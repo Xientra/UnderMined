@@ -28,45 +28,69 @@ public class MeshGenerator
         List<int> indeces = new List<int>();
 
         // growing list of vertex positions
-        List<Vector3> verts = new List<Vector3>();
+        List<Vector3> vertices = new List<Vector3>();
 
         // march through squares a second time
         for (int y = 0; y < width; y++)
         {
             for (int x = 0; x < height; x++)
             {
-                TriangulateSquare(squares[x,y], isoValue, gridPointDic, indeces, verts, outlines, indexToVertex, vertexToIndex);
+                TriangulateSquare(squares[x,y], isoValue, indeces, vertices, outlines, indexToVertex, vertexToIndex);
             }
-        }
-
-        // vertex array
-        Vector3[] vertices = new Vector3[gridPointDic.Keys.Count];
-        // fill vertex array
-        foreach(Vector3 key in gridPointDic.Keys) {
-            vertices[gridPointDic[key]] = key;
         }
 
         int[] indecesArr = indeces.ToArray();
 
         MeshInfo[] result = new MeshInfo[2];
 
-        result[0] = new MeshInfo(indecesArr, verts.ToArray());
-        //result[1] = TriangulateWall(wallHeight, outlines,vertices);
+        result[0] = new MeshInfo(indecesArr, vertices.ToArray());
+        result[1] = TriangulateWall(wallHeight, outlines, vertices);
 
         return result;
     }
 
-    private MeshInfo TriangulateWall(float wallheight, List<int> outlineIndeces, Vector3[] vertices) {
-        MeshInfo meshInfo = new MeshInfo();
+    private MeshInfo TriangulateWall(float wallheight, List<int> outlineIndeces, List<Vector3> vertices) {
+        MeshInfo meshInfo = new();
         int wallSegmentCount = outlineIndeces.Count / 2;
+
+        int wallIndex = 0;
 
         Vector3[] wallVerts = new Vector3[wallSegmentCount * 4];
         List<int> wallIndeces = new List<int>();
 
+        Dictionary<int,int> topIndexToWallIndex = new Dictionary<int,int>();
+        Dictionary<Vector3, int> wallPosToIndex = new Dictionary<Vector3, int>();
+
+        int assignTopIndex(int wallSegmentIndex)
+        {
+            int vertexIndex = outlineIndeces[wallSegmentIndex];
+
+            if(topIndexToWallIndex.TryGetValue(vertexIndex, out int wallVertIndex))
+            {
+                return wallVertIndex;
+            } else
+            {
+                int nextIndex = wallIndex++;
+                topIndexToWallIndex[vertexIndex] = nextIndex;
+                return nextIndex;
+            }
+        }
+
+        int assignBottomIndex(Vector3 wallPos)
+        {
+            if(wallPosToIndex.TryGetValue(wallPos, out int wallVertIndex)) 
+            { 
+                return wallVertIndex; 
+            } else
+            {
+                int nextIndex = wallIndex++;
+                wallPosToIndex[wallPos] = nextIndex;
+                return nextIndex;
+            }
+        }
         
         for(int i = 0; i < wallSegmentCount; i++) {
             int wallSegmentIndex = i * 2;
-            int startIndex = i * 4;
 
             Vector3 aPos = vertices[outlineIndeces[wallSegmentIndex]];
             Vector3 dPos = vertices[outlineIndeces[wallSegmentIndex+1]];
@@ -74,10 +98,10 @@ public class MeshGenerator
             Vector3 bPos = aPos + Vector3.down * wallheight;
             Vector3 cPos = dPos + Vector3.down * wallheight;
 
-            int aI = startIndex;
-            int bI = startIndex + 1;
-            int cI = startIndex + 2;
-            int dI = startIndex + 3;
+            int aI = assignTopIndex(wallSegmentIndex);
+            int bI = assignBottomIndex(bPos);
+            int cI = assignBottomIndex(cPos);
+            int dI = assignTopIndex(wallSegmentIndex + 1);
 
             wallVerts[aI] = aPos;
             wallVerts[bI] = bPos;
@@ -117,7 +141,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, Dictionary<Vector3, int> GridPointDic, List<int> indeces, List<Vector3> vertices, List<int> outlines
+    private void TriangulateSquare(GridSquare square, float isoValue, List<int> indeces, List<Vector3> vertices, List<int> outlines
         , Dictionary<int, Vector3> indexToVertex, Dictionary<Vector3, int> vertexToIndex) {
         /// <summary>
         /// to find position at which isoContour to the isoValue is

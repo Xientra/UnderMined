@@ -111,8 +111,10 @@ namespace Features.Cave.Chunk_System
             wall.SetIndices(wallInfo.indeces, MeshTopology.Triangles, 0);
             wall.RecalculateNormals();
 
+            Debug.Log("The TopMesh has: " + meshInfos[0].vertices.Length + " Vertices and: " + meshInfos[0].indeces.Length / 3 + " triangles");
+            Debug.Log("The WallMesh has: " + meshInfos[1].vertices.Length + " Vertices and: " + meshInfos[1].indeces.Length / 3 + " triangles");
 
-            //_wallFilter.mesh = wall;
+            _wallFilter.mesh = wall;
             _wallCollider.sharedMesh = wall;
         }
 
