@@ -55,13 +55,13 @@ public class MeshGenerator
 
         int wallIndex = 0;
 
-        Vector3[] wallVerts = new Vector3[wallSegmentCount * 4];
+        List<Vector3> wallVerts = new List<Vector3>();
         List<int> wallIndeces = new List<int>();
 
         Dictionary<int,int> topIndexToWallIndex = new Dictionary<int,int>();
         Dictionary<Vector3, int> wallPosToIndex = new Dictionary<Vector3, int>();
 
-        int assignTopIndex(int wallSegmentIndex)
+        int assignTop(int wallSegmentIndex)
         {
             int vertexIndex = outlineIndeces[wallSegmentIndex];
 
@@ -70,19 +70,23 @@ public class MeshGenerator
                 return wallVertIndex;
             } else
             {
+                wallVerts.Add(vertices[vertexIndex]);
                 int nextIndex = wallIndex++;
                 topIndexToWallIndex[vertexIndex] = nextIndex;
                 return nextIndex;
             }
         }
 
-        int assignBottomIndex(Vector3 wallPos)
+        int assignBottom(int wallSegmentIndex)
         {
-            if(wallPosToIndex.TryGetValue(wallPos, out int wallVertIndex)) 
-            { 
+            Vector3 originPos = vertices[outlineIndeces[wallSegmentIndex]];
+            Vector3 wallPos = originPos + Vector3.down * wallheight;
+            if (wallPosToIndex.TryGetValue(wallPos, out int wallVertIndex)) 
+            {
                 return wallVertIndex; 
             } else
             {
+                wallVerts.Add(wallPos);
                 int nextIndex = wallIndex++;
                 wallPosToIndex[wallPos] = nextIndex;
                 return nextIndex;
@@ -92,22 +96,10 @@ public class MeshGenerator
         for(int i = 0; i < wallSegmentCount; i++) {
             int wallSegmentIndex = i * 2;
 
-            Vector3 aPos = vertices[outlineIndeces[wallSegmentIndex]];
-            Vector3 dPos = vertices[outlineIndeces[wallSegmentIndex+1]];
-
-            Vector3 bPos = aPos + Vector3.down * wallheight;
-            Vector3 cPos = dPos + Vector3.down * wallheight;
-
-            int aI = assignTopIndex(wallSegmentIndex);
-            int bI = assignBottomIndex(bPos);
-            int cI = assignBottomIndex(cPos);
-            int dI = assignTopIndex(wallSegmentIndex + 1);
-
-            wallVerts[aI] = aPos;
-            wallVerts[bI] = bPos;
-
-            wallVerts[cI] = cPos;
-            wallVerts[dI] = dPos;
+            int aI = assignTop(wallSegmentIndex);
+            int bI = assignBottom(wallSegmentIndex);
+            int cI = assignBottom(wallSegmentIndex + 1);
+            int dI = assignTop(wallSegmentIndex + 1);
 
             wallIndeces.Add(aI);
             wallIndeces.Add(cI);
@@ -118,7 +110,7 @@ public class MeshGenerator
             wallIndeces.Add(cI);
         }
 
-        meshInfo.vertices = wallVerts;
+        meshInfo.vertices = wallVerts.ToArray();
         //jank
         meshInfo.indeces = wallIndeces.ToArray();
 
