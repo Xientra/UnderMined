@@ -80,6 +80,7 @@ MonoBehaviour:
   stoneColor: {r: 0.25, g: 0.25, b: 0.25, a: 0}
   coalColor: {r: 0, g: 0, b: 0, a: 0}
   goldColor: {r: 0.83, g: 0.65, b: 0, a: 1}
+  boosterColor: {r: 0, g: 1, b: 0.6156863, a: 1}
   noiseScale: 0.1
   oldCenterChunkIndex: {x: 0, y: 0}
   target: {fileID: 0}

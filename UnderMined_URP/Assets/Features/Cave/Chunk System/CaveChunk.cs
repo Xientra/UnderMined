@@ -87,6 +87,8 @@ namespace Features.Cave.Chunk_System
                             break;
                         case WallType.Gold: oreColor.Add(ChunkManager.instance.goldColor);
                             break;
+                        case WallType.Booster: oreColor.Add(ChunkManager.instance.boosterColor);
+                            break;
                     }
                 }
             }

@@ -26,6 +26,7 @@ namespace Features.Cave.Chunk_System
         public Color stoneColor = new Color(0.25f, 0.25f, 0.25f, 0f);
         public Color coalColor = new Color(0, 0f, 0f, 0f);
         public Color goldColor = new Color(0.83f, 0.65f, 0, 1f);
+        public Color boosterColor = new Color(0.83f, 0.65f, 0, 1f);
 
         private class ChunkInfo
         {
@@ -137,6 +138,10 @@ namespace Features.Cave.Chunk_System
             bool isGold = OreGeneratorFunction(position + new Vector3(100, 0, 0));
             if (isGold)
                 return WallType.Gold;
+            
+            bool isBooster = OreGeneratorFunction(position + new Vector3(-100, 0, 0));
+            if (isBooster)
+                return WallType.Booster;
 
             return WallType.Stone;
         }
