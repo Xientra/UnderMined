@@ -11,6 +11,7 @@ public class InGameGUI : MonoBehaviour
     [Header("Menu:")]
 
     public Image healthBar;
+    public Image boosterBar;
     public TextMeshProUGUI moneyLabel;
     public TextMeshProUGUI timerLabel;
     
@@ -26,6 +27,7 @@ public class InGameGUI : MonoBehaviour
             //timerLabel.text = TimeSpan.FromSeconds(drill.timeRemaining).ToString("hh':'mm':'ss");
 
             healthBar.fillAmount = _gameManager.drillTime01;
+            boosterBar.fillAmount = _gameManager.boosterAmount01;
             
             moneyLabel.text = Mathf.RoundToInt(_gameManager.GoldAmount) + "";
         }

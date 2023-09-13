@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour
 
     public float startTime = 30f;
     public float drillTime01 => drill.timeRemaining / drill.maxTimeAmount;
-    
-    
+    public float boosterAmount01 => drill.remainingBoostTime / drill.timeRemaining;
+
     [Header("Menu:")]
     
     public GameObject mainMenu;

@@ -40,9 +40,22 @@ public class DrillController : MonoBehaviour
     public OreCollection collectedOre = new OreCollection();
     public OreCollection totalCollectedOre = new OreCollection();
 
+    [Header("Boost:")]
+    
+    public bool inBoostMode = false;
+
+    [Space(5)]
+    
+    public float boostTime = 30f;
+    public float remainingBoostTime = 30f;
+
+    public float boostSpeed = 10f;
+    public float boostMineCooldown = 0.3f;
+    
     [Header("Effects:")]
     
     public VisualEffect drillVfx;
+    public VisualEffect drillBoostVfx;
 
     public Animator animator;
 
@@ -54,6 +67,8 @@ public class DrillController : MonoBehaviour
         drillVfx.Play();
         animator.SetBool("isMining", true);
         animator.SetBool("isDriving", true);
+
+        SetBoostMode(true); // DEBUG
     }
 
     private void Update()
@@ -65,14 +80,19 @@ public class DrillController : MonoBehaviour
 
         Mine();
 
-        timeRemaining -= Time.deltaTime;
-        if (timeRemaining <= 0)
-            OnDie();
+        if (inBoostMode == false)
+        {
+            timeRemaining -= Time.deltaTime;
+            if (timeRemaining <= 0)
+                OnDie();
+        }
     }
 
     private void Move()
     {
-        transform.position += transform.forward * (speed * Time.deltaTime);
+        float s = inBoostMode ? boostSpeed : speed;
+        
+        transform.position += transform.forward * (s * Time.deltaTime);
 
         speed += acceleration * Time.deltaTime;
     }
@@ -82,8 +102,23 @@ public class DrillController : MonoBehaviour
         if (Time.time > _mineTimestamp)
         {
             ChunkManager.instance.MineWall(miningPoint.transform.position, Random.Range(miningSizeMinMax.x, miningSizeMinMax.y), miningStrength);
-            _mineTimestamp = Time.time + mineDelay;
+            _mineTimestamp = Time.time + (inBoostMode ? boostMineCooldown : mineDelay);
         }
+    }
+
+    public void SetBoostMode(bool value)
+    {
+        inBoostMode = value;
+        if (value)
+            drillBoostVfx.Play();
+        else
+            drillBoostVfx.Stop();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("TargetZone"))
+            Debug.Log("ADVANCE TO NEXT STAGE");
     }
 
     public void AddOre(WallType oreType, float amount)
