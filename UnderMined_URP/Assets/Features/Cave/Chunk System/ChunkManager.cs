@@ -215,7 +215,7 @@ namespace Features.Cave.Chunk_System
         /// Removes part of the  wall at the given position.<br/>
         /// point is the world position of mining, radius the radius and strength is between 0 and 1 the amount subtracted from the wall.
         /// </summary>
-        public MiningResult MineWall(Vector3 point, float radius, float strength)
+        public OreCollection MineWall(Vector3 point, float radius, float strength)
         {
             // TODO: make this cross chunks
 
@@ -223,15 +223,13 @@ namespace Features.Cave.Chunk_System
 
             Vector2 localMinePoint = new Vector2(point.x % ChunkSize, point.z % ChunkSize);
 
-            MiningResult mr = MineChunk(point, radius, strength, chunkGridPos);
+            OreCollection ore = MineChunk(point, radius, strength, chunkGridPos);
 
-            MiningResult temp = new MiningResult();
+            OreCollection oreFromOtherChunk = new OreCollection();
 
             void MineNeighbor(Vector2Int dir) {
-                temp = MineChunk(point, radius, strength, chunkGridPos + dir);
-                mr.coalAmount += temp.coalAmount;
-                mr.goldAmount += temp.goldAmount;
-                mr.stoneAmount += temp.stoneAmount;
+                oreFromOtherChunk = MineChunk(point, radius, strength, chunkGridPos + dir);
+                ore.AddOreCollection(oreFromOtherChunk);
             }
 
             bool goUp = localMinePoint.y + radius > 64;
@@ -249,14 +247,14 @@ namespace Features.Cave.Chunk_System
             else if(goRight) MineNeighbor(Vector2Int.right);
             else if(goLeft) MineNeighbor(Vector2Int.left);
 
-            return mr;
+            return ore;
         }
 
-        private MiningResult MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos) {
+        private OreCollection MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos) {
             GridPoint[,] valueField = GetChunkInfoAtChunkCoord(chunkGridPos).valueField;
             
             // TODO: make this cross chunks
-            MiningResult mr = new MiningResult();
+            OreCollection ore = new OreCollection();
 
             // TODO: maybe optimize 
 
@@ -269,19 +267,15 @@ namespace Features.Cave.Chunk_System
                     {
                         float removeAmount = Mathf.Min(valueField[x, y].value, strength * miningFalloff.Evaluate(distance / radius));
                         valueField[x, y].value -= removeAmount;
-                        if (valueField[x, y].wallType == WallType.Stone)
-                            mr.stoneAmount += removeAmount;
-                        else if (valueField[x, y].wallType == WallType.Coal)
-                            mr.coalAmount += removeAmount;
-                        else if (valueField[x, y].wallType == WallType.Gold)
-                            mr.goldAmount += removeAmount;
+
+                        ore.AddOre(valueField[x, y].wallType, removeAmount);
                     }
                 }
 
 
             GetChunkThatHoldsValues(valueField).UpdateMesh(); // TODO add null check
 
-            return mr;
+            return ore;
         }
 
         private void OnDestroy()

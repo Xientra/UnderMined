@@ -421,10 +421,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5843183996874581282}
-  - component: {fileID: 6748097396760923053}
-  - component: {fileID: 8885201813628553895}
-  - component: {fileID: 3405280429056535524}
   - component: {fileID: 2926280606579057485}
+  - component: {fileID: 8885201813628553895}
+  - component: {fileID: 6748097396760923053}
+  - component: {fileID: 3405280429056535524}
+  - component: {fileID: 6275613474425137677}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -451,6 +452,59 @@ Transform:
   - {fileID: 466966221489013084}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &2926280606579057485
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8336790836275135422}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!143 &8885201813628553895
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8336790836275135422}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.5
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!114 &6748097396760923053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,32 +616,6 @@ MonoBehaviour:
   m_DefaultActionMap: DefaultControlls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!143 &8885201813628553895
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8336790836275135422}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.5
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!114 &3405280429056535524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,38 +657,25 @@ MonoBehaviour:
     type: 3}
   mineVfx: {fileID: 4439333757721418960}
   canMine: 0
-  minOreAmount: 1
-  goldPickup: {fileID: 3350196191448095415, guid: f35d262f2f2fd6743ae390a411f56498,
-    type: 3}
-  coalPickup: {fileID: 5301539416658108682, guid: c7129cfc58fb8af499012195786b4fd3,
-    type: 3}
---- !u!54 &2926280606579057485
-Rigidbody:
+--- !u!114 &6275613474425137677
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8336790836275135422}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ca2567c69d6a44da012352fe9e3c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minOreAmount: 0.5
+  coalPickupPrefab: {fileID: 5301539416658108682, guid: c7129cfc58fb8af499012195786b4fd3,
+    type: 3}
+  goldPickupPrefab: {fileID: 3350196191448095415, guid: f35d262f2f2fd6743ae390a411f56498,
+    type: 3}
+  boosterPickupPrefab: {fileID: 5301539416658108682, guid: 52f3091d62257444d89094750db81122,
+    type: 3}
 --- !u!1001 &3696439321050427368
 PrefabInstance:
   m_ObjectHideFlags: 0

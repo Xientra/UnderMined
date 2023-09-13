@@ -37,8 +37,8 @@ public class DrillController : MonoBehaviour
     private float _mineTimestamp = 0f;
     
 
-    public Dictionary<WallType, float> collectedOre = new Dictionary<WallType, float>();
-    public Dictionary<WallType, float> totalCollectedOre = new Dictionary<WallType, float>();
+    public OreCollection collectedOre = new OreCollection();
+    public OreCollection totalCollectedOre = new OreCollection();
 
     [Header("Effects:")]
     
@@ -47,21 +47,6 @@ public class DrillController : MonoBehaviour
     public Animator animator;
 
     public VisualEffect explodeVfx;
-
-    private void Awake()
-    {
-        // for things that are shown on UI
-        collectedOre.TryAdd(WallType.Gold, 0);
-        totalCollectedOre.TryAdd(WallType.Gold, 0);
-        collectedOre.TryAdd(WallType.Booster, 0);
-        totalCollectedOre.TryAdd(WallType.Booster, 0);
-    }
-
-    public float GetOreAmount(WallType ore)
-    {
-        collectedOre.TryGetValue(ore, out var amount);
-        return amount;
-    }
 
     public void StartMoving()
     {
@@ -109,20 +94,17 @@ public class DrillController : MonoBehaviour
             if (GameManager.instance.gameIsRunning == false)
                 GameManager.instance.StartGame();
             
-            // add time
+            // add time instead of time
             timeRemaining += amount * coalToTimeRatio;
             if (timeRemaining > maxTimeAmount)
                 timeRemaining = maxTimeAmount;
         }
         else
         {
-            collectedOre.TryAdd(oreType, 0);
-            collectedOre[oreType] += amount;
+            collectedOre.AddOre(oreType, amount);
         }
 
-        
-        totalCollectedOre.TryAdd(oreType, 0);
-        totalCollectedOre[oreType] += amount;
+        totalCollectedOre.AddOre(oreType, amount);
     }
 
     public void StealCoal(float amount)

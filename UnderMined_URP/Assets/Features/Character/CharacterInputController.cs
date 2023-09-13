@@ -7,10 +7,13 @@ using UnityEngine.InputSystem;
 using UnityEngine.VFX;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(MinerOreCollection))]
+[SelectionBase]
 public class CharacterInputController : MonoBehaviour
 {
     private CharacterController _characterController;
     public DrillController _drillController;
+    private MinerOreCollection _oreCollection;
 
     [Header("Move Variables")]
     [SerializeField] private float moveSpeed = 10.0f;
@@ -63,6 +66,7 @@ public class CharacterInputController : MonoBehaviour
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        _oreCollection = GetComponent<MinerOreCollection>();
     }
 
     // Start is called before the first frame update
@@ -218,38 +222,11 @@ public class CharacterInputController : MonoBehaviour
                 {
                     animator.SetTrigger("Action/Attack");
                     mineVfx.Play();
-                    MiningResult mr = ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
-                    SpawnPickups(mr);
+                    OreCollection ore = ChunkManager.instance.MineWall(attackCube.transform.position, miningRadius, miningStrength);
+                    _oreCollection.AddOre(ore, attackCube.transform.position);
                     StartCoroutine(attackHandling());
                     StartCoroutine(attackCooldownHandling(attackCooldown));
                 }
-            }
-        }
-
-        
-        [Header("Ore Pickup Spawn:")] // TODO: put this somewhere else at some point
-        public float minOreAmount = 0.5f;
-        public PickUp goldPickup;
-        public PickUp coalPickup;
-
-        private MiningResult storedOre = new MiningResult();
-        
-        private void SpawnPickups(MiningResult mr)
-        {
-            storedOre.Add(mr);
-
-            if (storedOre.goldAmount > minOreAmount)
-            {
-                Instantiate(goldPickup.gameObject, transform.position, Quaternion.identity)
-                    .GetComponent<PickUp>().amount = mr.goldAmount;
-                storedOre.goldAmount -= minOreAmount;
-            }
-
-            if (storedOre.coalAmount > minOreAmount)
-            {
-                Instantiate(coalPickup.gameObject, transform.position, Quaternion.identity)
-                    .GetComponent<PickUp>().amount = mr.coalAmount;
-                storedOre.coalAmount -= minOreAmount;
             }
         }
 

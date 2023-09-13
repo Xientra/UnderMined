@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public bool gameIsRunning = false;
     [Space(10)]
     public float goldWorth = 10000f;
-    public float GoldAmount => drill.GetOreAmount(WallType.Gold) * goldWorth;
+    public float GoldAmount => drill.collectedOre[WallType.Gold] * goldWorth;
 
     [Header("Starting Zone:")]
     
