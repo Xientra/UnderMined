@@ -42,7 +42,10 @@ public class DrillController : MonoBehaviour
 
     [Header("Boost:")]
     
+    public bool isBoostReady = false;
     public bool inBoostMode = false;
+
+    public float oreNeededForBoostMode = 300f;
 
     [Space(5)]
     
@@ -56,6 +59,7 @@ public class DrillController : MonoBehaviour
     
     public VisualEffect drillVfx;
     public VisualEffect drillBoostVfx;
+    public VisualEffect boostReadyVfx;
 
     public Animator animator;
 
@@ -68,7 +72,7 @@ public class DrillController : MonoBehaviour
         animator.SetBool("isMining", true);
         animator.SetBool("isDriving", true);
 
-        SetBoostMode(true); // DEBUG
+        AddOre(WallType.Booster, 300); // DEBUG
     }
 
     private void Update()
@@ -79,6 +83,7 @@ public class DrillController : MonoBehaviour
         Move();
 
         Mine();
+
 
         if (inBoostMode == false)
         {
@@ -106,11 +111,21 @@ public class DrillController : MonoBehaviour
         }
     }
 
-    public void SetBoostMode(bool value)
+    private void SetBoostReady()
+    {
+        isBoostReady = true;
+        boostReadyVfx.Play();
+    }
+
+    public void SetBoostMode(bool value = true)
     {
         inBoostMode = value;
+        isBoostReady = false;
         if (value)
+        {
             drillBoostVfx.Play();
+            boostReadyVfx.Stop();
+        }
         else
             drillBoostVfx.Stop();
     }
@@ -123,20 +138,32 @@ public class DrillController : MonoBehaviour
 
     public void AddOre(WallType oreType, float amount)
     {
-        if (oreType == WallType.Coal)
+        switch (oreType)
         {
-            // start game on first coal pickup
-            if (GameManager.instance.gameIsRunning == false)
-                GameManager.instance.StartGame();
+            case WallType.Coal:
+                // start game on first coal pickup
+                if (GameManager.instance.gameIsRunning == false)
+                    GameManager.instance.StartGame();
             
-            // add time instead of time
-            timeRemaining += amount * coalToTimeRatio;
-            if (timeRemaining > maxTimeAmount)
-                timeRemaining = maxTimeAmount;
-        }
-        else
-        {
-            collectedOre.AddOre(oreType, amount);
+                // add time instead of time
+                timeRemaining += amount * coalToTimeRatio;
+                if (timeRemaining > maxTimeAmount)
+                    timeRemaining = maxTimeAmount;
+                break;
+            
+            case WallType.Booster:
+                collectedOre.AddOre(oreType, amount);
+                if (collectedOre[WallType.Booster] > oreNeededForBoostMode) // clamp
+                {
+                    collectedOre[WallType.Booster] = oreNeededForBoostMode;
+                    if (isBoostReady == false)
+                        SetBoostReady();
+                }
+                break;
+            
+            default:
+                collectedOre.AddOre(oreType, amount);
+                break;
         }
 
         totalCollectedOre.AddOre(oreType, amount);

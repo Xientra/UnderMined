@@ -8,6 +8,7 @@ public class JoinManager : MonoBehaviour
 {
     public PlayerInput[] players = new PlayerInput[4];
     private int _playerCount = 0;
+    public int PlayerCount => _playerCount;
 
     public Material[] playerMaterials = new Material[4];
 
