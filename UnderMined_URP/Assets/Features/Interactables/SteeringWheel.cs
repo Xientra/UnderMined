@@ -34,7 +34,7 @@ public class SteeringWheel : Interactable
 
         if (drill.isBoostReady && SteeringPlayersCount == GameManager.instance.joinManager.PlayerCount)
         {
-            drill.SetBoostMode(true);
+            drill.SetBoostMode();
         }
     }
 }

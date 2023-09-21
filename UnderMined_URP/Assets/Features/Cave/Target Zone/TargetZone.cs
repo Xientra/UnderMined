@@ -1,11 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class TargetZone : MonoBehaviour
 {
-    private void Update()
+    public event EventHandler DrillReachedZone; 
+
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Drill"))
+            DrillReachedZone?.Invoke(this, EventArgs.Empty);
     }
 }

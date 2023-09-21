@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using Features.Cave.Chunk_System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -42,6 +42,9 @@ public class DrillController : MonoBehaviour
 
     [Header("Boost:")]
     
+    public DrillStates drillState = DrillStates.Off;
+    public enum DrillStates  { Off, Running, BoostReady, Boosting, Destroyed, Cutscene }
+
     public bool isBoostReady = false;
     public bool inBoostMode = false;
 
@@ -55,6 +58,18 @@ public class DrillController : MonoBehaviour
     public float boostSpeed = 10f;
     public float boostMineCooldown = 0.3f;
     
+    [Header("Target Zone:")]
+    
+    public TargetZone targetZonePrefab;
+
+    public float targetZoneDistance = 100f;
+
+    public float downwardsAngle = 30f;
+    public float timeBeforeSceneReload = 6f;
+    public float drillDownSpeed = 50f;
+    
+    public EventHandler advanceToNextStage;
+
     [Header("Effects:")]
     
     public VisualEffect drillVfx;
@@ -77,7 +92,7 @@ public class DrillController : MonoBehaviour
 
     private void Update()
     {
-        if (isRunning == false)
+        if (isRunning == false || isBoostReady)
             return;
 
         Move();
@@ -117,23 +132,36 @@ public class DrillController : MonoBehaviour
         boostReadyVfx.Play();
     }
 
-    public void SetBoostMode(bool value = true)
+    public void SetBoostMode()
     {
-        inBoostMode = value;
+        inBoostMode = true;
         isBoostReady = false;
-        if (value)
-        {
-            drillBoostVfx.Play();
-            boostReadyVfx.Stop();
-        }
-        else
-            drillBoostVfx.Stop();
+
+        drillBoostVfx.Play();
+        boostReadyVfx.Stop();
+        
+        // create target zone
+        Vector2 randomInCircle = Random.insideUnitCircle;
+        Vector3 targetZonePosition = transform.position + new Vector3(randomInCircle.x, 0, randomInCircle.y) * targetZoneDistance;
+        Instantiate(targetZonePrefab.gameObject, targetZonePosition, Quaternion.identity);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("TargetZone"))
-            Debug.Log("ADVANCE TO NEXT STAGE");
+            StartCoroutine(AdvancingToNextStage());
+    }
+
+    public IEnumerator AdvancingToNextStage()
+    {
+        Vector3 localEuler = transform.localRotation.eulerAngles;
+        localEuler.x = downwardsAngle;
+        transform.localRotation = Quaternion.Euler(localEuler);
+
+        yield return new WaitForSeconds(timeBeforeSceneReload);
+        
+        advanceToNextStage?.Invoke(this, EventArgs.Empty);
+        Debug.Log("LOAD NEW SCENE HERE");
     }
 
     public void AddOre(WallType oreType, float amount)
