@@ -115,6 +115,7 @@ namespace Features.Cave.Chunk_System
             ChunkInfo ci = GetChunkInfoAtChunkCoord(gridPos);
             chunkPool[chunkIndex].SetChunkValueField(ci.valueField);
             chunkPool[chunkIndex].canBeReplaced = false;
+            chunkPool[chunkIndex].chunkGridPos = gridPos;
         }
 
         private ChunkInfo GetChunkInfoAtChunkCoord(Vector2Int gridPos)
@@ -202,12 +203,12 @@ namespace Features.Cave.Chunk_System
             return new Vector3(gridPos.x * ChunkSize, 0, gridPos.y * ChunkSize);
         }
 
-        private CaveChunk GetChunkThatHoldsValues(GridPoint[,] values)
+        private CaveChunk GetChunkThatHoldsValues(Vector2Int chunkGridPos)
         {
             for (int i = 0; i < chunkPool.Length; i++)
-                if (chunkPool[i].ChunkValueField == values)
+                if (chunkPool[i].chunkGridPos == chunkGridPos)
                     return chunkPool[i];
-            
+
             return null;
         }
 
@@ -221,39 +222,55 @@ namespace Features.Cave.Chunk_System
 
             Vector2Int chunkGridPos = WorldToChunkCoord(point);
 
-            Vector2 localMinePoint = new Vector2(point.x % ChunkSize, point.z % ChunkSize);
+            Vector2 localMinePoint = new Vector2();
 
-            OreCollection ore = MineChunk(point, radius, strength, chunkGridPos);
+            // transform the global position to a local 0-Chunksize pos
+            if (point.x < 0)
+            {
+                localMinePoint.x = ChunkSize - Mathf.Abs(point.x) % ChunkSize;
+            } else
+            {
+                localMinePoint.x = point.x % ChunkSize;
+            }
+
+            if (point.z < 0)
+            {
+                localMinePoint.y = ChunkSize - Mathf.Abs(point.z) % ChunkSize;
+            } else
+            {
+                localMinePoint.y = point.z % ChunkSize;
+            }
+
+            OreCollection ore = MineChunk(point, radius, strength, chunkGridPos, localMinePoint, chunkGridPos);
 
             OreCollection oreFromOtherChunk = new OreCollection();
 
             void MineNeighbor(Vector2Int dir) {
-                oreFromOtherChunk = MineChunk(point, radius, strength, chunkGridPos + dir);
+                oreFromOtherChunk = MineChunk(point, radius, strength, chunkGridPos + dir, localMinePoint, chunkGridPos);
                 ore.AddOreCollection(oreFromOtherChunk);
             }
 
-            bool goUp = localMinePoint.y + radius > 64;
+            bool goUp = localMinePoint.y + radius > ChunkSize - 1;
             bool goDown = localMinePoint.y - radius < 0;
-            bool goRight = localMinePoint.x + radius > 64;
+            bool goRight = localMinePoint.x + radius > ChunkSize - 1;
             bool goLeft = localMinePoint.x - radius < 0;
 
-            /*
-            if(goRight && goUp) MineNeighbor(Vector2Int.right + Vector2Int.up);
-            else if(goRight && goDown) MineNeighbor(Vector2Int.right + Vector2Int.down);
-            else if(goLeft && goUp) MineNeighbor(Vector2Int.left + Vector2Int.up);
-            else if(goLeft && goDown) MineNeighbor(Vector2Int.left + Vector2Int.down);
-            else*/ if(goUp) MineNeighbor(Vector2Int.up);
-            else if(goDown) MineNeighbor(Vector2Int.down);
-            else if(goRight) MineNeighbor(Vector2Int.right);
-            else if(goLeft) MineNeighbor(Vector2Int.left);
+
+            if (goRight && goUp) MineNeighbor(Vector2Int.right + Vector2Int.up);
+            if (goRight && goDown) MineNeighbor(Vector2Int.right + Vector2Int.down);
+            if (goLeft && goUp) MineNeighbor(Vector2Int.left + Vector2Int.up);
+            if (goLeft && goDown) MineNeighbor(Vector2Int.left + Vector2Int.down);
+            if (goUp) MineNeighbor(Vector2Int.up);
+            if (goDown) MineNeighbor(Vector2Int.down);
+            if (goRight) MineNeighbor(Vector2Int.right);
+            if (goLeft) MineNeighbor(Vector2Int.left);
 
             return ore;
         }
 
-        private OreCollection MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos) {
+        private OreCollection MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos, Vector3 localMinePoint, Vector2Int originChunk) {
             GridPoint[,] valueField = GetChunkInfoAtChunkCoord(chunkGridPos).valueField;
             
-            // TODO: make this cross chunks
             OreCollection ore = new OreCollection();
 
             // TODO: maybe optimize 
@@ -272,8 +289,7 @@ namespace Features.Cave.Chunk_System
                     }
                 }
 
-
-            GetChunkThatHoldsValues(valueField).UpdateMesh(); // TODO add null check
+            GetChunkThatHoldsValues(chunkGridPos).UpdateMesh();
 
             return ore;
         }

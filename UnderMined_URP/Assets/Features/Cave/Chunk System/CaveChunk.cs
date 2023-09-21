@@ -18,6 +18,9 @@ namespace Features.Cave.Chunk_System
 
         public bool canBeReplaced = true;
 
+        /// <summary> holds the current pos in the chunk grid </summary>
+        public Vector2Int chunkGridPos;
+
         private float DEBUG_boxSize = 1f;
 
        
