@@ -133,7 +133,7 @@ namespace Features.Cave.Chunk_System
                         }
 
                         if (chunkValueField[x, y].value > ChunkManager.IsoValue)
-                            Gizmos.DrawCube(transform.position + chunkValueField[x, y].pos, chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
+                            Gizmos.DrawCube(transform.position + new Vector3(x, 0, y), chunkValueField[x, y].value * DEBUG_boxSize * ChunkManager.CellSize * Vector3.one);
                     }
                 }
             }

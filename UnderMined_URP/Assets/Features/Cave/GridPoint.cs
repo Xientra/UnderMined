@@ -1,35 +1,17 @@
+using System;
 using UnityEngine;
 
 public struct GridPoint
 {
-    /// <summary> world space pos of grid point</summary>
-    public Vector3 pos;
-
-    /// <summary> SignedDistanceField Value of this GridPoint </summary>
-    public float value;
-
-
+    /// <summary> SignedDistanceField Value of this GridPoint. Values from 0-255; 255 means wall</summary>
+    public byte value;
 
     public WallType wallType;
-
-    public GridPoint(Vector3 _pos)
-    {
-        pos = _pos;
-        value = 1f;
-        wallType = WallType.Stone;
-    }
     
-    public GridPoint(Vector3 _pos, float _value)
+    public GridPoint(byte _value=255,WallType _wallType=WallType.Stone)
     {
-        pos = _pos;
-        value = _value;
-        wallType = WallType.Stone;
-    }
-    
-    public GridPoint(Vector3 _pos, float _value, WallType _wallType)
-    {
-        pos = _pos;
         value = _value;
         wallType = _wallType;
     }
+
 }

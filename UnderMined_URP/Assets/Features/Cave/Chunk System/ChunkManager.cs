@@ -14,7 +14,7 @@ namespace Features.Cave.Chunk_System
 
         public const float CellSize = 1.0f;
 
-        public const float IsoValue = 0.5f;
+        public const byte IsoValue = 128;
 
         public const float WallHeight = 3f;
 
@@ -175,11 +175,10 @@ namespace Features.Cave.Chunk_System
             {
                 Vector3 gridPointPos = new Vector3(x * CellSize, 0, y * CellSize);
                 //float value = Mathf.PerlinNoise(gridPointPos.x / ChunkSize * noiseScale, gridPointPos.z/ ChunkSize * noiseScale);
-                float value = 1f;
+                Byte value = 255;
                 //if(x > size/2) value = 0f;
 
-                GridPoint p = new GridPoint(gridPointPos, value);
-                p.wallType = GetWallType(gridOrigin + gridPointPos);
+                GridPoint p = new GridPoint(value, GetWallType(gridOrigin + gridPointPos));
                 newField[x, y] = p;
             }
 
@@ -213,33 +212,44 @@ namespace Features.Cave.Chunk_System
         }
 
         /// <summary>
+        /// transform the global position to a local pos in a chunk
+        /// </summary>
+        /// <param name="globalPos"></param>
+        /// <returns>Vector2 containing float values from 0 to Chunksize</returns>
+        private Vector2 GlobalPosToLocalGridPos(Vector3 globalPos)
+        {
+            Vector2 localMinePoint = new Vector2();
+
+            if (globalPos.x < 0)
+            {
+                localMinePoint.x = ChunkSize - Mathf.Abs(globalPos.x) % ChunkSize;
+            }
+            else
+            {
+                localMinePoint.x = globalPos.x % ChunkSize;
+            }
+
+            if (globalPos.z < 0)
+            {
+                localMinePoint.y = ChunkSize - Mathf.Abs(globalPos.z) % ChunkSize;
+            }
+            else
+            {
+                localMinePoint.y = globalPos.z % ChunkSize;
+            }
+            return localMinePoint;
+        }
+
+        /// <summary>
         /// Removes part of the  wall at the given position.<br/>
         /// point is the world position of mining, radius the radius and strength is between 0 and 1 the amount subtracted from the wall.
         /// </summary>
         public OreCollection MineWall(Vector3 point, float radius, float strength)
         {
-            // TODO: make this cross chunks
-
             Vector2Int chunkGridPos = WorldToChunkCoord(point);
 
-            Vector2 localMinePoint = new Vector2();
-
             // transform the global position to a local 0-Chunksize pos
-            if (point.x < 0)
-            {
-                localMinePoint.x = ChunkSize - Mathf.Abs(point.x) % ChunkSize;
-            } else
-            {
-                localMinePoint.x = point.x % ChunkSize;
-            }
-
-            if (point.z < 0)
-            {
-                localMinePoint.y = ChunkSize - Mathf.Abs(point.z) % ChunkSize;
-            } else
-            {
-                localMinePoint.y = point.z % ChunkSize;
-            }
+            Vector2 localMinePoint = GlobalPosToLocalGridPos(point);
 
             OreCollection ore = MineChunk(point, radius, strength, chunkGridPos, localMinePoint, chunkGridPos);
 
@@ -268,26 +278,35 @@ namespace Features.Cave.Chunk_System
             return ore;
         }
 
-        private OreCollection MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos, Vector3 localMinePoint, Vector2Int originChunk) {
+        private OreCollection MineChunk(Vector3 point, float radius, float strength, Vector2Int chunkGridPos, Vector2 localMinePoint, Vector2Int originChunk) {
             GridPoint[,] valueField = GetChunkInfoAtChunkCoord(chunkGridPos).valueField;
             
             OreCollection ore = new OreCollection();
 
-            // TODO: maybe optimize 
+            int gridRadius = Mathf.FloorToInt(radius / CellSize);
 
-            for (int y = 0; y < ChunkSize + 1; y++)
-                for (int x = 0; x < ChunkSize + 1; x++)
+            Vector2Int gridCoords = new Vector2Int(Mathf.RoundToInt(localMinePoint.x),Mathf.RoundToInt(localMinePoint.y));
+
+            // spans across all grid points that could possibly be affected by mining
+            int yStart = Mathf.Max(0, gridCoords.y - gridRadius);
+            int yEnd = Mathf.Min(ChunkSize, gridCoords.y + gridRadius);
+            int xStart = Mathf.Max(0, gridCoords.x - gridRadius);
+            int xEnd = Mathf.Min(ChunkSize, gridCoords.x + gridRadius);
+
+            for (int y = yStart; y < yEnd; y++)
+            {
+                for (int x = xStart; x < xEnd; x++)
                 {
-                    Vector3 globalGridPos = valueField[x, y].pos + new Vector3(ChunkSize * chunkGridPos.x, 0, ChunkSize * chunkGridPos.y);
-                    float distance = (globalGridPos - point).magnitude;
+                    float distance = (localMinePoint - new Vector2(x,y)).magnitude;
                     if (distance < radius)
                     {
-                        float removeAmount = Mathf.Min(valueField[x, y].value, strength * miningFalloff.Evaluate(distance / radius));
+                        byte removeAmount = Math.Min(valueField[x, y].value, (byte)(strength * miningFalloff.Evaluate(distance / radius) * 255f));
                         valueField[x, y].value -= removeAmount;
 
                         ore.AddOre(valueField[x, y].wallType, removeAmount);
                     }
                 }
+            }
 
             GetChunkThatHoldsValues(chunkGridPos).UpdateMesh();
 

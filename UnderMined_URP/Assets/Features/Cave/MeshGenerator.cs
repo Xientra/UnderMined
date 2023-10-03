@@ -1,3 +1,4 @@
+using Features.Cave.Chunk_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class MeshGenerator
         {
             for (int x = 0; x < height; x++)
             {
-                TriangulateSquare(squares[x,y], isoValue, indeces, vertices, outlines, indexToVertex, vertexToIndex);
+                TriangulateSquare(squares[x,y], x, y, isoValue, indeces, vertices, outlines, indexToVertex, vertexToIndex);
             }
         }
 
@@ -138,7 +139,7 @@ public class MeshGenerator
         return squares;
     }
 
-    private void TriangulateSquare(GridSquare square, float isoValue, List<int> indeces, List<Vector3> vertices, List<int> outlines
+    private void TriangulateSquare(GridSquare square, int x, int y, float isoValue, List<int> indeces, List<Vector3> vertices, List<int> outlines
         , Dictionary<int, Vector3> indexToVertex, Dictionary<Vector3, int> vertexToIndex) {
         /// <summary>
         /// to find position at which isoContour to the isoValue is
@@ -146,11 +147,11 @@ public class MeshGenerator
         /// <param name="lower"> is world space pos at the bottom left of the grid</param>
         /// <param name="higher"> is world space pos at the bottom left of the grid</param>
         /// <param name="isoValue"> is world space pos at the bottom left of the grid</param>
-        Vector3 CrossPos(GridPoint lower, GridPoint higher, float isoValue) {
+        Vector3 CrossPos(byte lowerValue, Vector3 lowerPos, byte higherValue, Vector3 higherPos, float isoValue) {
             Vector3 result = Vector3.zero;
-            if(!lower.value.Equals(higher.value)) {
-                float t = (isoValue - lower.value) / (higher.value - lower.value);
-                result = (1-t) * lower.pos + t * higher.pos;
+            if(!lowerValue.Equals(higherValue)) {
+                float t = (isoValue - lowerValue) / (higherValue - lowerValue);
+                result = (1-t) * lowerPos + t * higherPos;
             }
             return result;
         }
@@ -164,16 +165,27 @@ public class MeshGenerator
         GridPoint tR = square.topRight;
         GridPoint bR = square.bottomRight;
 
+        float s = ChunkManager.CellSize;
+
+        // corner points
+        Vector3 bLpos = new(x, 0, y);
+        Vector3 tLpos = new(x, 0, y + s);
+        Vector3 tRpos = new(x + s , 0,y + s);
+        Vector3 bRpos = new(x + s, 0, y);
+
+        // points on square sides
         Vector3 l;
         Vector3 t;
         Vector3 r;
         Vector3 b;
 
+        // corner indices
         int bLI;
         int tLI;
         int tRI;
         int bRI;
 
+        // side indices
         int lI;
         int tI;
         int rI;
@@ -218,12 +230,12 @@ public class MeshGenerator
             // all empty case
             break;
             case 1:
-                b = CrossPos(bL,bR,isoValue);
-                r = CrossPos(tR,bR,isoValue);
+                b = CrossPos(bL.value,bLpos,bR.value,bRpos,isoValue);
+                r = CrossPos(tR.value,tRpos,bR.value,bRpos,isoValue);
 
                 bI = assignIndex(b);
                 rI = assignIndex(r);
-                bRI = assignIndex(bR.pos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(bI);
                 indeces.Add(rI);
@@ -233,12 +245,12 @@ public class MeshGenerator
                 outlines.Add(bI);
             break;
             case 2:
-                r = CrossPos(bR,tR,isoValue);
-                t = CrossPos(tL,tR,isoValue);
+                r = CrossPos(bR.value,bRpos,tR.value,tRpos,isoValue);
+                t = CrossPos(tL.value,tLpos,tR.value,tRpos,isoValue);
 
                 rI = assignIndex(r);
                 tI = assignIndex(t);
-                tRI = assignIndex(tR.pos);
+                tRI = assignIndex(tRpos);
 
                 indeces.Add(rI);
                 indeces.Add(tI);
@@ -248,13 +260,13 @@ public class MeshGenerator
                 outlines.Add(rI);
             break;
             case 3:
-                b = CrossPos(bL,bR,isoValue);
-                t = CrossPos(tL,tR,isoValue);
+                b = CrossPos(bL.value,bLpos,bR.value,bRpos,isoValue);
+                t = CrossPos(tL.value,tLpos,tR.value,tRpos,isoValue);
 
                 bI = assignIndex(b);
                 tI = assignIndex(t);
-                tRI = assignIndex(tR.pos);
-                bRI = assignIndex(bR.pos);
+                tRI = assignIndex(tRpos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(bI);
                 indeces.Add(tRI);
@@ -268,12 +280,12 @@ public class MeshGenerator
                 outlines.Add(bI);
             break;
             case 4:
-                t = CrossPos(tR,tL,isoValue);
-                l = CrossPos(bL,tL,isoValue);
+                t = CrossPos(tR.value,tRpos,tL.value,tLpos,isoValue);
+                l = CrossPos(bL.value,bLpos,tL.value,tLpos,isoValue);
 
                 tI = assignIndex(t);
                 lI = assignIndex(l);
-                tLI = assignIndex(tL.pos);
+                tLI = assignIndex(tLpos);
 
                 indeces.Add(lI);
                 indeces.Add(tLI);
@@ -283,11 +295,11 @@ public class MeshGenerator
                 outlines.Add(tI);
             break;
             case 5:
-                l = CrossPos(bL,tL,isoValue);
-                b = CrossPos(bL,bR,isoValue);
+                l = CrossPos(bL.value,bLpos,tL.value,tLpos,isoValue);
+                b = CrossPos(bL.value,bLpos,bR.value,bRpos,isoValue);
 
-                r = CrossPos(tR,bR,isoValue);
-                t = CrossPos(tR,tL,isoValue);
+                r = CrossPos(tR.value,tRpos,bR.value,bRpos,isoValue);
+                t = CrossPos(tR.value,tRpos,tL.value,tLpos,isoValue);
 
                 lI = assignIndex(l);
                 bI = assignIndex(b);
@@ -295,8 +307,8 @@ public class MeshGenerator
                 rI = assignIndex(r);
                 tI = assignIndex(t);
 
-                tLI = assignIndex(tL.pos);
-                bRI = assignIndex(bR.pos);
+                tLI = assignIndex(tLpos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(tLI);
                 indeces.Add(bI);
@@ -321,14 +333,14 @@ public class MeshGenerator
                 outlines.Add(rI);
                 break;
             case 6:
-                l = CrossPos(bL,tL,isoValue);
-                r = CrossPos(bR,tR,isoValue);
+                l = CrossPos(bL.value,bLpos,tL.value,tLpos,isoValue);
+                r = CrossPos(bR.value,bRpos,tR.value,tRpos,isoValue);
 
                 lI = assignIndex(l);
                 rI = assignIndex(r);
 
-                tLI = assignIndex(tL.pos);
-                tRI = assignIndex(tR.pos);
+                tLI = assignIndex(tLpos);
+                tRI = assignIndex(tRpos);
 
                 indeces.Add(lI);
                 indeces.Add(tLI);
@@ -342,15 +354,15 @@ public class MeshGenerator
                 outlines.Add(rI);
                 break;
             case 7:
-                l = CrossPos(bL,tL,isoValue);
-                b = CrossPos(bL,bR,isoValue);
+                l = CrossPos(bL.value,bLpos,tL.value,tLpos,isoValue);
+                b = CrossPos(bL.value,bLpos,bR.value,bRpos,isoValue);
 
                 lI = assignIndex(l);
                 bI = assignIndex(b);
 
-                tLI = assignIndex(tL.pos);
-                tRI = assignIndex(tR.pos);
-                bRI = assignIndex(bR.pos);
+                tLI = assignIndex(tLpos);
+                tRI = assignIndex(tRpos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(lI);
                 indeces.Add(tLI);
@@ -368,12 +380,12 @@ public class MeshGenerator
                 outlines.Add(bI);
             break;
             case 8:
-                l = CrossPos(tL,bL,isoValue);
-                b = CrossPos(bR,bL,isoValue);
+                l = CrossPos(tL.value,tLpos,bL.value,bLpos,isoValue);
+                b = CrossPos(bR.value,bRpos,bL.value,bLpos,isoValue);
 
                 lI = assignIndex(l);
                 bI = assignIndex(b);
-                bLI = assignIndex(bL.pos);
+                bLI = assignIndex(bLpos);
 
                 indeces.Add(lI);
                 indeces.Add(bI);
@@ -383,13 +395,13 @@ public class MeshGenerator
                 outlines.Add(lI);
             break;
             case 9:
-                l = CrossPos(tL,bL,isoValue);
-                r = CrossPos(tR,bR,isoValue);
+                l = CrossPos(tL.value,tLpos,bL.value,bLpos,isoValue);
+                r = CrossPos(tR.value,tRpos,bR.value,bRpos,isoValue);
 
                 lI = assignIndex(l);
                 rI = assignIndex(r);
-                bLI = assignIndex(bL.pos);
-                bRI = assignIndex(bR.pos);
+                bLI = assignIndex(bLpos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(lI);
                 indeces.Add(rI);
@@ -403,18 +415,18 @@ public class MeshGenerator
                 outlines.Add(lI);
             break;
             case 10:
-                t = CrossPos(tL,tR,isoValue);
-                l = CrossPos(tL,bL,isoValue);
+                t = CrossPos(tL.value,tLpos,tR.value,tRpos,isoValue);
+                l = CrossPos(tL.value,tLpos,bL.value,bLpos,isoValue);
 
-                b = CrossPos(bR,bL,isoValue);
-                r = CrossPos(bR,tR,isoValue);
+                b = CrossPos(bR.value,bRpos,bL.value,bLpos,isoValue);
+                r = CrossPos(bR.value,bRpos,tR.value,tRpos,isoValue);
 
                 tI = assignIndex(t);
                 lI = assignIndex(l);
                 bI = assignIndex(b);
                 rI = assignIndex(r);
-                bLI = assignIndex(bL.pos);
-                tRI = assignIndex(tR.pos);
+                bLI = assignIndex(bLpos);
+                tRI = assignIndex(tRpos);
 
                 indeces.Add(lI);
                 indeces.Add(bI);
@@ -439,14 +451,14 @@ public class MeshGenerator
                 outlines.Add(bI);
             break;
             case 11:
-                t = CrossPos(tL,tR,isoValue);
-                l = CrossPos(tL,bL,isoValue);
+                t = CrossPos(tL.value,tLpos,tR.value,tRpos,isoValue);
+                l = CrossPos(tL.value,tLpos,bL.value,bLpos,isoValue);
 
                 tI = assignIndex(t);
                 lI = assignIndex(l);
-                bRI = assignIndex(bR.pos);
-                bLI = assignIndex(bL.pos);
-                tRI = assignIndex(tR.pos);
+                bRI = assignIndex(bRpos);
+                bLI = assignIndex(bLpos);
+                tRI = assignIndex(tRpos);
 
                 indeces.Add(lI);
                 indeces.Add(bRI);
@@ -464,13 +476,13 @@ public class MeshGenerator
                 outlines.Add(lI);
             break;
             case 12:
-                b = CrossPos(bR,bL,isoValue);
-                t = CrossPos(tR,tL,isoValue);
+                b = CrossPos(bR.value,bRpos,bL.value,bLpos,isoValue);
+                t = CrossPos(tR.value,tRpos,tL.value,tLpos,isoValue);
 
                 bI = assignIndex(b);
                 tI = assignIndex(t);
-                bLI = assignIndex(bL.pos);
-                tLI = assignIndex(tL.pos);
+                bLI = assignIndex(bLpos);
+                tLI = assignIndex(tLpos);
 
                 indeces.Add(bLI);
                 indeces.Add(tLI);
@@ -484,14 +496,14 @@ public class MeshGenerator
                 outlines.Add(tI);
                 break;
             case 13:
-                r = CrossPos(tR,bR,isoValue);
-                t = CrossPos(tR,tL,isoValue);
+                r = CrossPos(tR.value,tRpos,bR.value,bRpos,isoValue);
+                t = CrossPos(tR.value,tRpos,tL.value,tLpos,isoValue);
 
                 rI = assignIndex(r);
                 tI = assignIndex(t);
-                bLI = assignIndex(bL.pos);
-                tLI = assignIndex(tL.pos);
-                bRI = assignIndex(bR.pos);
+                bLI = assignIndex(bLpos);
+                tLI = assignIndex(tLpos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(bLI);
                 indeces.Add(tLI);
@@ -509,14 +521,14 @@ public class MeshGenerator
                 outlines.Add(tI);
             break;
             case 14:
-                b = CrossPos(bR,bL,isoValue);
-                r = CrossPos(bR,tR,isoValue);
+                b = CrossPos(bR.value,bRpos,bL.value,bLpos,isoValue);
+                r = CrossPos(bR.value,bRpos,tR.value,tRpos,isoValue);
 
                 rI = assignIndex(r);
                 bI = assignIndex(b);
-                tLI = assignIndex(tL.pos);
-                bLI = assignIndex(bL.pos);
-                tRI = assignIndex(tR.pos);
+                tLI = assignIndex(tLpos);
+                bLI = assignIndex(bLpos);
+                tRI = assignIndex(tRpos);
 
                 indeces.Add(tLI);
                 indeces.Add(bI);
@@ -536,10 +548,10 @@ public class MeshGenerator
             case 15:
                 // all wall case: isoContour on GridPoints
 
-                bLI = assignIndex(bL.pos);
-                tLI = assignIndex(tL.pos);
-                tRI = assignIndex(tR.pos);
-                bRI = assignIndex(bR.pos);
+                bLI = assignIndex(bLpos);
+                tLI = assignIndex(tLpos);
+                tRI = assignIndex(tRpos);
+                bRI = assignIndex(bRpos);
 
                 indeces.Add(bLI);
                 indeces.Add(tLI);

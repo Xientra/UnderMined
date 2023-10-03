@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DEBUG_MeshGenerator : MonoBehaviour
 {
-    public float[,] grid = { { 1, 1 }, { 1, 0 } };
+    public byte[,] grid = { { 255, 255 }, { 255, 0 } };
 
     MeshFilter meshFilter;
 
@@ -31,7 +31,7 @@ public class DEBUG_MeshGenerator : MonoBehaviour
         {
             for (int j = 0; j < y; j++)
             {
-                map[i, j] = new GridPoint(new Vector3(i, j), grid[i, j], 0);
+                map[i, j] = new GridPoint(grid[i, j], 0);
             }
         }
 
