@@ -265,7 +265,6 @@ namespace Features.Cave.Chunk_System
             bool goRight = localMinePoint.x + radius > ChunkSize - 1;
             bool goLeft = localMinePoint.x - radius < 0;
 
-
             if (goRight && goUp) MineNeighbor(Vector2Int.right + Vector2Int.up);
             if (goRight && goDown) MineNeighbor(Vector2Int.right + Vector2Int.down);
             if (goLeft && goUp) MineNeighbor(Vector2Int.left + Vector2Int.up);
@@ -288,10 +287,18 @@ namespace Features.Cave.Chunk_System
             Vector2Int gridCoords = new Vector2Int(Mathf.RoundToInt(localMinePoint.x),Mathf.RoundToInt(localMinePoint.y));
 
             // spans across all grid points that could possibly be affected by mining
+
             int yStart = Mathf.Max(0, gridCoords.y - gridRadius);
             int yEnd = Mathf.Min(ChunkSize, gridCoords.y + gridRadius);
             int xStart = Mathf.Max(0, gridCoords.x - gridRadius);
             int xEnd = Mathf.Min(ChunkSize, gridCoords.x + gridRadius);
+
+            if (chunkGridPos.y == 1)
+            {
+                Debug.Log("____");
+                Debug.Log(localMinePoint);
+                Debug.Log(point);
+            }
 
             for (int y = yStart; y < yEnd; y++)
             {
