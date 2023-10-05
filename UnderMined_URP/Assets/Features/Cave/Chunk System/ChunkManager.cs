@@ -253,7 +253,7 @@ namespace Features.Cave.Chunk_System
 
             OreCollection ore = MineChunk(point, radius, strength, chunkGridPos, localMinePoint, chunkGridPos);
 
-            OreCollection oreFromOtherChunk = new OreCollection();
+            OreCollection oreFromOtherChunk;
 
             void MineNeighbor(Vector2Int dir) {
                 oreFromOtherChunk = MineChunk(point, radius, strength, chunkGridPos + dir, localMinePoint, chunkGridPos);
@@ -288,16 +288,88 @@ namespace Features.Cave.Chunk_System
 
             // spans across all grid points that could possibly be affected by mining
 
-            int yStart = Mathf.Max(0, gridCoords.y - gridRadius);
-            int yEnd = Mathf.Min(ChunkSize, gridCoords.y + gridRadius);
-            int xStart = Mathf.Max(0, gridCoords.x - gridRadius);
-            int xEnd = Mathf.Min(ChunkSize, gridCoords.x + gridRadius);
+            int yStart;
+            int yEnd;
+            int xStart;
+            int xEnd;
 
-            if (chunkGridPos.y == 1)
+            int HandleEdgeCases(int originChunkCoord)
             {
-                Debug.Log("____");
+                int result;
+                if (originChunkCoord <= ChunkSize && originChunkCoord >= ChunkSize - 2*gridRadius - 1)
+                {
+                    // upround case
+                    result = 0;
+                } else if (originChunkCoord >= 0 && originChunkCoord <= 2*gridRadius + 1)
+                {
+                    // downround case
+                    result = ChunkSize + 1;
+                } else if (originChunkCoord >= ChunkSize)
+                {
+                    // overshoot case
+                    result = originChunkCoord % ChunkSize;
+                } else if(originChunkCoord <= 0)
+                {
+                    // undershoot case
+                    result = ChunkSize + originChunkCoord;
+                } else
+                {
+                    // error case
+                    result = -1;
+                }
+
+                return result;
+            }
+
+            float HandleMinePointCases(float mineCoord)
+            {
+                if (mineCoord < radius)
+                {
+                    return ChunkSize + mineCoord;
+                }
+                else
+                {
+                    return mineCoord - ChunkSize;
+                }
+            }
+
+            int startCoordY = gridCoords.y - gridRadius;
+            int endCoordY = gridCoords.y + gridRadius;
+            int startCoordX = gridCoords.x - gridRadius;
+            int endCoordX = gridCoords.x + gridRadius;
+
+            if(chunkGridPos.y == originChunk.y)
+            {
+                yStart = Mathf.Max(0, startCoordY);
+                yEnd = Mathf.Min(ChunkSize + 1, endCoordY);
+            } else
+            {
+                yStart = HandleEdgeCases(startCoordY);
+                yEnd = HandleEdgeCases(endCoordY);
+
+                localMinePoint.y = HandleMinePointCases(localMinePoint.y);
+            }
+            if(chunkGridPos.x == originChunk.x)
+            {
+                xStart = Mathf.Max(0, startCoordX);
+                xEnd = Mathf.Min(ChunkSize + 1, endCoordX);
+            } else
+            {
+                xStart = HandleEdgeCases(startCoordX);
+                xEnd = HandleEdgeCases(endCoordX);
+
+                localMinePoint.x = HandleMinePointCases(localMinePoint.x);
+            }
+
+            if(chunkGridPos.x == -1)
+            {
+                Debug.Log("^^^^");
                 Debug.Log(localMinePoint);
-                Debug.Log(point);
+                Debug.Log(xStart);
+                Debug.Log(xEnd);
+                Debug.Log("---");
+                Debug.Log(startCoordX);
+                Debug.Log(endCoordX);
             }
 
             for (int y = yStart; y < yEnd; y++)
