@@ -284,7 +284,7 @@ namespace Features.Cave.Chunk_System
 
             int gridRadius = Mathf.FloorToInt(radius / CellSize);
 
-            Vector2Int gridCoords = new Vector2Int(Mathf.RoundToInt(localMinePoint.x),Mathf.RoundToInt(localMinePoint.y));
+            Vector2Int gridCoords = new Vector2Int(Mathf.FloorToInt(localMinePoint.x),Mathf.FloorToInt(localMinePoint.y));
 
             // spans across all grid points that could possibly be affected by mining
 
@@ -296,11 +296,12 @@ namespace Features.Cave.Chunk_System
             int HandleEdgeCases(int originChunkCoord)
             {
                 int result;
-                if (originChunkCoord <= ChunkSize && originChunkCoord >= ChunkSize - 2*gridRadius - 1)
+                // the minus 2 keeps consistency with the range
+                if (originChunkCoord <= ChunkSize && originChunkCoord >= ChunkSize - 2*gridRadius - 2)
                 {
                     // upround case
                     result = 0;
-                } else if (originChunkCoord >= 0 && originChunkCoord <= 2*gridRadius + 1)
+                } else if (originChunkCoord >= 0 && originChunkCoord <= 2*gridRadius)
                 {
                     // downround case
                     result = ChunkSize + 1;
@@ -333,10 +334,11 @@ namespace Features.Cave.Chunk_System
                 }
             }
 
+            // the additional length is done to keep the mining symmetrical
             int startCoordY = gridCoords.y - gridRadius;
-            int endCoordY = gridCoords.y + gridRadius;
+            int endCoordY = gridCoords.y + gridRadius + 1;
             int startCoordX = gridCoords.x - gridRadius;
-            int endCoordX = gridCoords.x + gridRadius;
+            int endCoordX = gridCoords.x + gridRadius + 1;
 
             if(chunkGridPos.y == originChunk.y)
             {
@@ -361,15 +363,14 @@ namespace Features.Cave.Chunk_System
                 localMinePoint.x = HandleMinePointCases(localMinePoint.x);
             }
 
-            if(chunkGridPos.x == -1)
+            if(xStart < 0 || xEnd > ChunkSize + 1)
             {
-                Debug.Log("^^^^");
-                Debug.Log(localMinePoint);
-                Debug.Log(xStart);
-                Debug.Log(xEnd);
-                Debug.Log("---");
+                Debug.Log("__");
+                Debug.Log(chunkGridPos + "<-" + originChunk);
                 Debug.Log(startCoordX);
                 Debug.Log(endCoordX);
+                Debug.Log(xStart);
+                Debug.Log(xEnd);
             }
 
             for (int y = yStart; y < yEnd; y++)

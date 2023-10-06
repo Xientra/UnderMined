@@ -120,6 +120,16 @@ public class MeshGenerator
         mesh.SetIndices(wallIndeces, MeshTopology.Triangles, 0);
         mesh.RecalculateNormals();
 
+        if (wallVerts.Count < 3 && wallVerts.Count > 0)
+        {
+            Debug.LogError("whyyyyyy");
+            Debug.Log(wallVerts.Count);
+            for(int i = 0;i < wallVerts.Count;i++)
+            {
+                Debug.Log("Vertex: " + wallVerts[i] + " at index " + i);
+            }
+        }
+
         return mesh;
     }
 
