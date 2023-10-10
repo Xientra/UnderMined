@@ -55,6 +55,9 @@ namespace Features.Cave.Chunk_System
         public float oreAmount = 0.5f;
         private Vector3 randomOffsetPerRun = Vector3.zero;
 
+        // contains all modifiedChunks of this frame
+        private List<Vector2Int> modifiedChunks = new List<Vector2Int>();
+
         public void Awake()
         {
             instance = this;
@@ -97,6 +100,11 @@ namespace Features.Cave.Chunk_System
             SetChunkValues(8, targetGridPos + new Vector2Int(1, 1));
 
             oldCenterChunkIndex = GetTargetChunkGridPosition();
+        }
+
+        private void LateUpdate()
+        {
+            UpdateMeshesOfModifiedChunks();
         }
 
         private bool CheckChunkReplaceable(Vector2Int pos1, Vector2Int pos2)
@@ -284,6 +292,7 @@ namespace Features.Cave.Chunk_System
 
             int gridRadius = Mathf.FloorToInt(radius / CellSize);
 
+            // floor both coords and later add +1 to the range for symmetry
             Vector2Int gridCoords = new Vector2Int(Mathf.FloorToInt(localMinePoint.x),Mathf.FloorToInt(localMinePoint.y));
 
             // spans across all grid points that could possibly be affected by mining
@@ -293,6 +302,7 @@ namespace Features.Cave.Chunk_System
             int xStart;
             int xEnd;
 
+            // transform bound coords from origin chunk to neighbor chunk
             int HandleEdgeCases(int originChunkCoord)
             {
                 int result;
@@ -322,6 +332,7 @@ namespace Features.Cave.Chunk_System
                 return result;
             }
 
+            // transform minepoint from originchunk to neighbor chunk
             float HandleMinePointCases(float mineCoord)
             {
                 if (mineCoord < radius)
@@ -340,6 +351,7 @@ namespace Features.Cave.Chunk_System
             int startCoordX = gridCoords.x - gridRadius;
             int endCoordX = gridCoords.x + gridRadius + 1;
 
+            // if we are in a neighborchunk, we must convert all coords fitting for that chunk
             if(chunkGridPos.y == originChunk.y)
             {
                 yStart = Mathf.Max(0, startCoordY);
@@ -363,16 +375,7 @@ namespace Features.Cave.Chunk_System
                 localMinePoint.x = HandleMinePointCases(localMinePoint.x);
             }
 
-            if(xStart < 0 || xEnd > ChunkSize + 1)
-            {
-                Debug.Log("__");
-                Debug.Log(chunkGridPos + "<-" + originChunk);
-                Debug.Log(startCoordX);
-                Debug.Log(endCoordX);
-                Debug.Log(xStart);
-                Debug.Log(xEnd);
-            }
-
+            // go through all nearby points to mining point
             for (int y = yStart; y < yEnd; y++)
             {
                 for (int x = xStart; x < xEnd; x++)
@@ -388,9 +391,22 @@ namespace Features.Cave.Chunk_System
                 }
             }
 
-            GetChunkThatHoldsValues(chunkGridPos).UpdateMesh();
+            // add the chunk only if it hasn't been added yet
+            if(!modifiedChunks.Contains(chunkGridPos)) modifiedChunks.Add(chunkGridPos);
+
+            // GetChunkThatHoldsValues(chunkGridPos).UpdateMesh();
 
             return ore;
+        }
+
+        private void UpdateMeshesOfModifiedChunks()
+        {
+            foreach (var chunkGridPos in modifiedChunks)
+            {
+                GetChunkThatHoldsValues(chunkGridPos).UpdateMesh();
+            }
+            // clear the list for next frame
+            modifiedChunks.Clear();
         }
 
         private void OnDestroy()
