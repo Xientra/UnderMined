@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -50,13 +51,14 @@ namespace Features.Cave.Chunk_System
 
         public CaveChunk[] chunkPool = new CaveChunk[9];
 
-
         [Header("Ore Generation:")] public float[] oreFrequencies = new[] { 0.1f, 0.5f };
         public float oreAmount = 0.5f;
         private Vector3 randomOffsetPerRun = Vector3.zero;
 
         // contains all modifiedChunks of this frame
         private List<Vector2Int> modifiedChunks = new List<Vector2Int>();
+
+        private Dictionary<Vector2Int, int> chunkCoordToPoolIndex = new Dictionary<Vector2Int, int>();
 
         public void Awake()
         {
@@ -68,27 +70,22 @@ namespace Features.Cave.Chunk_System
         private void Start()
         {
             oldCenterChunkIndex = GetTargetChunkGridPosition();
-            UpdateChunks(oldCenterChunkIndex);
+            InitializeChunks(oldCenterChunkIndex);
         }
 
         private void Update()
         {
             Vector2Int targetGridPos = GetTargetChunkGridPosition();
 
-            if (oldCenterChunkIndex != targetGridPos)
+            if (oldCenterChunkIndex != targetGridPos) 
+            {
                 UpdateChunks(targetGridPos);
+            }
         }
 
-        private void UpdateChunks(Vector2Int targetGridPos)
+        private void InitializeChunks(Vector2Int targetGridPos)
         {
-            // set chunks free that are too far away
-            for (int i = 0; i < chunkPool.Length; i++)
-                if (CheckChunkReplaceable(WorldToChunkCoord(chunkPool[i].transform.position), targetGridPos))
-                    chunkPool[i].canBeReplaced = true;
-
-            // put far away chunks to near position
-
-            // hard settings chunks for now
+            // hard settings chunks for initialization
             SetChunkValues(0, targetGridPos + new Vector2Int(-1, -1));
             SetChunkValues(1, targetGridPos + new Vector2Int(0, -1));
             SetChunkValues(2, targetGridPos + new Vector2Int(1, -1));
@@ -102,27 +99,71 @@ namespace Features.Cave.Chunk_System
             oldCenterChunkIndex = GetTargetChunkGridPosition();
         }
 
+        private void UpdateChunks(Vector2Int targetGridPos)
+        {
+            List<Vector2Int> requiredChunks = new List<Vector2Int>();
+
+            List<Vector2Int> currentChunkCoords = chunkCoordToPoolIndex.Keys.ToList();
+
+            requiredChunks.Add(targetGridPos);
+
+            // required neighbor chunks
+            requiredChunks.Add(targetGridPos + new Vector2Int(-1,    -1));
+            requiredChunks.Add(targetGridPos + new Vector2Int( 0,    -1));
+            requiredChunks.Add(targetGridPos + new Vector2Int( 1,    -1));
+            requiredChunks.Add(targetGridPos + new Vector2Int(-1,     0));
+            requiredChunks.Add(targetGridPos + new Vector2Int( 1,     0));
+            requiredChunks.Add(targetGridPos + new Vector2Int(-1,     1));
+            requiredChunks.Add(targetGridPos + new Vector2Int( 0,     1));
+            requiredChunks.Add(targetGridPos + new Vector2Int( 1,     1));
+
+            foreach(Vector2Int requiredChunk in requiredChunks)
+            {
+                // this required chunk must be added
+                if(!currentChunkCoords.Contains(requiredChunk))
+                {
+                    // must remove replaced chunk, otherwise, we try to replace it again
+                    int replacedChunkIndex = -1;
+
+                    // find replacable spot
+                    for(int i = 0; i < currentChunkCoords.Count; i++) 
+                    {
+                        Vector2Int currentChunk = currentChunkCoords[i];
+
+                        Vector2Int targetToCurrent = currentChunk - targetGridPos;
+                        // if current saved chunk too far away, we can replace it
+                        if (Mathf.Abs(targetToCurrent.x) > 1 || Mathf.Abs(targetToCurrent.y) > 1)
+                        {
+                            int replacableIndex = chunkCoordToPoolIndex[currentChunk];
+
+                            chunkCoordToPoolIndex.Remove(currentChunk);
+
+                            replacedChunkIndex = i;
+                            
+                            // replace chunk
+                            SetChunkValues(replacableIndex, requiredChunk);
+                            break;
+                        }
+                    }
+
+                    currentChunkCoords.RemoveAt(replacedChunkIndex);
+                }
+            }
+
+            oldCenterChunkIndex = targetGridPos;
+        }
+
         private void LateUpdate()
         {
             UpdateMeshesOfModifiedChunks();
-        }
-
-        private bool CheckChunkReplaceable(Vector2Int pos1, Vector2Int pos2)
-        {
-            if (Mathf.Abs(pos1.x - pos2.x) > 1)
-                return true;
-            if (Mathf.Abs(pos1.y - pos2.y) > 1)
-                return true;
-
-            return false;
         }
 
         private void SetChunkValues(int chunkIndex, Vector2Int gridPos)
         {
             chunkPool[chunkIndex].transform.localPosition = GridToWorldPosition(gridPos);
             ChunkInfo ci = GetChunkInfoAtChunkCoord(gridPos);
+            chunkCoordToPoolIndex.Add(gridPos, chunkIndex);
             chunkPool[chunkIndex].SetChunkValueField(ci.valueField);
-            chunkPool[chunkIndex].canBeReplaced = false;
             chunkPool[chunkIndex].chunkGridPos = gridPos;
         }
 

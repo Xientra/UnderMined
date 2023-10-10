@@ -16,8 +16,6 @@ namespace Features.Cave.Chunk_System
 
         private MeshFilter _meshFilter;
 
-        public bool canBeReplaced = true;
-
         /// <summary> holds the current pos in the chunk grid </summary>
         public Vector2Int chunkGridPos;
 
