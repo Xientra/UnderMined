@@ -39,6 +39,9 @@ namespace Features.Cave.Chunk_System
             }
         }
 
+        /// <summary>
+        /// Dictionary with the chunkInformation (it's signed distance (value) field) at the respective chunk-coord
+        /// </summary>
         private Dictionary<Vector2Int, ChunkInfo> _caveChunkValues = new Dictionary<Vector2Int, ChunkInfo>();
 
         public float noiseScale = 0.2f;
@@ -47,8 +50,10 @@ namespace Features.Cave.Chunk_System
         [FormerlySerializedAs("currentCenterChunkIndex")]
         public Vector2Int oldCenterChunkIndex;
 
+        [Tooltip("target object is the center for the chunks. The chunks always build up around the current target position")]
         public GameObject target;
 
+        [Tooltip("3x3 chunks with target in center")]
         public CaveChunk[] chunkPool = new CaveChunk[9];
 
         [Header("Ore Generation:")] public float[] oreFrequencies = new[] { 0.1f, 0.5f };
@@ -167,6 +172,11 @@ namespace Features.Cave.Chunk_System
             chunkPool[chunkIndex].chunkGridPos = gridPos;
         }
 
+        /// <summary>
+        /// returns the ChunkInformation at given <paramref name="gridPos"/>"/> If no chunk has been loaded at <paramref name="gridPos"/> a new Chunk is created.
+        /// </summary>
+        /// <param name="gridPos"></param>
+        /// <returns></returns>
         private ChunkInfo GetChunkInfoAtChunkCoord(Vector2Int gridPos)
         {
             if (_caveChunkValues.TryGetValue(gridPos, out var valueField))

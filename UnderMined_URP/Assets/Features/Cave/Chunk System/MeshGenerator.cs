@@ -9,10 +9,9 @@ public class MeshGenerator
     /// Implementation of a Marching Squares Algorithm
     /// </summary>
     /// <param name="map">contains the signed distance field values with local positions</param>
-    /// <param name="gridPointDic">contains local grid positions as keys and their vertex index as value</param>
     /// <param name="isoValue">determines what counts as wall/air. Values lower than this count as air</param>
     /// <param name="wallHeight"></param>
-    /// <returns>two <see cref="Mesh"/>s in an Array. At [0] is the top of the mesh. At [1] are the walls</returns>
+    /// <returns>two <see cref="Mesh"/>es in an Array. At [0] is the top of the mesh. At [1] are the walls</returns>
     public Mesh[] GenerateMeshFromMap(GridPoint[,] map, float isoValue, float wallHeight) {
         int width = map.GetLength(0) - 1;
         int height = map.GetLength(1) - 1;
@@ -23,6 +22,7 @@ public class MeshGenerator
         Dictionary<int, Vector3> indexToVertex = new Dictionary<int, Vector3>();
         Dictionary<Vector3, int> vertexToIndex = new Dictionary<Vector3, int>();
 
+        // vertex indeces which require walls
         List<int> outlines = new List<int>();
 
         // growing list of triangle indeces
@@ -31,11 +31,12 @@ public class MeshGenerator
         // growing list of vertex positions
         List<Vector3> vertices = new List<Vector3>();
 
-        // march through squares a second time
+        // march through squares
         for (int y = 0; y < width; y++)
         {
             for (int x = 0; x < height; x++)
             {
+                // triangulates squares and sets the indeces, vertices, outlines, indexToVertex, vertexToIndex to create the meshes afterwards
                 TriangulateSquare(squares[x,y], x, y, isoValue, indeces, vertices, outlines, indexToVertex, vertexToIndex);
             }
         }
@@ -55,15 +56,25 @@ public class MeshGenerator
         return result;
     }
 
+    /// <summary>
+    /// creates a wall mesh, it creates a <paramref name="wallheight"/> big wall segment between every each <paramref name="vertices"/>-pair of <paramref name="outlineIndeces"/> 
+    /// </summary>
+    /// <param name="wallheight"></param>
+    /// <param name="outlineIndeces"></param>
+    /// <param name="vertices"></param>
+    /// <returns></returns>
     private Mesh TriangulateWall(float wallheight, List<int> outlineIndeces, List<Vector3> vertices) {
         Mesh mesh = new();
         int wallSegmentCount = outlineIndeces.Count / 2;
 
         int wallIndex = 0;
 
+        // these two list save the used wall verts/indeces for the returned mesh
+        // they do not contain duplicate positions
         List<Vector3> wallVerts = new List<Vector3>();
         List<int> wallIndeces = new List<int>();
 
+        // these two dictionaries are used to not have duplicate vertices/indeces in the wall mesh
         Dictionary<int,int> topIndexToWallIndex = new Dictionary<int,int>();
         Dictionary<Vector3, int> wallPosToIndex = new Dictionary<Vector3, int>();
 
@@ -120,6 +131,7 @@ public class MeshGenerator
         mesh.SetIndices(wallIndeces, MeshTopology.Triangles, 0);
         mesh.RecalculateNormals();
 
+        /*
         if (wallVerts.Count < 3 && wallVerts.Count > 0)
         {
             Debug.LogError("whyyyyyy");
@@ -129,6 +141,7 @@ public class MeshGenerator
                 Debug.Log("Vertex: " + wallVerts[i] + " at index " + i);
             }
         }
+        */
 
         return mesh;
     }
@@ -149,6 +162,18 @@ public class MeshGenerator
         return squares;
     }
 
+    /// <summary>
+    /// Calculates the triangulation of one <paramref name="square"/> and alters the given lists and dictionaries accordingly
+    /// </summary>
+    /// <param name="square">the <see cref="GridSquare"/> to be triangulated</param>
+    /// <param name="x">local x position in chunk</param>
+    /// <param name="y">local y position in chunk</param>
+    /// <param name="isoValue">determines what is air/wall</param>
+    /// <param name="indeces">list of vertex indeces, we add new indeces to it according to the square</param>
+    /// <param name="vertices">list of vertices, we add new indeces to it according to the square</param>
+    /// <param name="outlines">list of outline indeces, we add new indeces to it according to the square. the outline indeces appear if the square contains a wall</param>
+    /// <param name="indexToVertex">helper dictionary to not have duplicate vertices</param>
+    /// <param name="vertexToIndex">helper dictionary to not have duplicate vertices</param>
     private void TriangulateSquare(GridSquare square, int x, int y, float isoValue, List<int> indeces, List<Vector3> vertices, List<int> outlines
         , Dictionary<int, Vector3> indexToVertex, Dictionary<Vector3, int> vertexToIndex) {
         /// <summary>
@@ -167,7 +192,7 @@ public class MeshGenerator
         }
 
         // predefinitions
-        // index just counts upwards depending on length of gridpointDic
+        // index just counts upwards depending on number of used vertices
         int currentIndex = vertices.Count;
 
         GridPoint bL = square.bottomLeft;
@@ -235,6 +260,9 @@ public class MeshGenerator
             caseNumber += 1;
         }
 
+        // 15 cases of marching squares; adds the respective triangulation at the correct position of the isoContour using CrossPos
+        // also add wall indeces (outlines) if the case has a wall
+        // the cases can be seen in Undermined/MathexplanationStuff
         switch(caseNumber) {
             case 0:
             // all empty case
