@@ -42,4 +42,6 @@ public class PickUp : Interactable
             player.currentInteractable = null;
         }
     }
+    
+    
 }

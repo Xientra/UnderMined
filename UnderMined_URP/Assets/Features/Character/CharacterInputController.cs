@@ -268,4 +268,5 @@ public class CharacterInputController : MonoBehaviour
         Instantiate(revivePrefab).GetComponent<Revive>().fallenplayer = this;
         animator.SetTrigger("Action/Die");
     }
+    
 }
