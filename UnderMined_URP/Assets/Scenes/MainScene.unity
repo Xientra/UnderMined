@@ -209,10 +209,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 412603912}
-    - targetCorrespondingSourceObject: {fileID: 1699352806319518982, guid: f35d262f2f2fd6743ae390a411f56498,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 412603916}
   m_SourcePrefab: {fileID: 100100000, guid: f35d262f2f2fd6743ae390a411f56498, type: 3}
 --- !u!4 &163913526 stripped
 Transform:
@@ -441,27 +437,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TutorialText: {fileID: 1346819430}
---- !u!135 &412603916
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412603911}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &749859650 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1699352806319518982, guid: f35d262f2f2fd6743ae390a411f56498,
@@ -676,6 +651,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ore-Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699352806319518982, guid: f35d262f2f2fd6743ae390a411f56498,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107867139449916435, guid: f35d262f2f2fd6743ae390a411f56498,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2651414172827108383, guid: f35d262f2f2fd6743ae390a411f56498,
         type: 3}
@@ -1264,10 +1249,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1973291925}
-    - targetCorrespondingSourceObject: {fileID: 1825357697098228184, guid: c7129cfc58fb8af499012195786b4fd3,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1973291929}
   m_SourcePrefab: {fileID: 100100000, guid: c7129cfc58fb8af499012195786b4fd3, type: 3}
 --- !u!4 &1365987940 stripped
 Transform:
@@ -1330,27 +1311,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TutorialText: {fileID: 303501732}
---- !u!135 &1973291929
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1973291920}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2029541625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1368,6 +1328,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Drill-Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699352806319518982, guid: f35d262f2f2fd6743ae390a411f56498,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107867139449916435, guid: f35d262f2f2fd6743ae390a411f56498,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2651414172827108383, guid: f35d262f2f2fd6743ae390a411f56498,
         type: 3}
@@ -1427,10 +1397,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 309438652}
-    - targetCorrespondingSourceObject: {fileID: 1699352806319518982, guid: f35d262f2f2fd6743ae390a411f56498,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2029541630}
   m_SourcePrefab: {fileID: 100100000, guid: f35d262f2f2fd6743ae390a411f56498, type: 3}
 --- !u!4 &2029541626 stripped
 Transform:
@@ -1438,27 +1404,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2029541625}
   m_PrefabAsset: {fileID: 0}
---- !u!135 &2029541630
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 309438651}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1088085897060904923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1495,12 +1440,12 @@ PrefabInstance:
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000071240187
+      value: -0.0000000071240227
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000048231947
+      value: 0.000000004823197
       objectReference: {fileID: 0}
     - target: {fileID: 50545677629405052, guid: c6dba288749f2ef4fb31a0795941e73c,
         type: 3}
@@ -1662,12 +1607,12 @@ PrefabInstance:
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000071240187
+      value: -0.0000000071240227
       objectReference: {fileID: 0}
     - target: {fileID: 887087557750074918, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000048231947
+      value: 0.000000004823197
       objectReference: {fileID: 0}
     - target: {fileID: 1001227417301961611, guid: 193e6d928d8c3a545ba6974832207bae,
         type: 3}
